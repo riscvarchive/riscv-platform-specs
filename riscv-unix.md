@@ -5,7 +5,9 @@
 This RISC-V Unix-class platform specification is
 
  &copy; 2017 Krste Asanovic <krste@sifive.com>
+
  &copy; 2017 Palmer Dabbelt <palmer@sifive.com>
+
  &copy; 2017 Andrew Waterman <andrew@sifive.com>
 
 It is licensed under the Creative Commons Attribution 4.0 International
@@ -14,16 +16,16 @@ https://creativecommons.org/licenses/by/4.0/.
 
 # Unix-class Platform Specification
 
-This specification is incomplete.  Currently, it only lists the constraints
-on a RISC-V implementation beyond those in the architecture manual.
+This Unix-class platform specification is incomplete.  Currently, it only
+lists the constraints on a RISC-V implementation beyond those in the
+architecture manual.  It only describes the RV64 Unix platform; a future
+version of this specification will describe the RV32 Unix platform.
 
 RISC-V Unix-class systems implement the RV64GC ISA with supervisor mode and
 the Sv39 page-based virtual-memory scheme.  Systems may support additional ISA
 extensions, but if these extensions add user-visible architectural state, they
 must be initially disabled.  Systems that support Sv48 must support Sv39,
 systems that support Sv57 must support Sv48, and so forth.
-
-A future version of this specification will describe RV32 Unix platforms.
 
 Within main-memory regions, aligned instruction fetch must be atomic, up to
 the smaller of ILEN and XLEN bits.  In particular, if an aligned 4-byte word
