@@ -38,5 +38,5 @@ values.)
 Unless otherwise specified by a given I/O device,
 I/O regions are at least point-to-point strongly ordered.
 All devices attached to a given PCIe root complex are on the same ordered
-channel (numbered 2 or above), though different root complexes may not
+channel (numbered 2 or above), though different root complexes might not
 be on the same ordering channel.
