@@ -40,3 +40,6 @@ I/O regions are at least point-to-point strongly ordered.
 All devices attached to a given PCIe root complex are on the same ordered
 channel (numbered 2 or above), though different root complexes might not
 be on the same ordering channel.
+
+On RV64I-based Unix-class systems the negative virtual addresses are
+reserved for the kernel.
