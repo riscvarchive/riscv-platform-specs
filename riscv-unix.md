@@ -43,3 +43,58 @@ be on the same ordering channel.
 
 On RV64I-based Unix-class systems the negative virtual addresses are
 reserved for the kernel.
+
+## Misaligned Physical-Memory Access Atomicity
+
+Consider a data memory access of size *w* to physical address *p<sub>0</sub>*,
+where *w* does not evenly divide *p<sub>0</sub>*.  Let *p<sub>1</sub>* denote
+the physical address of the last byte of the access, and let *P* denote the
+address pair *(p<sub>0</sub>, p<sub>1</sub>)*.  There are two cases:
+
+1. *P* lies within a single physical-memory region.  One of the following
+   holds:
+
+   1. Loads and stores to *P* execute atomically with respect to other
+      accesses to *P*.  AMOs to *P* either execute atomically
+      with respect to other accesses to *P* or raise access
+      exceptions.  LRs and SCs to *P* either execute atomically
+      with respect to other accesses to *P* or raise access exceptions.
+   
+   2. Loads and stores to *P* execute without guarantee of atomicity.  AMOs,
+      LRs, and SCs to *P* raise access exceptions.
+
+2. *P* spans two physical-memory regions. AMOs, LRs, and SCs all raise access
+   exceptions.  Additionally, one of the following holds:
+
+   1. Loads and stores to *P* raise access exceptions.
+
+   2. Loads and stores to *P* succeed without guarantee of atomicity.
+
+   3. Loads and stores to *P* proceed partially, then raise access exceptions.
+      No register writebacks occur.
+
+## Misaligned Virtual-Memory Access Atomicity
+
+Consider a data memory access of size *w* to virtual address *v<sub>0</sub>*,
+where *w* does not evenly divide *v<sub>0</sub>*.  Let *v<sub>1</sub>* denote
+the virtual address of the last byte of the access.  Let *p<sub>0</sub>* and
+*p<sub>1</sub>* be the physical addresses corresponding to *v<sub>0</sub>* and
+*v<sub>1</sub>*, if translations exist.  One of the following must hold:
+
+1. *v<sub>0</sub>* is an impermissible virtual address; the access raises
+   a page-fault exception with trap value *v<sub>0</sub>*.
+
+3. *v<sub>0</sub>* is a permissible virtual address; *v<sub>1</sub>* lies
+   in a different, impermissible page.
+   The access raises a page-fault exception with a trap value equal
+   to the base virtual address of the page containing *v<sub>1</sub>*.
+   Alternatively, if the same access to physical-address pair
+   *(p<sub>0</sub>, p<sub>0</sub>+w-1)* would have caused an access exception,
+   the implementation may raise that exception instead.  (This design
+   simplifies the emulation of misaligned accesses in more-privileged software.)
+
+3. *v<sub>0</sub>* and *v<sub>1</sub>* are both permissible virtual
+   addresses.
+   The access proceeds according to the misaligned physical-memory access
+   rules above, noting that *v<sub>0</sub>* and *v<sub>1</sub>* may lie
+   in different physical-memory regions, despite their virtual contiguity.
