@@ -43,3 +43,9 @@ be on the same ordering channel.
 
 On RV64I-based Unix-class systems the negative virtual addresses are
 reserved for the kernel.
+
+External devices (DMA engines, the debug unit, non RISC-V cores, etc)
+that are visible to RISC-V harts must appear as coherent agents, just
+like any RISC-V hart would.  If additional ordering constraints are
+necessary for a device to function, those will be provide by a
+device-specific mechanism.
