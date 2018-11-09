@@ -24,9 +24,14 @@ memory orderings.  The bulk of this specification mandates the behavior that
 complaint implementations must exhibit WRT to supervisor-mode software, with an
 explicit attempt to avoid mandating any behavior when in machine-mode.
 
-The RISC-V Unix-class Platform Specification is an open standard.
+The RISC-V Unix-class Platform Specification is an open standard.  Any vendor
+is free to implement the standard, and contributions are welcome via our Git
+Hub page: http://github.com/riscv/riscv-platform-specs
 
 ## Restrictions on the RISC-V User and Supervisor ISA Specifications
+
+This specification restricts behavior allowed by the RISC-V user and supervisor
+ISA specifications in order to ensure compatibility between implementations.
 
 ### Additional Memory Ordering Requirements
 
@@ -61,6 +66,21 @@ systems that support Sv57 must support Sv48, and so forth.
 On RV64I-based Unix-class systems the negative virtual addresses are reserved
 for the kernel.
 
-## Mandated Behavior Upon Entering Supervisor Mode
+## Mandated State Upon Entering Supervisor Mode
+
+This specification mandates restrictions on the state of the system upon
+entering supervisor mode.  These restrictions exist to allow software to depend
+on the state of the system from the first instruciton, 
+
+### Register State Upon Entering Supervisor Mode
+
+### Behavior of `ecall` from Supervisor Mode
 
 ## Mandated Behavior of Memory Regions
+
+The RISC-V ISA cleanly defines the behavior of most instructions, but restricts
+itself from mandating the allowed behavior of any memory regions.  
+
+### Platform-Level Interrupt Controller
+
+Clean up the PLIC spec.
