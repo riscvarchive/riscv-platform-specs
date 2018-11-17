@@ -35,6 +35,9 @@ previous value stored to that location.  (That is, the fetched instruction is
 not an unpredictable value, nor is it a hybrid of the bytes of the old and new
 values.)
 
+LR/SC forward progress is guaranteed on main-memory regions that are cacheable
+and coherent.
+
 Unless otherwise specified by a given I/O device,
 I/O regions are at least point-to-point strongly ordered.
 All devices attached to a given PCIe root complex are on the same ordered
