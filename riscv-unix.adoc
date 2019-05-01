@@ -1,0 +1,72 @@
+# RISC-V UNIX-Class Platform Specification
+
+## Copyright and license information
+
+This RISC-V Unix-class platform specification is
+
+[%hardbreaks]
+(C) 2017 Krste Asanovic <krste@sifive.com>
+(C) 2017-2019 Palmer Dabbelt <palmer@sifive.com>
+(C) 2017 Andrew Waterman <andrew@sifive.com>
+
+It is licensed under the Creative Commons Attribution 4.0 International
+License (CC-BY 4.0).  The full license text is available at
+https://creativecommons.org/licenses/by/4.0/.
+
+## Introduction
+
+This document contains the RISC-V UNIX-class platform specification.  This
+specification defines additional restrictions on implementations in order to
+allow software to be compatible between these implementations.  These
+restrictions are enumerated along with the least privileged level to which they
+apply.  Implementations can be compatible with a subset of this specification,
+but that subset must include all restrictions placed on a privilege level as
+well as all less-privileged levels.  For example: implementations can claim to
+be compatible with the "RISC-V Supervisor-Level UNIX Platform" if they are
+compatible with the entire "User-Level Platform" and "Supervisor-Level
+Platform" chapters of this document.
+
+### Versioning
+
+## User-Level Platform
+
+* User-mode environments must implement at least version 2.2 of the RISC-V User
+  ISA specification, which can be found at
+  https://github.com/riscv/riscv-isa-manual/blob/master/release/riscv-spec-v2.2.pdf.  
+* User-mode programs may not execute the `fence.i` instruction.
+* User-mode environments may provide additional ISA extensions, but if those
+  extensions add user-visible state they must be initially disabled.
+* Within main-memory regions, aligned instruction fetch must be atomic, up to
+  the smaller of ILEN and XLEN bits.  In particular, if an aligned 4-byte word
+  is stored with the `sw` instruction, then any processor attempts to execute
+  that word, the processor either fetches the newly stored word, or some previous
+  value stored to that location.  (That is, the fetched instruction is not an
+  unpredictable value, nor is it a hybrid of the bytes of the old and new
+  values.)
+
+## Supervisor-Level Platform
+
+* Supervisor-mode environments must implement at least version 0.2.0 of the
+  RISC-V SBI specification, which can be found at
+  https://github.com/riscv/riscv-sbi-doc/blob/v0.2.0/riscv-sbi.adoc
+* Supervisor-mode environments must implement the Sv39 page-based
+  virtual-memory scheme.   Systems that support Sv48 must support Sv39, systems
+  that support Sv57 must support Sv48, and so forth.
+* Unless otherwise specified by a given I/O device, I/O regions are at least
+  point-to-point strongly ordered.  All devices attached to a given PCIe root
+  complex are on the same ordered channel (numbered 2 or above), though
+  different root complexes might not be on the same ordering channel.
+* On RV64I-based Unix-class systems the negative virtual addresses are reserved
+  for the kernel.
+* External devices (DMA engines, the debug unit, non RISC-V cores, etc) that
+  are visible to RISC-V harts must appear as coherent agents, just like any
+  RISC-V hart would.  If additional ordering constraints are necessary for a
+  device to function, those will be provide by a device-specific mechanism.
+
+## Machine-Level Platform
+
+## Profiles
+
+### Portable UNIX Platform Profile
+
+* Supervisor-mode environments must implement RV64GC.
