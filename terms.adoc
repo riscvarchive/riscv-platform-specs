@@ -1,0 +1,14 @@
+## Terms and Definitions
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and
+"OPTIONAL" in this document are to be interpreted as described in
+<<RFC2119>> and are incorporated herein by reference.
+
+.Glossary
+[horizontal]
+ISA:: Instruction Set Architecture
+Mandatory:: A _mandatory_ requirement MUST be implemented.
+OSPS:: Operating System Platform Specification
+Platform:: A collection of hardware and firmware operating as a single unit;
+   examples are a single-board computer, or a tablet, or a server.
+Suggested:: A _suggested_ requirement is one that is OPTIONAL.

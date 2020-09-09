@@ -20,20 +20,53 @@ include::contributors.adoc[]
 // Changelog
 include::changelog.adoc[]
 
+// Begin the really interesting parts of the document
 ## Introduction
 
-This document contains the RISC-V UNIX-class platform specification.  This
-specification defines additional restrictions on implementations in order to
-allow software to be compatible between these implementations.  These
-restrictions are enumerated along with the least privileged level to which they
-apply.  Implementations can be compatible with a subset of this specification,
-but that subset must include all restrictions placed on a privilege level as
-well as all less-privileged levels.  For example: implementations can claim to
-be compatible with the "RISC-V Supervisor-Level UNIX Platform" if they are
-compatible with the entire "User-Level Platform" and "Supervisor-Level
-Platform" chapters of this document.
+This document is the RISC-V Operating System Platform Specification
+(OSPS).  This specification defines the hardware and firmware
+required to be able to install and use one or more operating systems on a
+platform built around the RISC-V Instruction Set Architecture (ISA).
+The intent is to set out the constraints necessary
+for a hardware platform so that an operating system can be assured
+it is compatible with that platform, if the platform is in compliance
+with this specification.
 
-### Versioning
+This specification also sets out the constraints on the
+RISCV-V Instruction Set Architecture (ISA) -- at all privilege 
+levels -- that are needed to provide a consistent and predictable
+environment for running these operating systems.
+
+The OSPS sets out the constraints on platforms as _use cases_.  Each
+use case specifies a particular combination of hardware platform
+and operating system to be used in specific environments.  For example,
+the general purpose computing use case specifies the expected hardware
+and firmware for systems such as commercial laptop, desktop or server
+computers; these use cases generally match acknowledged market
+segments possible for RISC-V based platforms.
+
+In order for a platform to be compliant with OSPS, it must be compliant
+with a specific use case.  That may allow it to be compliant with other
+use cases, but it is recommended that a platform have one specific target
+to start from.  For any given use case, all mandatory requirement must be
+implemented in the platform.  Optional requirements may or may not be
+implemented on any given platform; if such a requirement
+could cause the platform to behave differently when not implemented,
+a fallback position is specified that must be implemented.
+
+Over time, it is expected that each use case will see a series of
+revisions.  Under ideal circumstances, a platform will be compliant
+with the most recent version of any use case specification.  When a
+platform indicates it is compliant with the OSPS, it should specify
+a use case *and* a specific revision of that use case.
+
+// terms and definitions
+include::terms.adoc[]
+
+// bibliography
+include::references.adoc[]
+
+WARNING: what follows are original notes that will be replaced over time.
 
 ## User-Level Platform
 

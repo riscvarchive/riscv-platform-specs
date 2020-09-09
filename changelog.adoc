@@ -7,4 +7,5 @@
 ** Break content down into include files; more structure, but easier
    to make changes to down the line.
 ** Initial outline of material needed.
+** Add in terms and references sections.
 ** Complete rewrite of existing material.
