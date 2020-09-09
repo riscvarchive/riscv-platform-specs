@@ -8,6 +8,9 @@
 :sectnums:
 :toc: macro
 
+// Table of Contents
+toc::[]
+
 // Overall document copyrights and licensing
 include::licensing.adoc[]
 
@@ -16,7 +19,6 @@ include::contributors.adoc[]
 
 // Changelog
 include::changelog.adoc[]
-
 
 ## Introduction
 
