@@ -5,7 +5,7 @@
 ASCIIDOCTOR = asciidoctor
 OSPS_SPEC = riscv-osps
 PANDOC = pandoc
-PARTS = 
+PARTS = licensing.adoc contributors.adoc changelog.adoc
 
 # Build the OSPS
 all: $(OSPS_SPEC).md $(OSPS_SPEC).pdf $(OSPS_SPEC).html

@@ -1,0 +1,10 @@
+[preface]
+## Change Log
+
+### For v0.1
+* 2020-09-09:
+** Initial changes for structure and future maintenance.
+** Break content down into include files; more structure, but easier
+   to make changes to down the line.
+** Initial outline of material needed.
+** Complete rewrite of existing material.

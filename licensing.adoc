@@ -1,0 +1,15 @@
+[preface]
+## Copyright and License Information
+
+This RISC-V Operating System Platform Specification (OSPS) is
+
+[%hardbreaks]
+(C) 2017 Krste Asanovic <krste@sifive.com>
+(C) 2017-2019 Palmer Dabbelt <palmer@sifive.com>
+(C) 2017 Andrew Waterman <andrew@sifive.com>
+(C) 2020 Al Stone <ahs3@redhat.com>
+
+The OSPS is licensed under the Creative Commons Attribution 4.0 International
+License (CC-BY 4.0).  The full license text is available at
+https://creativecommons.org/licenses/by/4.0/.
+

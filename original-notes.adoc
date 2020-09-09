@@ -1,22 +1,19 @@
-# RISC-V Operating System Platform Specification
-:author: RISC-V Platform Specification Task Group
-:email: tech-unixplatformspec@lists.riscv.org
-:revnumber: 0.1-draft1
-:revdate: September 2020
-:revremark: Initial draft.
-:doctype: book
-:sectnums:
-:toc: macro
+WARNING: all material from this section on was part of the
+initial notes made for this specification and may or may not
+end up being included in the final document.
 
-// Overall document copyrights and licensing
-include::licensing.adoc[]
+## Copyright and license information
 
-// Document contributors
-include::contributors.adoc[]
+This RISC-V Unix-class platform specification is
 
-// Changelog
-include::changelog.adoc[]
+[%hardbreaks]
+(C) 2017 Krste Asanovic <krste@sifive.com>
+(C) 2017-2019 Palmer Dabbelt <palmer@sifive.com>
+(C) 2017 Andrew Waterman <andrew@sifive.com>
 
+It is licensed under the Creative Commons Attribution 4.0 International
+License (CC-BY 4.0).  The full license text is available at
+https://creativecommons.org/licenses/by/4.0/.
 
 ## Introduction
 
