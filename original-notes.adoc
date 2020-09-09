@@ -1,34 +1,8 @@
 WARNING: all material from this section on was part of the
 initial notes made for this specification and may or may not
-end up being included in the final document.
-
-## Copyright and license information
-
-This RISC-V Unix-class platform specification is
-
-[%hardbreaks]
-(C) 2017 Krste Asanovic <krste@sifive.com>
-(C) 2017-2019 Palmer Dabbelt <palmer@sifive.com>
-(C) 2017 Andrew Waterman <andrew@sifive.com>
-
-It is licensed under the Creative Commons Attribution 4.0 International
-License (CC-BY 4.0).  The full license text is available at
-https://creativecommons.org/licenses/by/4.0/.
-
-## Introduction
-
-This document contains the RISC-V UNIX-class platform specification.  This
-specification defines additional restrictions on implementations in order to
-allow software to be compatible between these implementations.  These
-restrictions are enumerated along with the least privileged level to which they
-apply.  Implementations can be compatible with a subset of this specification,
-but that subset must include all restrictions placed on a privilege level as
-well as all less-privileged levels.  For example: implementations can claim to
-be compatible with the "RISC-V Supervisor-Level UNIX Platform" if they are
-compatible with the entire "User-Level Platform" and "Supervisor-Level
-Platform" chapters of this document.
-
-### Versioning
+end up being included in the final document.  It is retained
+in this file until it is no longer needed -- it has either
+been incorporated or removed from the OSPS being developed.
 
 ## User-Level Platform
 
