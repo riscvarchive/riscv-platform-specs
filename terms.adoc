@@ -6,9 +6,13 @@ NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and
 
 .Glossary
 [horizontal]
+H-mode:: Hypervisor Mode in the RISC-V ISA, less privileged than M-mode
 ISA:: Instruction Set Architecture
+M-mode:: Machine Mode (most privileged) in the RISC-V ISA
 Mandatory:: A _mandatory_ requirement MUST be implemented.
 OSPS:: Operating System Platform Specification
 Platform:: A collection of hardware and firmware operating as a single unit;
    examples are a single-board computer, or a tablet, or a server.
+S-mode:: Supervisor Mode in the RISC-V ISA, less privileged than H-mode
 Suggested:: A _suggested_ requirement is one that is OPTIONAL.
+U-mode:: User Mode (least privileged) in the RISC-V ISA
