@@ -1,9 +1,9 @@
 # RISC-V Operating System Platform Specification
 :author: RISC-V Platform Specification Task Group
 :email: tech-unixplatformspec@lists.riscv.org
-:revnumber: 0.1-draft1
+:revnumber: 0.1.0-draft
 :revdate: September 2020
-:revremark: Initial draft.
+:revremark: Initial version.
 :doctype: book
 :sectnums:
 :toc: macro
@@ -48,7 +48,7 @@ segments possible for RISC-V based platforms.
 In order for a platform to be compliant with OSPS, it must be compliant
 with a specific use case.  That may allow it to be compliant with other
 use cases, but it is recommended that a platform have one specific target
-to start from.  For any given use case, all mandatory requirement must be
+to start from.  For any given use case, all mandatory requirements must be
 implemented in the platform.  Optional requirements may or may not be
 implemented on any given platform; if such a requirement
 could cause the platform to behave differently when not implemented,
@@ -62,6 +62,141 @@ a use case *and* a specific revision of that use case.
 
 // terms and definitions
 include::terms.adoc[]
+
+## Use Cases
+We define these use cases:
+
+* General purpose computing, where the hardware and software of a system
+are expected to change over time, and configurations of hardware and software
+can be highly variable.
+* Appliance computing, where the hardware configuration is essentially
+fixed, but software is expected to change.
+* Special purpose computing, where hardware and software typically do not
+change once shipped from the factory.
+
+### Common Requirements
+This section is currently a placeholder.
+
+NOTE: As requirements for individual use cases are uncovered, it is
+expected that some will end up being common to all cases.  If so, they
+should be moved to this section.
+
+#### Revision History
+Common Requirements Current Revision: *0* [September 2020]
+
+### General Purpose Computing
+This use case sets out the requirements for what is commonly known
+as _general purpose computing_.  For platforms of this type, it is expected
+that the user will be able to add or remove cards such as PCIe or SATA, 
+add or remove devices such as disks, monitors or graphics cards, and will
+be able to choose from one or more available operating systems.  Commercial
+desktop, laptop or server systems are primary examples.
+
+Operating systems for this use case include at a minimum the members
+of the Linux families (Fedora, Debian, Red Hat, SUSE, and similar).  If
+a platform is compliant with the requirements of this use case, it should
+be possible to easily install and maintain any of the Linux distributions
+without modification.
+
+It should also be possible to use any of the other Unix-based operating
+systems and distributions such as those in the BSD family, as well as
+commercial operating systems such as Microsoft Windows.
+
+The stress here is on the idea of _general_ computing, and hence most of
+the readily available operating systems designed for that environment.  The
+goal is to be able to seamlessly replace existing systems based on other
+ISAs.
+
+#### Revision History
+General Purpose Computing Current Revision: *0* [September 2020]
+
+#### RISC-V ISA Requirements
+##### Machine Mode
+##### Hypervisor Mode
+##### Supervisor Mode
+##### User Mode
+
+#### Memory Requirements
+##### Addressable Memory
+##### Virtual Memory
+##### Memory Maps
+
+#### Required Hardware Components
+##### Interrupt Controller
+##### MMU
+##### DMA
+##### Memory-mapped I/O
+##### IOMMU (for virtualization)
+##### Power Management
+##### CPU Frequency Control
+##### Thermal Management
+
+#### Firmware Requirements
+##### SMBIOS/DMI
+##### IPMI
+##### UEFI
+##### ACPI
+##### Updating Firmware
+
+#### Boot Sequence Requirements
+
+#### Boot Protocol Requirements
+
+
+### Appliance Computing
+This use case sets out the requirements for _appliance computing_.
+For platforms of this type, it is expected that the user will *NOT*
+be able to add or remove cards or devices, with the possible exception
+of adding memory devices such as SD cards.  The hardware in such a
+system is essentially fixed for the life of the device.  Primary
+examples are devices such as tablets, smart phones, automobile systems,
+or even some refrigerators.
+
+The operating system and applications on such appliances may change
+over time.  However, the owner of the device will not be able to
+arbitrarily change the operating system or firmware installed (unless
+they are _really_ clever); in general, this would be fairly strictly
+controlled by the device manufacturer.
+
+Operating systems for this use case could include members of the Linux
+families (Fedora, Debian, Red Hat, SUSE, and similar).  When a platform
+is compliant with the requirements of this use case, it should be
+possible to install and maintain the Linux distributions, but modification
+or specialization of the OS or firmware may be required.
+
+It should also be possible to use any of the other Unix-based operating
+systems and distributions such as those in the BSD family, as well as
+commercial operating systems such as Microsoft Windows.  Again, some
+modification or specialization may be required.
+
+Real-Time Operating Systems (RTOSs) will play a role here as well,
+depending on how the platform is being used.  Whether or not there
+is a standard amenable to all RTOSs is TBD.
+
+The stress here is on the idea of _appliances_ -- devices meant to
+meet a specific need, with flexible levels of functionality, but
+running on a consistent and unchanging set of hardware.
+
+NOTE: this is currently a placeholder.  Such systems exist, but the
+level of standardization required is not as clear as in the case of
+general purpose computing platforms.
+
+#### Revision History
+Appliance Computing Current Revision: *0* [September 2020]
+
+### Special Purpose Computing
+This use case sets out the requirements for _special purpose computing_.
+Platforms of this class typically have fixed hardware, software and firmware
+over the life of the product.  The device should be updatable to
+handle security issues or product flaws.  Examples might be simple
+remote sensors, light bulbs, toasters, or other small household appliance
+controls.
+
+NOTE: this is currently a placeholder.  It is not clear there exists
+a set of standards for such devices, or even that such a set should exist.
+
+#### Revision History
+Special Purpose Computing Current Revision: *0* [September 2020]
 
 // bibliography
 include::references.adoc[]
