@@ -7,6 +7,7 @@ NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and
 .Glossary
 [horizontal]
 H-mode:: Hypervisor Mode in the RISC-V ISA, less privileged than M-mode
+hart:: Hardware Thread
 ISA:: Instruction Set Architecture
 M-mode:: Machine Mode (most privileged) in the RISC-V ISA
 Mandatory:: A _mandatory_ requirement MUST be implemented.

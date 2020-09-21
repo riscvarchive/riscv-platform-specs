@@ -114,7 +114,41 @@ General Purpose Computing Current Revision: *0* [September 2020]
 ##### Machine Mode
 ##### Hypervisor Mode
 ##### Supervisor Mode
+1. Supervisor-mode environments must implement at least version 20190608
+   of the RISC-V Instruction Set Manual Volume II: Privileged
+   Specification <<ISAU>>.
+2. Supervisor-mode environments must implement RV64GC.
+3. Supervisor-mode environments must implement the Sv39 page-based
+   virtual-memory scheme.   Systems that support Sv48 must support
+   Sv39, systems that support Sv57 must support Sv48, and so forth.
+4. Unless otherwise specified by a given I/O device, I/O regions are at
+   least point-to-point strongly ordered.  All devices attached to a
+   given PCIe root complex are on the same ordered channel (numbered 2
+   or above), though different root complexes might not be on the same
+   ordering channel.
+5. On RV64I-based Unix-class systems the negative virtual addresses are
+   reserved for the kernel.
+6. External devices (DMA engines, the debug unit, non RISC-V cores, etc.)
+   that are visible to RISC-V harts must appear as coherent agents, just
+   like any RISC-V hart would.  If additional ordering constraints are
+   necessary for a device to function, those will be provided by a
+   device-specific mechanism.
+
 ##### User Mode
+1. User-mode environments must implement at least version 20191213
+   of the RISC-V Instruction Set Manual Volume I: Unprivileged
+   Specification <<ISAP>>.
+2. User-mode programs may not execute the `fence.i` instruction.
+3. User-mode environments may provide additional ISA extensions, but if those
+   extensions add user-visible state they must be initially disabled.
+4. Within main-memory regions, aligned instruction fetch must be atomic,
+   up to the smaller of ILEN and XLEN bits.  In particular, if an aligned
+   4-byte word is stored with the `sw` instruction, then any processor
+   attempts to execute that word, the processor either fetches the newly
+   stored word, or some previous value stored to that location.  That is,
+   the fetched instruction is not an unpredictable value, nor is it a
+   hybrid of the bytes of the old and new values.
+
 
 #### Memory Requirements
 ##### Addressable Memory
