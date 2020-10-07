@@ -1,0 +1,23 @@
+// SPDX-License-Indentifer: CC-BY-4.0
+//
+// user-level.adoc: original User Level Platform content
+//
+// This is material from the very first draft of the spec.
+//
+
+## User-Level Platform
+
+* User-mode environments must implement at least version 2.2 of the RISC-V User
+  ISA specification, which can be found at
+  https://github.com/riscv/riscv-isa-manual/blob/master/release/riscv-spec-v2.2.pdf.  
+* User-mode programs may not execute the `fence.i` instruction.
+* User-mode environments may provide additional ISA extensions, but if those
+  extensions add user-visible state they must be initially disabled.
+* Within main-memory regions, aligned instruction fetch must be atomic, up to
+  the smaller of ILEN and XLEN bits.  In particular, if an aligned 4-byte word
+  is stored with the `sw` instruction, then any processor attempts to execute
+  that word, the processor either fetches the newly stored word, or some previous
+  value stored to that location.  (That is, the fetched instruction is not an
+  unpredictable value, nor is it a hybrid of the bytes of the old and new
+  values.)
+
