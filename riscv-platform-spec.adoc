@@ -33,13 +33,11 @@ include::user-level.adoc[]
 include::supervisor-level.adoc[]
 
 // Machine-Level Platform (NB: content from very first version)
+// This is the only line in that original content.
 ## Machine-Level Platform
 
-## Profiles
-
-### Portable UNIX Platform Profile
-
-* Supervisor-mode environments must implement RV64GC.
+// Profiles: (NB: content from very first version)
+include::profiles.adoc[]
 
 // acknowledge all of the contributors
 include::contributors.adoc[]
