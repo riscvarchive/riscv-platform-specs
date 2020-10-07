@@ -20,6 +20,9 @@ toc::[]
 // document copyright and licensing information
 include::licensing.adoc[]
 
+// changelog for the document
+include::changelog.adoc[]
+
 ## Introduction
 
 This document contains the RISC-V UNIX-class platform specification.  This

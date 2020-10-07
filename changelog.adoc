@@ -1,0 +1,14 @@
+// SPDX-License-Indentifer: CC-BY-4.0
+//
+// changelog.adoc: change log for the document
+//
+// Provide a list of changes made to each revision of the document.
+//
+[preface]
+## Change Log
+
+### Version 0.1-rc0
+* 2020-10-07:
+** Initial changes for structure and future maintenance.
+** Break content down into include files; more structure, but easier
+   to make changes down the line.
