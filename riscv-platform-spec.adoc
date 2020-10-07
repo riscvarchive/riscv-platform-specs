@@ -17,18 +17,8 @@
 // table of contents
 toc::[]
 
-## Copyright and license information
-
-This RISC-V Unix-class platform specification is
-
-[%hardbreaks]
-(C) 2017 Krste Asanovic <krste@sifive.com>
-(C) 2017-2019 Palmer Dabbelt <palmer@sifive.com>
-(C) 2017 Andrew Waterman <andrew@sifive.com>
-
-It is licensed under the Creative Commons Attribution 4.0 International
-License (CC-BY 4.0).  The full license text is available at
-https://creativecommons.org/licenses/by/4.0/.
+// document copyright and licensing information
+include::licensing.adoc[]
 
 ## Introduction
 
