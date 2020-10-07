@@ -14,6 +14,9 @@
 :sectnums:
 :toc: macro
 
+// table of contents
+toc::[]
+
 ## Copyright and license information
 
 This RISC-V Unix-class platform specification is
