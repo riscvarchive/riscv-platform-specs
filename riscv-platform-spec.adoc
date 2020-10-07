@@ -1,4 +1,18 @@
-# RISC-V UNIX-Class Platform Specification
+// SPDX-License-Identifier: CC-BY-4.0
+//
+// riscv-platform-spec.adoc: main file for the specification
+//
+// This file provides the primary structure and formatting for
+// the overal Profile and Platform Specification.
+//
+# RISC-V Profile and Platform Specification
+:author: RISC-V Platform Specification Task Group
+:email: tech-unixplatformspec@lists.riscv.org
+:revnumber: 0.1-rc0
+:revdate: October 2020
+:doctype: book
+:sectnums:
+:toc: macro
 
 ## Copyright and license information
 
