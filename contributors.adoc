@@ -1,0 +1,31 @@
+// SPDX-License-Indentifer: CC-BY-4.0
+//
+// contributors.adoc: acknowledge document contributors
+//
+// Provide a simple acknowledgement to all who have contributed to the
+// specifiction.
+//
+[appendix]
+## Contributors
+
+All of these individuals either wrote portions of this specification or
+contributed ideas and suggestions in some way:
+
+Krste Asanovic,
+Allen Baum,
+Palmer Dabbelt,
+Greg Favor,
+Mark Himelstein,
+David Kruckmeyer,
+Anup Patel,
+Atish Patra,
+Al Stone,
+Arun Thomas,
+Philipp Tomsich,
+Paul Walmsley,
+Andrew Waterman.
+
+If you have contributed and are not listed, do let us know.  We haven't
+forgotten you, but we may have forgotten to edit this list.
+
+Thank you.

@@ -1,0 +1,21 @@
+// SPDX-License-Indentifer: CC-BY-4.0
+//
+// licensing.adoc: licensing information
+//
+// Copyright and licensing information for the specification.
+//
+[preface]
+## Copyright and License Information
+
+This RISC-V Profile and Platform Specification (P2S) is
+
+[%hardbreaks]
+(C) 2017 Krste Asanovic <krste@sifive.com>
+(C) 2017-2019 Palmer Dabbelt <palmer@sifive.com>
+(C) 2017 Andrew Waterman <andrew@sifive.com>
+(C) 2020 Al Stone <ahs3@redhat.com>
+
+The P2S is licensed under the Creative Commons Attribution 4.0 International
+License (CC-BY 4.0).  The full license text is available at
+https://creativecommons.org/licenses/by/4.0/.
+
