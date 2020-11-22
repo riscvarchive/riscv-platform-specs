@@ -1,23 +1,48 @@
-// SPDX-License-Indentifer: CC-BY-4.0
+// SPDX-License-Identifier: CC-BY-4.0
 //
-// introduction.adoc: describe the purpose of the document
+// introduction.adoc: provide an introduction to the document
 //
-// Provide a description of the overall intent and purpose of this
-// specifiction.
+// Provide a basic introduction to the overall document.
 //
 
-## Introduction
+# Introduction
 
-This document contains the RISC-V UNIX-class platform specification.  This
-specification defines additional restrictions on implementations in order to
-allow software to be compatible between these implementations.  These
-restrictions are enumerated along with the least privileged level to which they
-apply.  Implementations can be compatible with a subset of this specification,
-but that subset must include all restrictions placed on a privilege level as
-well as all less-privileged levels.  For example: implementations can claim to
-be compatible with the "RISC-V Supervisor-Level UNIX Platform" if they are
-compatible with the entire "User-Level Platform" and "Supervisor-Level
-Platform" chapters of this document.
+This document is the RISC-V Profiles and Platform Specification (RVP2S).
 
-### Versioning
+This specification defines the hardware and firmware required to be able
+to install and use one or more operating environments (OEs) on a computing
+system built around the RISC-V Instruction Set Architecture (ISA).  The
+intent is to capture the constraints necessary for hardware so that an
+operating environment can be assured it is compatible with that hardware,
+if it is in compliance with the specification.
 
+For the purposes of this specification an _operating environment_ can
+range from a single application running on a bare metal system to a full
+scale server operating system (OS) running a Linux distribution on a
+commercial off-the shelf (COTS) system.
+
+Constraints on the hardware and firmware comprising part of a platform
+are key to this specification.  However, these constraints are only meant
+to define a baseline set of functionality.  Vendors may add whatever
+advanced functionality they wish beyond that, as long as it is discoverable
+in some way.  For example, any given platform may need an MMU or an IRQ
+controller to boot, but may not require an I2C bus; the vendor can of course
+add that bus if they wish, but it might not be part of the required baseline
+for that platform.
+
+This specification also sets out any necessary constraints on the RISC-V
+Instruction Set Architecture (ISA) -- at all privilege levels -- that are
+required to provide a consistent and predictable environment for running
+operating systems.
+
+The intent is to provide only the constraints necessary, and not to restrict
+creativity.
+
+The structure of the document is straightforward.  First, basic terminology
+is defined, in particular the terms _profile_ and _platform_ that form the
+basis for the structure of the rest of the specification.  Second, the
+currently defined profiles are described, setting out the use of the RISC-V
+architecture in a processor.  Third, the current defined platforms are
+described with specific hardware, firmware, and software requirements.
+And finally, checklists are provided in the appendices to make it easier
+to determine if a new system meets a given platform specification.
