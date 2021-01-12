@@ -12,3 +12,5 @@
 ** Initial changes for structure and future maintenance.
 ** Break content down into include files; more structure, but easier
    to make changes down the line.
+* 2021-01-12:
+** Provide an updated introduction.
