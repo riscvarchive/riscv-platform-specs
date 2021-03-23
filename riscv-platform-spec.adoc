@@ -5,11 +5,11 @@
 // This file provides the primary structure and formatting for
 // the overal Profile and Platform Specification.
 //
-# RISC-V Profile and Platform Specification
+= RISC-V Platform Specification
 :author: RISC-V Platform Specification Task Group
 :email: tech-unixplatformspec@lists.riscv.org
-:revnumber: 0.1-rc0
-:revdate: October 2020
+:revnumber: 0.2-rc0
+:revdate: Mar 2021 
 :doctype: book
 :sectnums:
 :toc: macro
@@ -26,18 +26,104 @@ include::changelog.adoc[]
 // Introduction: describe the intent and purpose of the document
 include::introduction.adoc[]
 
-// User-Level Platform (NB: content from very first version)
-include::user-level.adoc[]
-
-// Supervisor-Level Platform (NB: content from very first version)
-include::supervisor-level.adoc[]
-
-// Machine-Level Platform (NB: content from very first version)
-// This is the only line in that original content.
-## Machine-Level Platform
-
 // Profiles: (NB: content from very first version)
 include::profiles.adoc[]
+
+// Linux-2022 Platform
+== Linux-2022 Platform
+
+// Base feature set for Linux-2022 Platform
+=== Base
+==== Architecture
+* Profile - RVA22
+** Cache Management
+** PMU 
+** ASID 
+* Debug
+
+==== Memory Map
+* Virtual Memory
+* sv39/sv48/sv57
+* Start Address
+
+==== Interrupt Controller
+* AIA
+* PLIC + CLINT
+* Interrupt Assignments
+
+==== System Peripherals
+* UART/Serial Console
+* Clocks
+* Timers
+* Watchdog Timers
+
+==== Boot Process
+* Firmware
+* Boot-Loader
+* Discovery Mechanisms
+
+==== Runtime services
+* SBI
+* UEFI
+
+// Server extension for Linux-2022 Platform
+=== Server Extension
+==== Boot Process
+* Firmware
+* Boot-Loader
+* Discovery Mechanisms
+
+==== Runtime services
+* SBI
+* UEFI
+
+==== System Peripherals
+* PCI-E
+
+==== Secure Boot
+* TEE
+* Root of Trust
+* E-Fuse
+* PKA/TRNG
+
+==== Virtualization/Hypervisor
+* H-extension
+* IOMMU
+
+==== RAS
+
+// Embedded-2022 Platform
+== Embedded-2022
+
+// Base feature set for Embedded-2022 Platform
+=== Base
+==== Architecture
+* Profile - RVM22
+* Debug
+
+==== Memory Map
+* Start Address
+
+==== Interrupt Controller
+* CLIC/PLIC
+
+==== System Peripherals
+* UART/Serial Console
+* Clocks
+* Timers
+
+==== Boot Process
+* Firmware
+* Boot-Loader
+* Discovery Mechanisms
+
+// PMP extension for Embedded-2022 Platform
+=== PMP Extension
+==== PMP Regions
+
+// RVM-SIS extension for Embedded-2022 Platform
+=== RVM-SIS Extension
+==== HAL
 
 // acknowledge all of the contributors
 include::contributors.adoc[]

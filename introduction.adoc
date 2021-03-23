@@ -10,14 +10,5 @@
 
 This document contains the RISC-V UNIX-class platform specification.  This
 specification defines additional restrictions on implementations in order to
-allow software to be compatible between these implementations.  These
-restrictions are enumerated along with the least privileged level to which they
-apply.  Implementations can be compatible with a subset of this specification,
-but that subset must include all restrictions placed on a privilege level as
-well as all less-privileged levels.  For example: implementations can claim to
-be compatible with the "RISC-V Supervisor-Level UNIX Platform" if they are
-compatible with the entire "User-Level Platform" and "Supervisor-Level
-Platform" chapters of this document.
-
-### Versioning
-
+allow software to be compatible between these implementations.
+The scope and definitions used in this document are defined in the plaform profiles specification.

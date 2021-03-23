@@ -7,7 +7,4 @@
 
 ## Profiles
 
-### Portable UNIX Platform Profile
-
-* Supervisor-mode environments must implement RV64GC.
-
+* Portable UNIX Platform Profile
