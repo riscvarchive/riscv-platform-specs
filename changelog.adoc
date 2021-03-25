@@ -8,6 +8,8 @@
 ## Change Log
 
 ### version 0.2-rc0
+* 2021-03-25:
+** Initial commit of Embedded-2022 specification
 * 2021-03-16:
 ** Added 2022 platforms
 ** Added individual sections and sub-sections for the content

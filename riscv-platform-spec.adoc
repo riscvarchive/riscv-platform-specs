@@ -95,36 +95,91 @@ include::profiles.adoc[]
 // Embedded-2022 Platform
 == Embedded-2022
 
-// Base feature set for Embedded-2022 Platform
+=== Scope
+The Embedded-2022 specification aims to apply to a range of embedded platforms.
+In this case embedded platforms range from hand coded bare metal assembly
+all the way to to embedded operating systems such as
+https://www.zephyrproject.org[Zephyr] and embedded Linux.
+
+This specification has two competing interests. On one hand embedded software
+will be easier to write and port if all the embedded hardware is similar. On
+the other hand vendors want to differentiate their product and reuse existing
+IP and SoC designs.
+
+Due to this, the Embedded-2022 specification has both required and recommended
+components. All required components must be met in order to meet this
+specification.
+It's strongly encouraged that all recommended components are met as well,
+although they do not have to in order to meet the specification.
+
 === Base
 ==== Architecture
-* Profile - RVM22
-* Debug
+The Embedded-2022 specification depends on the RVM22 specification and all
+requirements from RVM22 must be met.
 
-==== Memory Map
-* Start Address
+Any RISC-V system that uses at least RV32/64G can meet the Embedded-2022
+specification.
 
 ==== Interrupt Controller
-* CLIC/PLIC
+Embedded systems are recommended to use a spec compliant
+https://github.com/riscv/riscv-plic-spec[PLIC], a spec compliant
+https://github.com/riscv/riscv-fast-interrupt/blob/master/clic.adoc[CLIC]
+or both a CLIC and and PLIC.
 
-==== System Peripherals
-* UART/Serial Console
-* Clocks
-* Timers
+If using just a PLIC the system must continue to use the original basic
+`xsip`/`xtip`/`xeip` signals in the `xip` register to indicate pending
+interrupts.
+If using the CLIC then both the original basic and CLIC modes of interrupts
+must be supported.
 
-==== Boot Process
-* Firmware
-* Boot-Loader
-* Discovery Mechanisms
+Embedded systems cannot use a non-compliant interrupt controller and still
+call it a PLIC or CLIC.
+
+==== Machine Timer
+The RISC-V machine timer (controlled via `mtime` and `mtimecmp`) must be
+implemented. The two registers must be memory mapped as required by the RISC-V
+specification.
+
+The Embedded-2022 specification requires that the registers be mapped
+adjacent to each other with the `mtime` region at the lower address.
+
+The starting address of this region can be located anywhere in
+memory, including inside other peripherals, as long as the start address is
+4 byte aligned.
+
+An example of the memory layout for a 32-bit system with a single hart is below
+
+-------------------------
+=========================
+| 0x00 |  mtime low     |
+| 0x04 |  mtime high    |
+| 0x08 |  mtimecmp low  |
+| 0x0C |  mtimecmp high |
+=========================
+-------------------------
+
+and for a 64-bit system with 2 harts
+
+---------------------------
+===========================
+| 0x00 |  mtime           |
+| 0x08 |  mtimecmp hart 1 |
+| 0x10 |  mtimecmp hart 2 |
+===========================
+---------------------------
+
+==== Memory Map
+It is recommended that main memory and loadable code (not ROM) start at
+address `0x8000_0000`.
 
 // PMP extension for Embedded-2022 Platform
-=== PMP Extension
-==== PMP Regions
+=== Physical Memory Protection (PMP) Extension
+It is recommended that any systems that implement more then just machine mode
+also implement PMP support.
 
-// RVM-SIS extension for Embedded-2022 Platform
-=== RVM-SIS Extension
-==== HAL
+When PMP is supported it is recommended to include at least 4 regions, although
+if possible more should be supported to allow more flexibility. Hardware
+implementations should aim for supporting at least 16 PMP regions.
 
 // acknowledge all of the contributors
 include::contributors.adoc[]
-
