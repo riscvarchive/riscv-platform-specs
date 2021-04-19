@@ -11,4 +11,5 @@
 This document contains the RISC-V UNIX-class platform specification.  This
 specification defines additional restrictions on implementations in order to
 allow software to be compatible between these implementations.
-The scope and definitions used in this document are defined in the plaform profiles specification.
+The scope and definitions used in this document are defined in the platform
+policy specification.
