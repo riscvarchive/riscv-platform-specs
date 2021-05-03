@@ -3,7 +3,7 @@
 // riscv-platform-spec.adoc: main file for the specification
 //
 // This file provides the primary structure and formatting for
-// the overal Profile and Platform Specification.
+// the overall Profile and Platform Specification.
 //
 = RISC-V Platform Specification
 :author: RISC-V Platform Specification Task Group

@@ -1,9 +1,9 @@
-// SPDX-License-Indentifer: CC-BY-4.0
+// SPDX-License-Identifier: CC-BY-4.0
 //
 // contributors.adoc: acknowledge document contributors
 //
 // Provide a simple acknowledgement to all who have contributed to the
-// specifiction.
+// specification.
 //
 [appendix]
 ## Contributors
