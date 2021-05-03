@@ -9,10 +9,12 @@
 :author: RISC-V Platform Specification Task Group
 :email: tech-unixplatformspec@lists.riscv.org
 :revnumber: 0.2-rc0
-:revdate: Mar 2021 
+:revdate: Apr 2021
 :doctype: book
 :sectnums:
+:sectnumlevels: 5
 :toc: macro
+:toclevels: 5
 
 // table of contents
 toc::[]
@@ -68,14 +70,180 @@ include::profiles.adoc[]
 
 // Server extension for Linux-2022 Platform
 === Server Extension
-==== Boot Process
-* Firmware
-* Boot-Loader
-* Discovery Mechanisms
+The server extension specifies additional  requirements apart from base
+requirements for RV64I based server class platforms.
 
-==== Runtime services
-* SBI
-* UEFI
+The platforms which conform to server extension are required to implement
+
+- Advanced Platform-Level Interrupt Controller (APLIC). [*Dependency:
+ AIA spec should be ratified*]
+- Incoming MSI Controller (IMSIC) [*Dependency: AIA spec should be
+ratified*]
+
+- RISC-V Hypervisor-level Instruction-Set Extensions. [*Dependency:
+Spec should be ratified*]
+- Incoming MSI Controller (IMSIC) with at least 1 guest interrupt
+file for each HART ?? (*TBD*)
+- IOMMU with support for memory resident interrupt files ?? (*TBD*)
+
+==== Boot and Runtime Requirements
+=====  Firmware
+The boot and system firmware for the RV64I server platforms required to be
+based on UEFI as per the base specification with some additional
+requirements as mentioned below.
+
+====== PCIe support
+The platforms are required to implement *EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL* and other
+protocols as specified in Chapter 14 of UEFI specification version 2.9.
+
+====== UEFI configuration tables
+The platforms are required to provide following tables.
+
+* *EFI_ACPI_20_TABLE_GUID* ACPI configuration table which is at version 6.4+ or
+newer with HW-Reduced ACPI model.
+* *SMBIOS3_TABLE_GUID* SMBIOS table which conforms to version 3.4 or later.
+
+====== UEFI Protocol support
+The UEFI protocols listed below are required to be implemented in addition to
+the base spec requirements.
+
+.Required UEFI Protocols
+[cols="3,1,1", width=95%, align="center", options="header"]
+|===
+|Protocol                              | UEFI 2.9 $ | Note
+|EFI_LOAD_FILE2_PROTOCOL               | 13.2       |
+|EFI_DECOMPRESS_PROTOCOL               | 19.5       |
+|===
+
+===== Hardware Discovery Mechanisms
+
+====== ACPI
+
+For RV64I server platforms, ACPI tables are required to be passed via UEFI
+to the operating system for the purpose of discovery and the configuration of
+the hardware. This section defines the required ACPI tables and objects. All
+other ACPI tables for RISC-V can be implemented as needed adhering to the ACPI
+spec version 6.4+(RISC-V support when added).
+
+In ACPI namespace, processors are required to be defined under the System Bus
+*(\_SB)* name space.
+
+The required ACPI System Description Tables, Device Objects and Methods are
+listed below.
+
+.Required ACPI System Description Tables
+[cols="3,1,2", width=95%, align="center", options="header"]
+|===
+|ACPI Table                                    |ACPI 6.4+ $|Note
+|Root System Description Pointer (RSDP)        |5.2.5      |
+|Extended System Description Table (XSDT)      |5.2.8      |
+|Fixed ACPI Description Table (FADT)           |5.2.9      |
+|Differentiated System Description Table (DSDT)|5.2.11.1   |
+|Multiple APIC Description Table (MADT)        |5.2.12     |*TBD*: Need ECR
+                                                            to add
+                                                            APLIC & IMSIC
+                                                            (AIA) to MADT
+|RISC-V Timer Description Table                |New        |*TBD*: _DSD to
+                                                            communicate
+                                                            timebase-frequency?
+|Processor Properties Topology Table (PPTT)    |5.2.29     |CPU/Cache topology
+                                                            information
+|Memory-mapped ConFiGuration space (MCFG)      |PCI-SIG    |Required for PCIe
+                                                            support
+|Debug Port Table 2 (DBG2)                     |Microsoft  |*TBD*: 16550D?
+|Serial Port Console Redirection (SPCR)        |Microsoft  |*TBD*: 16550D?
+|System Resource Affinity Table (SRAT)         |5.2.16     |Required if the
+                                                            platform supports NUMA
+|System Locality Information Table (SLIT)      |5.2.17     |Required if the
+                                                            platform supports NUMA
+|IOMMU Information Table                       |           |*TBD*: New IOMMU
+                                                            table need to be
+                                                            defined (like IVRS)
+|Software Delegated Exception Interface (SDEI) |SDEI       |*TBD*: New table
+                                                            and SBI extension
+                                                            also may be required
+|PMU event mapping table?                      |New        |*TBD*: New table
+                                                            required
+|===
+
+
+.Required Device Objects and Methods
+[cols="1,2,3", width=95%, align="center", options="header"]
+|===
+|Object/Method | ACPI 6.4+ $ | Note
+|_AEI          | 5.6.5.2     | Required for GPIO-signalled events.
+|_EVT          | 5.6.5.3     | Required for interrupt-signalled events.
+|_ADR          | 6.1.1       | Required for PCI
+|_HID          | 6.1.5       |
+|_UID          | 6.1.12      |
+|_CRS          | 6.2.2       |
+|_CCA          | 6.2.17      | Required for DMA capable devices
+|_STA          | 6.3.7/7.2.4 | Device status
+|===
+
+====== SMBIOS
+
+The System Management BIOS (SMBIOS) table is required for the platform
+conforming to server extension. The SMBIOS records provide basic hardware and
+firmware configuration information used widely by the platform management
+applications.
+
+The SMBIOS table is identified using *SMBIOS3_TABLE_GUID* in UEFI configuration
+table. The memory type used for the SMBIOS table is required to be of type
+*EfiRuntimeServicesData*.
+
+In addition to the conformance guidelines as mentioned in *ANNEX A / 6.2* of
+the SMBIOS specification 3.4.0, below additional structures are required.
+
+.Required SMBIOS structures
+[cols="4,1,2", width=95%, align="center", options="header"]
+|===
+|Structure Type                                 | SMBIOS 3.4.0 $ | Note
+|Management Controller Host Interface (Type 42) | 7.43           | Required for
+Redfish Host Interface.
+|Processor Additional Information (Type 44)     | 7.45           | This
+structure provides the additional information of RISC-V processor
+characteristics and HART hardware features discovered during the firmware boot
+process.
+|===
+
+===== Boot-Loader
+*TBD*
+
+===== Runtime services
+====== SBI
+*TBD*
+
+====== UEFI
+The UEFI run time services listed below are required to be implemented.
+
+.Required UEFI Runtime Services
+[cols="3,1,3", width=95%, align="center", options="header"]
+|===
+|Service                   | UEFI 2.9 $ | Note
+|GetVariable               | 8.2        |
+|GetNextVariableName       | 8.2        |
+|SetVariable               | 8.2        | A dedicated storage for firmware is
+required so that there is no conflict in access by both firmware and the OS.
+|QueryVariableInfo         | 8.2        |
+|GetTime                   | 8.3        | RTC Access by the OS
+|SetTime                   | 8.3        | If it is not possible to set the RTC,
+the SetTime() can return an error.
+|GetWakeupTime             | 8.3        | Interface is required to be
+implemented but it can return EFI_UNSUPPORTED.
+|SetWakeupTime             | 8.3        | Interface is required to be
+implemented but it can return EFI_UNSUPPORTED.
+|SetVirtualAddressMap      | 8.4        |
+|ConvertPointer            | 8.4        |
+|GetNextHighMonotonicCount | 8.5        |
+|ResetSystem               | 8.5        | If SBI SRST implementation is
+also available, the OS should not use the SBI interface directly but use this
+UEFI interface.
+|UpdateCapsule             | 8.5        | Interface is required to be
+implemented but it can return EFI_UNSUPPORTED.
+|QueryCapsuleCapabilities  | 8.5        | Interface is required to be
+implemented but it can return EFI_UNSUPPORTED.
+|===
 
 ==== System Peripherals
 * PCI-E
