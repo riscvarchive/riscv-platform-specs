@@ -1,9 +1,9 @@
-// SPDX-License-Indentifer: CC-BY-4.0
+// SPDX-License-Identifier: CC-BY-4.0
 //
 // contributors.adoc: acknowledge document contributors
 //
 // Provide a simple acknowledgement to all who have contributed to the
-// specifiction.
+// specification.
 //
 [appendix]
 ## Contributors
@@ -25,7 +25,8 @@ Philipp Tomsich,
 Paul Walmsley,
 Andrew Waterman,
 Kumar Sankaran,
-Alistair Francis.
+Alistair Francis,
+Sunil V L.
 
 If you have contributed and are not listed, do let us know.  We haven't
 forgotten you, but we may have forgotten to edit this list.

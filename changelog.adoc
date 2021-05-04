@@ -1,4 +1,4 @@
-// SPDX-License-Indentifer: CC-BY-4.0
+// SPDX-License-Identifier: CC-BY-4.0
 //
 // changelog.adoc: change log for the document
 //
@@ -8,6 +8,8 @@
 ## Change Log
 
 ### version 0.2-rc0
+* 2021-04-08:
+** Initial commit of server firmware requirements
 * 2021-03-25:
 ** Initial commit of Embedded-2022 specification
 * 2021-03-16:
