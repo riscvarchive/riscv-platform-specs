@@ -8,6 +8,8 @@
 ## Change Log
 
 ### version 0.2-rc0
+* 2021-05-19:
+** Base boot and runtime requirements - Initial commit 
 * 2021-04-08:
 ** Initial commit of server firmware requirements
 * 2021-03-25:
