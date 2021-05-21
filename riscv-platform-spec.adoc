@@ -85,10 +85,40 @@ include::profiles.adoc[]
 
 ==== System Peripherals
 * UART/Serial Console
-* Clocks
-* Timers
-* Watchdog Timers
 
+In order to facilitate the bringup and debug of the low level initial platform
+software(firmware, bootloaders, kernel etc), platforms are required to
+implement a UART port which confirms to the following requirements:
+
+* The UART register addresses are required to be aligned to 4 byte boundaries.
+If the implemented register width is less than 4 bytes then the implmented
+bytes are required to be mapped starting at the smallest address.
+* The UART port implementation is required to be register-compatible with one
+of the following:
+** UART 16550 - _REQUIRED_
+** UART 8250 - _DEPRECATED_
+
+* Clock and Timers
+** Platforms are required to provide an at least 10ns resolution 64-bit counter
+with strictly monotonic updates.
+** The hardware clock that drives the counter is required to operate at a minimum
+frequency of 10MHz.
+** Platforms that use DT for hardware discovery are required to advertise the
+timebase to the operating systems via the `timebase-frequency` property of the
+"/cpus" node
+footnote:[https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/riscv/cpus.yaml].
+
+[sidebar]
+--
+[underline]*_Implementation Note_*
+
+For a counter with 10ns resolution the `timebase-frequency` value would be 100000000
+(100 MHz) which would also be the minimum possible value for `timebase-frequency`.
+From the software perspective a unit increment of the mtime value would correspond
+to a 10ns interval. However the hardware clock driving the counter could operate at a
+lower frequency, thereby incrementing the mtime value by more than one unit per
+clock tick.
+--
 ==== Boot Process
 - The base specification defines the interface between the firmware and the 
 operating system suitable for the RISC-V platforms with rich operating 
@@ -326,6 +356,13 @@ implemented but it can return EFI_UNSUPPORTED.
 |===
 
 ==== System Peripherals
+* Clock and Timers
+** Platforms are required to implement the time CSR.
+** Platforms are required to implement the
+https://lists.riscv.org/g/tech-privileged/message/404[Sstc] extension.
+** Platforms are required to delegate the supervisor timer interrupt to 'S'
+mode. If the 'H' extension is implemented then the platforms are required to
+delegate the virtual supervisor timer interrupt to 'VS' mode.
 * PCI-E
 
 ==== Secure Boot
