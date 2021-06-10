@@ -73,6 +73,93 @@ include::profiles.adoc[]
 ** ASID 
 * Debug
 
+==== Debug
+The Linux base platform requirements are -
+
+- Implement resethaltreq
+  * Rationale: Debugging immediately out of reset is a useful debug tool and
+    is required by item 5 in chapter 3. The resethaltreq mechanism provides a
+    standard way to do this.
+- Implement the program buffer
+  * Rationale: The program buffer is easier for most implementations than
+    abstract access.
+  * Rationale: Debuggers need to be able to insert ebreak instructions into
+    memory and make sure that the ebreak is visible to subsequent instruction
+    fetches.  Abstract access has no support for fence.i (or similar
+    mechanisms).
+- abstractcs.relaxedpriv must be 0
+  * Rationale: Doing otherwise is a potential security problem.
+- abstractauto must be implemented
+  * Rationale: autoexecprogbuf allows faster instruction-stuffing
+  * Rationale: autoexecdata allows fast read/write of a region of memory
+- dcsr.mprven must be tied to 1
+  * Rationale: Emulating two-stage table walks and PMP checks and endianness
+    swapping is a heavy burden on the debugger.
+- In textra, sselect must support the value 0 and either value 1 or 2 (or
+both).
+  * Rationale: There must be some way to limit triggers to only match in a
+    particular user context and a way to ignore user context.
+- If textra.sselect=1 is supported, the number of implemented bits of svalue
+must be at least the number of implemented bits of scontext.
+  * Rationale: This allows matching on every possible scontext.
+- If textra.sselect=2 is supported, the number of implemented bits of svalue
+must be at least ASIDLEN.
+  * Rationale: This allows matching on every possible ASID.
+- In textra, mhselect must support the value 0.  If the H extension is
+supported then mhselect must also support either values 1 and 5 or values 2
+and 6 (or all four).
+  * Rationale: There must be some way to limit triggers to only match in a
+    particular guest context and a way to ignore guest context.
+- If textra.mhselect=1,5 are supported and if H is the number of implemented
+bits of hcontext then, unless all bits of mhvalue are implemented, at least
+H-1 bits of mhvalue must be implemented.
+  * Rationale: This allows matching on every possible hcontext (up to the limit
+    of the field width).  It is H-1 bits instead of H because mhselect[2]
+    provides one bit.
+- If textra.mhselect=2,6 are supported, the number of implemented bits of
+mhvalue must be at least VMIDLEN-1.
+  * Rationale: This allows matching on every possible VMID.  It is VMIDLEN-1
+    instead of VMIDLEN because mhselect[2] provides one bit.
+- Implement at least four mcontrol6 triggers that can support matching on PC
+(select=0, execute=1, match=0) with timing=0 and full support for mode
+filtering (vs, vu, m, s, u) for all supported modes and support for textra as
+above.
+  * Rationale: The debugger needs breakpoints and 4 is a sufficient baseline.
+- Implement at least four mcontrol6 triggers that can support matching on load
+ and store addresses (select=0, match=0, and all combinations of load/store)
+ with timing=0 and full support for mode filtering (vs, vu, m, s, u) for all
+ supported modes and support for textra as above.
+  * Rationale: The debugger needs watchpoints and 4 is a sufficient baseline.
+- Implement at least one trigger capable of icount and support for textra as
+above.
+  * Rationale: Self-hosted single step needs this
+- Implement at least one trigger capable of etrigger and support for textra as
+above.
+  * Rationale: Debuggers need to be able to catch exceptions.
+- Implement at least one trigger capable of itrigger and support for textra as
+above.
+  * Rationale: Debuggers need to be able to catch interrupts.
+- The minimum trigger requirements must be met for action=0 and for action=1
+(possibly by the same triggers)
+  * Rationale: The intent is to have full support for external debug and full
+    support for self-hosted debug (though not necessarily at the same time).
+    This can be provided via the same set of triggers or separate sets of
+    triggers. External debug support for icount is unnecessary due to dcsr.step
+    and is therefore called out separately.
+- For implementations with multiple cores, support for at least one halt group
+and one resume group (in addition to group 0)
+  * Rationale: Allows stopping all harts (approximately) simultaneously which
+    is useful for debugging MP software
+- dcsr.stepie must support the 0 setting.  It is optional to support the 1
+setting.
+  * Rationale: It is not generally useful to step into interrupt handlers.
+- dcsr.stopcount and dcsr.stoptime must be supported and the reset value of
+each must be 1
+  * Rationale: The architecture has strict requirements on minstret which may
+    be perturbed by an external debugger in a way that's visible to software.
+    The default should allow code that's sensitive to these requirements to be
+    debugged.
+
 ==== Memory Map
 * Virtual Memory
 * sv39/sv48/sv57
@@ -195,6 +282,20 @@ Spec should be ratified*]
 - Incoming MSI Controller (IMSIC) with at least 1 guest interrupt
 file for each HART ?? (*TBD*)
 - IOMMU with support for memory resident interrupt files ?? (*TBD*)
+
+==== Debug
+The Linux server platform requirements are all of the above plus:
+
+- Implement at least six mcontrol6 triggers that can support matching on PC
+(select=0, execute=1, match=0) with timing=0 and full support for mode
+filtering (vs, vu, m, s, u) for all supported modes and support for textra as
+above.
+  * Rationale: Other architectures have found that 4 breakpoints are
+    insufficient in more capable systems and recommend 6.
+- If system bus access is implemented then accesses must be coherent with
+respect to all harts connected to the DM
+  * Rationale: Debuggers must be able to view memory coherently
+
 
 ==== Boot and Runtime Requirements
 =====  Firmware
