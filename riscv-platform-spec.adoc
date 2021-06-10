@@ -31,8 +31,8 @@ include::introduction.adoc[]
 // Profiles: (NB: content from very first version)
 include::profiles.adoc[]
 
-// Linux-2022 Platform
-== Linux-2022 Platform
+// Unix-2022 Platform
+== Unix-2022 Platform
 
 === Terminology
 [cols="1,2", width=80%, align="left", options="header"]
@@ -64,7 +64,7 @@ include::profiles.adoc[]
 |link:[Platform Policy]                                                                                       | TBD
 |===
 
-// Base feature set for Linux-2022 Platform
+// Base feature set for Unix-2022 Platform
 === Base
 ==== Architecture
 * Profile - RVA22
@@ -178,7 +178,7 @@ runtime services must implement ResetSystem() via SBI Reset extension.
 - OS should prioritize calling the UEFI interfaces before the SBI or Platform 
 specific mechanisms.
 
-// Server extension for Linux-2022 Platform
+// Server extension for Unix-2022 Platform
 === Server Extension
 The server extension specifies additional  requirements apart from base
 requirements for RV64I based server class platforms.
