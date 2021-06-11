@@ -28,7 +28,8 @@ Kumar Sankaran,
 Alistair Francis,
 Sunil V L,
 Rahul Pathak,
-Mayuresh Chitale
+Mayuresh Chitale,
+Paul Donahue
 
 If you have contributed and are not listed, do let us know.  We haven't
 forgotten you, but we may have forgotten to edit this list.
