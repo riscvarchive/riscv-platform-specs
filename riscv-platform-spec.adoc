@@ -31,8 +31,8 @@ include::introduction.adoc[]
 // Profiles: (NB: content from very first version)
 include::profiles.adoc[]
 
-// Linux-2022 Platform
-== Linux-2022 Platform
+// OS-A Platform
+== OS-A Platform
 
 === Terminology
 [cols="1,2", width=80%, align="left", options="header"]
@@ -64,7 +64,7 @@ include::profiles.adoc[]
 |link:[Platform Policy]                                                                                       | TBD
 |===
 
-// Base feature set for Linux-2022 Platform
+// Base feature set for OS-A Platform
 === Base
 ==== Architecture
 * Profile - RVA22
@@ -74,7 +74,7 @@ include::profiles.adoc[]
 * Debug
 
 ==== Debug
-The Linux base platform requirements are -
+The OS-A base platform requirements are -
 
 - Implement resethaltreq
   * Rationale: Debugging immediately out of reset is a useful debug tool and
@@ -265,7 +265,7 @@ runtime services must implement ResetSystem() via SBI Reset extension.
 - OS should prioritize calling the UEFI interfaces before the SBI or Platform 
 specific mechanisms.
 
-// Server extension for Linux-2022 Platform
+// Server extension for OS-A Platform
 === Server Extension
 The server extension specifies additional  requirements apart from base
 requirements for RV64I based server class platforms.
@@ -284,7 +284,7 @@ file for each HART ?? (*TBD*)
 - IOMMU with support for memory resident interrupt files ?? (*TBD*)
 
 ==== Debug
-The Linux server platform requirements are all of the above plus:
+The OS-A server platform requirements are all of the above plus:
 
 - Implement at least six mcontrol6 triggers that can support matching on PC
 (select=0, execute=1, match=0) with timing=0 and full support for mode
@@ -478,11 +478,11 @@ delegate the virtual supervisor timer interrupt to 'VS' mode.
 
 ==== RAS
 
-// Embedded-2022 Platform
-== Embedded-2022
+// M Platform
+== M Platform 
 
 === Scope
-The Embedded-2022 specification aims to apply to a range of embedded platforms.
+The M Platform specification aims to apply to a range of embedded platforms.
 In this case embedded platforms range from hand coded bare metal assembly
 all the way to to embedded operating systems such as
 https://www.zephyrproject.org[Zephyr] and embedded Linux.
@@ -492,7 +492,7 @@ will be easier to write and port if all the embedded hardware is similar. On
 the other hand vendors want to differentiate their product and reuse existing
 IP and SoC designs.
 
-Due to this, the Embedded-2022 specification has both required and recommended
+Due to this, the M Platform specification has both required and recommended
 components. All required components must be met in order to meet this
 specification.
 It's strongly encouraged that all recommended components are met as well,
@@ -500,10 +500,10 @@ although they do not have to in order to meet the specification.
 
 === Base
 ==== Architecture
-The Embedded-2022 specification depends on the RVM22 specification and all
+The M Platform specification depends on the RVM22 specification and all
 requirements from RVM22 must be met.
 
-Any RISC-V system that uses at least RV32/64G can meet the Embedded-2022
+Any RISC-V system that uses at least RV32/64G can meet the M Platform
 specification.
 
 ==== Interrupt Controller
@@ -526,7 +526,7 @@ The RISC-V machine timer (controlled via `mtime` and `mtimecmp`) must be
 implemented. The two registers must be memory mapped as required by the RISC-V
 specification.
 
-The Embedded-2022 specification requires that the registers be mapped
+The M Platform specification requires that the registers be mapped
 adjacent to each other with the `mtime` region at the lower address.
 
 The starting address of this region can be located anywhere in
@@ -558,7 +558,7 @@ and for a 64-bit system with 2 harts
 It is recommended that main memory and loadable code (not ROM) start at
 address `0x8000_0000`.
 
-// PMP extension for Embedded-2022 Platform
+// PMP extension for M Platform
 === Physical Memory Protection (PMP) Extension
 It is recommended that any systems that implement more then just machine mode
 also implement PMP support.
