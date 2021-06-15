@@ -1,12 +1,12 @@
-# RISC-V Profiles and Platform Specification
+# RISC-V Platform Specification
 
-The files in this project are used to create the RISC-V Profiles and
+The files in this project are used to create the RISC-V 
 Platform Specification.  This specification defines the set of firmware
 and hardware required of a RISC-V platform so that it may install
 and run various operating systems.
 
 The content of the specification is created and controlled by the RISC-V
-Profiles and Platform Specification Technical Subcommittee.  Information
+Platform Horizontal Subcommittee (RISC-V Platform HSC).  Information
 about the subcommittee can be found at
 https://lists.riscv.org/g/tech-unixplatformspec.
 Please note that membership in RISC-V International is required to post
