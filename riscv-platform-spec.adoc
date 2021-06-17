@@ -581,6 +581,10 @@ and for a 64-bit system with 2 harts
 ===========================
 ---------------------------
 
+The `mcounteren`.TM and `scounteren`.TM bits _must not_ be hardwired,
+regardless as to whether accesses to the `time` CSR are implemented
+directly or via traps.
+
 ==== Memory Map
 It is recommended that main memory and loadable code (not ROM) start at
 address `0x8000_0000`.
