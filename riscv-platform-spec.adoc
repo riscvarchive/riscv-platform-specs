@@ -19,18 +19,6 @@
 // table of contents
 toc::[]
 
-// document copyright and licensing information
-include::licensing.adoc[]
-
-// changelog for the document
-include::changelog.adoc[]
-
-// Introduction: describe the intent and purpose of the document
-include::introduction.adoc[]
-
-// Profiles: (NB: content from very first version)
-include::profiles.adoc[]
-
 == Introduction 
 The platform specification defines a set of platforms that specify requirements
 for interoperability between software and hardware. The platform policy 
@@ -68,11 +56,13 @@ The M platform has the following extensions:
 |SBI       | Supervisor Binary Interface    
 |UEFI      | Unified Extensible Firmware Interface
 |ACPI      | Advanced Configuration and Power Interface
+|APEI      | ACPI Platform Error Interfaces 
 |SMBIOS    | System Management Basic I/O System
 |DTS       | Devicetree source file    
 |DTB       | Devicetree binary
 |RVA22     | RISC-V Application 2022
 |EE        | Execution Environment
+|OSPM      | Operating System Power Management
 |RV32GC    | RISC-V 32-bit general purpose ISA described as RV32IMAFDC.
 |RV64GC    | RISC-V 64-bit general purpose ISA described as RV64IMAFDC.      
 |===
@@ -87,6 +77,7 @@ The M platform has the following extensions:
 |link:[RVA22 Specification]                                                                                   | TBD
 |link:https://arm-software.github.io/ebbr/[EBBR Specification]                                                | v2.0.0-pre1    
 |link:https://uefi.org/sites/default/files/resources/ACPI_Spec_6_4_Jan22.pdf[ACPI Specification]              | v6.4
+|link:https://uefi.org/specs/ACPI/6.4/18_ACPI_Platform_Error_Interfaces/ACPI_PLatform_Error_Interfaces.html[APEI Specification]              | v6.4
 |link:https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.4.0.pdf[SMBIOS Specification]    | v3.4.0
 |link:[Platform Policy]                                                                                       | TBD
 |===
@@ -94,11 +85,11 @@ The M platform has the following extensions:
 // Base feature set for OS-A Platform
 === Base
 ==== Architecture
-* Profile - RVA22
-** Cache Management
-** PMU 
-** ASID 
-* Debug
+* ISA Profile
+** The OS-A platform is required to comply with the RVA22 profile.
+* Cache Coherency 
+* PMU 
+* ASID 
 
 ==== Debug
 The OS-A base platform requirements are -
@@ -186,11 +177,6 @@ each must be 1
     be perturbed by an external debugger in a way that's visible to software.
     The default should allow code that's sensitive to these requirements to be
     debugged.
-
-==== Memory Map
-* Virtual Memory
-* sv39/sv48/sv57
-* Start Address
 
 ==== Interrupt Controller
 * AIA
@@ -294,24 +280,20 @@ specific mechanisms.
 
 // Server extension for OS-A Platform
 === Server Extension
-The server extension specifies additional  requirements apart from base
-requirements for RV64I based server class platforms.
+The server extension specifies additional requirements for RV64I based server 
+class platforms. The server extension includes all of the requirements for the
+base with the additional requirements as below.
 
-The platforms which conform to server extension are required to implement
+==== Architecture
+The platforms which conform to server extension are required to implement +
 
-- Advanced Platform-Level Interrupt Controller (APLIC). [*Dependency:
- AIA spec should be ratified*]
-- Incoming MSI Controller (IMSIC) [*Dependency: AIA spec should be
-ratified*]
-
-- RISC-V Hypervisor-level Instruction-Set Extensions. [*Dependency:
-Spec should be ratified*]
-- Incoming MSI Controller (IMSIC) with at least 1 guest interrupt
-file for each HART ?? (*TBD*)
-- IOMMU with support for memory resident interrupt files ?? (*TBD*)
+- RISC-V Hypervisor-level H Instruction-Set Extensions 
+- IOMMU with support for memory resident interrupt files
+- PMU 
+- ASID 
 
 ==== Debug
-The OS-A server platform requirements are all of the above plus:
+The OS-A server platform requirements are all of the base above plus:
 
 - Implement at least six mcontrol6 triggers that can support matching on PC
 (select=0, execute=1, match=0) with timing=0 and full support for mode
@@ -322,7 +304,6 @@ above.
 - If system bus access is implemented then accesses must be coherent with
 respect to all harts connected to the DM
   * Rationale: Debuggers must be able to view memory coherently
-
 
 ==== Boot and Runtime Requirements
 =====  Firmware
@@ -445,9 +426,6 @@ characteristics and HART hardware features discovered during the firmware boot
 process.
 |===
 
-===== Boot-Loader
-*TBD*
-
 ===== Runtime services
 ====== SBI
 *TBD*
@@ -499,11 +477,40 @@ delegate the virtual supervisor timer interrupt to 'VS' mode.
 * E-Fuse
 * PKA/TRNG
 
-==== Virtualization/Hypervisor
-* H-extension
-* IOMMU
-
 ==== RAS
+All the below mentioned RAS features are required for the OS-A platform server
+extension
+
+*  Main memory must be protected with SECDED-ECC. +
+*  All cache structures must be protected. +
+** single-bit errors must be detected and corrected. +
+** multi-bit errors can be detected and reported. +
+* There must be memory-mapped RAS registers associated with these protected
+structures to log detected errors with information about the type and location
+of the error. +
+* The platform must support the APEI specification to convey all error
+information to OSPM. +
+* Correctable errors must be reported by hardware and either be corrected or
+recovered by hardware, transparent to system operation and to software. +
+* Hardware must provide status of these correctable errors via RAS registers. +
+* Uncorrectable errors must be reported by the hardware via RAS error
+registers for system software to take the needed corrective action. +
+* Attempted use of corrupted (uncorrectable) data must result in a precise
+exception on that instruction with a distinguishing custom exception cause
+code. +
+* The platform should provide the capability to configure each RAS
+error to trigger firmware-first or OS-first error interrupt. +
+* Errors logged in RAS registers must be able to generate an interrupt request
+to the system interrupt controller that may be directed to either M-mode or
+S/HS-mode for firmware-first or OS-first error reporting. +
+* If the RAS error is handled by firmware, the firmware should be able
+to choose to expose the error to S/HS mode for further processing or
+just hide the error from S/HS software. +
+* If the RAS event is configured as the firmware first model, the platform 
+should be able to trigger the higest priority of M-mode interrupt to all HARTs 
+in the physical RV processor. +
+* Logging and/or reporting of errors can be masked. +
+* PCIe AER capability is required. +
 
 // M Platform
 == M Platform 
@@ -597,6 +604,3 @@ also implement PMP support.
 When PMP is supported it is recommended to include at least 4 regions, although
 if possible more should be supported to allow more flexibility. Hardware
 implementations should aim for supporting at least 16 PMP regions.
-
-// acknowledge all of the contributors
-include::contributors.adoc[]
