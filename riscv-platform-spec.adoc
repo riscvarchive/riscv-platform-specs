@@ -65,6 +65,7 @@ The M platform has the following extensions:
 |OSPM      | Operating System Power Management
 |RV32GC    | RISC-V 32-bit general purpose ISA described as RV32IMAFDC.
 |RV64GC    | RISC-V 64-bit general purpose ISA described as RV64IMAFDC.      
+|RAS       | Reliability, Availability, and Serviceability
 |===
 
 === Specifications
