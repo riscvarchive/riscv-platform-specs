@@ -561,13 +561,16 @@ The UEFI run time services listed below are required to be implemented.
 |SetVariable               | 8.2        | A dedicated storage for firmware is
 required so that there is no conflict in access by both firmware and the OS.
 |QueryVariableInfo         | 8.2        |
-|GetTime                   | 8.3        | RTC Access by the OS
-|SetTime                   | 8.3        | If it is not possible to set the RTC,
-the SetTime() can return an error.
+|GetTime                   | 8.3        | System Real-time accessed by the
+OS and firmware.<<SystemRealTime,(Refer to System Real-time section)>>
+|SetTime                   | 8.3        | System Real-time set by the
+OS and firmware.<<SystemRealTime,(Refer to System Real-time section)>>
 |GetWakeupTime             | 8.3        | Interface is required to be
-implemented but it can return EFI_UNSUPPORTED.
+implemented but it can return EFI_UNSUPPORTED.<<SystemRealTime,(Refer to
+System Real-time section)>>
 |SetWakeupTime             | 8.3        | Interface is required to be
-implemented but it can return EFI_UNSUPPORTED.
+implemented but it can return EFI_UNSUPPORTED.<<SystemRealTime,(Refer to
+System Real-time section)>>
 |SetVirtualAddressMap      | 8.4        |
 |ConvertPointer            | 8.4        |
 |GetNextHighMonotonicCount | 8.5        |
@@ -581,13 +584,36 @@ implemented but it can return EFI_UNSUPPORTED.
 |===
 
 ==== System Peripherals
-* Clock and Timers
+===== Clock and Timers
 ** Platforms are required to implement the time CSR.
 ** Platforms are required to implement the
 https://lists.riscv.org/g/tech-privileged/message/404[Sstc] extension.
 ** Platforms are required to delegate the supervisor timer interrupt to 'S'
 mode. If the 'H' extension is implemented then the platforms are required to
 delegate the virtual supervisor timer interrupt to 'VS' mode.
+
+===== System Real-time[[SystemRealTime]]
+In order to facilitate server manageability, server extension platform is
+required to provide the mechanism to maintain system date and time. The
+mechanism could be the Real-time clock on platform as it mentioned in UEFI
+spec, or other implementations that can provide the date and time information
+to UEFI runtime Time service. +
+The GetTime() and SetTime() UEFI runtime service
+must be implemented by firmware to incorporate with the underlying system 
+Real-time mechanism, however the SetTime() is allowed to be unsupported if the
+platform doesn’t require the feature to set date and time or the system
+Real-time mechanism doesn’t have capability to set time. UEFI GetWakeupTime()
+and SetWakeupTime() runtime services are also required to be implemented on
+server extension platform. However, those two runtime services can return
+EFI_UNSUPPORTED to the caller if the wake up from time is not supported by the
+platform. +
+Timezone and Daylight Saving Time (DST) are also defined in UEFI runtime Time
+service, however the system Real-time mechanism may not have the capability
+to maintain this information. Firmware can always return the local time without
+timezone and DST information, or firmware incorporates with other facilities
+such as BMC, UEFI variable or boot time system configuration utility to
+maintain this information with the system Real-time mechanism.
+
 * PCI-E
 
 ==== Secure Boot
