@@ -89,8 +89,13 @@ The M platform has the following extensions:
 * ISA Profile
 ** The OS-A platform is required to comply with the RVA22 profile.
 * Cache Coherency 
-* PMU 
-* ASID 
+** All harts must adhere to the RVWMO memory model.
+** All hart PMA regions for main memory must be marked as coherent.
+** Memory accesses by I/O masters can be coherent or non-coherent with respect 
+to all hart-related caches.
+
+
+==== PMU 
 
 ==== Debug
 The OS-A base platform requirements are -
@@ -288,10 +293,11 @@ base with the additional requirements as below.
 ==== Architecture
 The platforms which conform to server extension are required to implement +
 
-- RISC-V Hypervisor-level H Instruction-Set Extensions 
-- IOMMU with support for memory resident interrupt files
-- PMU 
-- ASID 
+- RV64 support
+- RISC-V H ISA extension
+- VMID support
+
+==== PMU
 
 ==== Debug
 The OS-A server platform requirements are all of the base above plus:
@@ -305,6 +311,8 @@ above.
 - If system bus access is implemented then accesses must be coherent with
 respect to all harts connected to the DM
   * Rationale: Debuggers must be able to view memory coherently
+
+==== Interrupt Controller 
 
 ==== Boot and Runtime Requirements
 =====  Firmware
