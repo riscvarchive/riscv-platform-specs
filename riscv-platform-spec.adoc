@@ -64,8 +64,14 @@ The M platform has the following extensions:
 |EE        | Execution Environment
 |OSPM      | Operating System Power Management
 |RV32GC    | RISC-V 32-bit general purpose ISA described as RV32IMAFDC.
-|RV64GC    | RISC-V 64-bit general purpose ISA described as RV64IMAFDC.      
+|RV64GC    | RISC-V 64-bit general purpose ISA described as RV64IMAFDC.
 |RAS       | Reliability, Availability, and Serviceability
+|CLINT     | Legacy Core-Local Interrupt Controller
+|ACLINT    | Advanced CLINT
+|PLIC      | Legacy Platform-Level Interrupt Controller
+|APLIC     | Advanced PLIC
+|AIA       | Advanced Interrupt Architecture 
+|IMSIC     | Incomning MSI Controller
 |===
 
 === Specifications
@@ -184,10 +190,114 @@ each must be 1
     The default should allow code that's sensitive to these requirements to be
     debugged.
 
-==== Interrupt Controller
-* AIA
-* PLIC + CLINT
-* Interrupt Assignments
+==== Interrupt Controller, Software Interrupt, and Timer Requirements
+In the following requirements,
+https://github.com/riscv/riscv-aia[*AIA*] refers to the Advanced Interrupt Architecture, https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[*ACLINT*]
+refers to the Advanced *CLINT*. AIA comprises two separate components: `IMSICs` and `APLICs`. 
+If supported, there is an `IMSIC` device associated with each hart. 
+If supported, *APLIC* devices are global to all harts, and there may be one or
+multiple in a system. *ACLINT* comprises three separate components: `MTIMER` for
+Timer support, and `MSWI` and `SSWI` for Machine-level and Supervisor-level
+Software Interrupt (IPI) support. +
+https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc[*PLIC*]
+refers to the legacy Platform-Level Interrupt Controller that provides
+facilities to route external interrupts to a hart context with a given privilege
+mode. The number of non-local interrupt sources supported by PLIC and how does
+each of them connect to the hart context is PLIC core implementation-specific. +
+*CLINT* is a legacy Core-Local Interrupt Controller that is a compatible subset of
+ACLINT which provides facilities to trigger Software (IPI) and Timer interrupts to
+hart.
+
+.The following table summarizes what features are supported for four classes of OS/A platforms.
+[width="100%",cols="^,^,^,^,^,^,^,^,^,^,^,^,^"]
+|=======
+.2+|*OS-A Platform* 3+|*MSIs* 3+|*Wired Interrupts* 3+|*IPIs* 3+|*Timer*
+|M-level|S-level|VS-level|M-level|S-level|VS-level|M-level|S-level|VS-level|M-level|S-level|VS-level
+|Existing|NA|NA|NA|PLIC|PLIC|PLIC + 
+_(Trap and emulate)_|MSWI +
+https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|
+SBI IPI +
+https://github.com/riscv/riscv-sbi-doc[`*SBI*`]|SBI IPI +
+https://github.com/riscv/riscv-sbi-doc[`*SBI*`]|MTIMER +
+https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|SBI Timer +
+https://github.com/riscv/riscv-sbi-doc[`*SBI*`]|SBI Timer +
+https://github.com/riscv/riscv-sbi-doc[`*SBI*`]
+|Only Wired IRQs|NA|NA|NA|APLIC M-level +
+https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level +
+https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level +
+_(Trap and emulate)_ +
+https://github.com/riscv/riscv-aia[`*AIA*`]|MSWI +
+https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|
+SSWI +
+https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|
+SBI IPI +
+https://github.com/riscv/riscv-sbi-doc[`*SBI*`]|MTIMER +
+https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|
+Priv Sstc +
+https://github.com/riscv/riscv-isa-manual/releases[`*Priv Spec*`]|
+Priv Sstc +
+https://github.com/riscv/riscv-isa-manual/releases[`*Priv Spec*`]
+|MSIs and Wired IRQs|IMSIC M-level + 
+https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC S-level +
+https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level +
+_(Trap and emulate)_ +
+https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC M-level + 
+https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level + 
+https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level + 
+_(Trap and emulate)_ +
+https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC M-level +
+https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC S-level +
+https://github.com/riscv/riscv-aia[`*AIA*`]|SBI IPI +
+https://github.com/riscv/riscv-sbi-doc[`*SBI*`]|MTIMER +
+https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|
+Priv Sstc +
+https://github.com/riscv/riscv-isa-manual/releases[`*Priv Spec*`]|
+Priv Sstc +
+https://github.com/riscv/riscv-isa-manual/releases[`*Priv Spec*`]
+|MSIs, Virtual MSIs and Wired IRQs|IMSIC M-level +
+https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC S-level +
+https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC VS-level +
+https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC M-level +
+https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level +
+https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level + 
+_(Trap and emulate)_ +
+https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC M-level +
+https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC S-level +
+https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC VS-level +
+https://github.com/riscv/riscv-aia[`*AIA*`]|MTIMER +
+https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|
+Priv Sstc +
+https://github.com/riscv/riscv-isa-manual/releases[`*Priv Spec*`]|
+Priv Sstc +
+https://github.com/riscv/riscv-isa-manual/releases[`*Priv Spec*`]
+|=======
+
+* For Timer support, one or more ACLINT MTIMER devices are Required for OS-A platform.
+One MTIMER may be used for all harts, or multiple MTIMERs may be used with
+multiple topological groups of harts. The base address of MTIMER memory map registers
+is platform implementation-specific, however, the format of MTIMER operation parameters
+(`mtime` and `mtimecmp` registers) must be compliant with
+https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc#21-register-map[ACLINT MTIMER Register Map]
+
+* For Interrupt Controller and Software Interrupt support, one of the following three
+choices below is Required
+  ** PLIC plus one or more ACLINT MSWI devices - DEPRECATED
+    *** One MSWI may be used for all harts, or multiple MSWIs may be used with
+multiple topological groups of harts
+    *** Only wired interrupts and M-mode IPIs are supported
+    *** Virtualization is not supported
+    *** This compatibly supports legacy PLIC + CLINT designs
+  ** One or more AIA APLIC devices plus one or more pairs of ACLINT MSWI and ACLINT SSWI devices
+    *** One MSWI/SSWI pair may be used for all harts, or multiple MSWI/SSWI
+pairs may be used with multiple topological groups of harts
+    *** Only wired interrupts are supported
+    *** Both M-mode and S-mode IPIs are supported
+    *** Virtualization is not supported
+  ** Zero, one, or more AIA APLIC devices plus per-hart AIA IMSIC devices
+    *** Both wired and MSI external interrupts are supported
+    *** Both M-mode and S-mode IPIs are supported via IMSICs
+    *** Virtualization is supported
+    *** Zero APLICs if there are no wired interrupts and only MSIs
 
 ==== System Peripherals
 * UART/Serial Console
@@ -520,6 +630,11 @@ should be able to trigger the higest priority of M-mode interrupt to all HARTs
 in the physical RV processor. +
 * Logging and/or reporting of errors can be masked. +
 * PCIe AER capability is required. +
+
+==== Interrupt Controller, Software Interrupt, and Timer Requirements
+  * For Timer support, ACLINT MTIMER devices is/are Required
+  * For Interrupt Controller and Software Interrupt support, the following one choice is Required
+    - Zero, one, or more AIA APLIC devices plus per-hart AIA IMSIC devices
 
 // M Platform
 == M Platform 
