@@ -72,6 +72,9 @@ The M platform has the following extensions:
 |APLIC     | Advanced PLIC
 |AIA       | Advanced Interrupt Architecture 
 |IMSIC     | Incomning MSI Controller
+|L1D       | L1 Data cache
+|LL	   | Last level cache
+|DTLB	   | DATA TLB cache
 |===
 
 === Specifications
@@ -102,6 +105,18 @@ to all hart-related caches.
 
 
 ==== PMU 
+
+The RVA22 profile defines 32 PMU counters out-of-which first three counters are
+defined by the privilege specification while other 29 counters are programmable.
+The SBI PMU extension defines a set of hardware events that can be monitored using
+these programmable counters. This section defines the minimum number of programmable
+counters and hardware events required for an OS-A compatible platform.
+
+* Counters
+** The platform do not require to implement any of the programmable counters.
+* Events
+** The platform do not require to implement any of the hardware events defined
+in SBI PMU extensions.
 
 ==== Debug
 The OS-A base platform requirements are -
@@ -408,6 +423,24 @@ The platforms which conform to server extension are required to implement +
 - VMID support
 
 ==== PMU
+
+* Counters
+** The platform must implement at least 8 programmable counters.
+* Events
+** Hardware general events
+*** The platform must implement all of the general hardware events defined by
+the SBI PMU extension.
+** Hardware cache events
+*** The platform must implement all of the hardware cache events for READ operations
+while WRITE operation must be implemented for L1D, LL and DTLB caches.
+
+[sidebar]
+--
+[underline]*_Implementation Note_*
+
+Any platform that do not implement the micro-architectural features related to
+a hardware event may hardwire the event value to zero.
+--
 
 ==== Debug
 The OS-A server platform requirements are all of the base above plus:
