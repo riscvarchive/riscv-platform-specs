@@ -75,6 +75,19 @@ The M platform has the following extensions:
 |L1D       | L1 Data cache
 |LL	   | Last level cache
 |DTLB	   | DATA TLB cache
+|PCIe      | PCI Express
+|ECAM      | Enhanced Configuration Access Mechanism
+|BAR       | Base Address Register
+|AER       | Advanced Error Reporting
+|CRS       | Configuration Request Retry Status
+|TLP       | Transaction Layer Packet
+|RCiEP     | Root Complex Integrated Endpoint
+|RCEC      | Root Complex Event Collector
+|PME       | Power Management Event
+|MSI       | Message Signaled Interrupts
+|MSI-X     | Enhanced Message Signaled Interrupts
+|INTx      | PCIe Legacy Interrupts
+|PMA       | Physical Memory Attributes
 |===
 
 === Specifications
@@ -625,6 +638,28 @@ https://lists.riscv.org/g/tech-privileged/message/404[Sstc] extension.
 mode. If the 'H' extension is implemented then the platforms are required to
 delegate the virtual supervisor timer interrupt to 'VS' mode.
 
+===== Watchdog Timers
+Implementation of a two-stage watchdog timer, as defined in the WatchDog Timer
+appendix footnote:[Watchdog Timer Appendix (TBD)] ,is required. Software must
+periodically refresh the watchdog timer, otherwise a first-stage watchdog
+timeout occurs. If the watchdog timer remains un-refreshed for a second period,
+then a second-stage watchdog timeout occurs.
+
+If a first-stage watchdog timeout occurs, a Supervisor-level interrupt request
+is generated and sent to the system interrupt controller, targeting a specific
+hart.
+
+If a second-stage watchdog timeout occurs, a system-level interrupt request is
+generated and sent to a system component more privileged than Supervisor-mode
+such as:
+
+- The system interrupt controller, with a Machine-level interrupt request
+targeting a specific hart
+- A platform management processor
+- Dedicated reset control logic
+
+The resultant action taken is platform-specific.
+
 ===== System Real-time[[SystemRealTime]]
 In order to facilitate server manageability, server extension platform is
 required to provide the mechanism to maintain system date and time. The
@@ -647,7 +682,135 @@ timezone and DST information, or firmware incorporates with other facilities
 such as BMC, UEFI variable or boot time system configuration utility to
 maintain this information with the system Real-time mechanism.
 
-* PCI-E
+===== PCIe
+Platforms are required to support at least PCIe Base Specification Revision 1.1
+footnote:[https://pcisig.com/specifications].
+
+====== PCIe Config Space
+* Platforms shall support access to the PCIe config space via ECAM as described
+in the PCIe Base specification.
+* The entire config space for a single PCIe domain should be accessible via a
+single ECAM I/O region.
+* Platform firmware should implement the MCFG table as listed in the ACPI System
+Description Tables above to allow the operating systems to discover the supported
+PCIe domains and map the ECAM I/O region for each domain.
+* Platform software shall configure ECAM I/O regions such that the effective
+memory attributes are that of a PMA I/O region (i.e. strongly-ordered,
+non-cacheable, non-idempotent).
+
+====== PCIe Memory Space
+Platforms are required to map PCIe address space directly in the system address
+space and not have any address translation for outbound accesses from harts or
+for inbound accesses to any component in the system address space
+
+* PCIe Outbound Memory +
+PCIe devices and bridges/switches frequently implement BARs which only support
+32-bit addressing or support 64 bit addressing but do not support prefetchable
+memory. To support mapping of such BARs, platforms are required to reserve
+some space below 4G for each root port present in the system.
+
+[sidebar]
+--
+[underline]*_Implementation Note_* +
+Platform software would likely configure these per root port regions such that
+their effective memory attributes are that of a PMA I/O region (i.e.
+strongly-ordered, non-cacheable, non-idempotent). Platforms would likely also
+reserve some space above 4G to map BARs that support 64 bit addressing and
+prefetchable memory which could be configured by the platform software as either
+I/O or memory.
+--
+
+* PCIe Inbound Memory +
+For security reasons, platforms must provide a mechanism controlled by M-mode
+software to restrict inbound PCIe accesses from accessing regions of address
+space intended to be accessible only to M-mode software.
+
+[sidebar]
+--
+[underline]*_Implementation Note_* +
+Such an access control mechanism could be analogous to the per-hart PMP
+as described in the RISC-V Privileged Architectures specification.
+--
+
+====== PCIe Interrupts
+* Platforms shall support both INTx and MSI/MSI-x interrupts.
+* Integration with AIA +
+TBD
+
+====== PCIe cache coherency
+Memory that is cacheable by harts is not kept coherent by hardware when PCIe
+transactions to that memory are marked with a No_Snoop bit of zero. In this
+case, software shall manage coherency on such memory; otherwise, software
+coherency management is not required.
+
+====== PCIe Topology
+Platforms are required to implement at least one of the following topologies
+and the components required in that topology.
+
+[#fig_intro1]
+.PCIe Topologies
+image::pcie-topology.png[width=524,height=218]
+
+* Host Bridge +
+Following are the requirements for host bridges:
+
+** Any read or write access by a hart to an ECAM I/O region shall be converted
+by the host bridge into the corresponding PCIe config read or config write
+request.
+** Any read or write access by a hart to a PCIe outbound region shall be
+forwarded by the host bridge to a BAR or prefetch/non-prefetch memory window,
+if the address falls within the region claimed by the BAR or prefetch/
+non-prefetch memory window. Otherwise the host bridge shall return an error.
+
+** Host bridge shall return all 1s in the following cases:
+*** Config read to non existent functions and devices on root bus.
+*** Config reads that receive Unsupported Request response from functions and
+devices on the root bus.
+* Root ports +
+Following are the requirements for root ports.
+** Root ports shall appear as PCI-PCI bridge to software.
+** Root ports shall implement all registers of Type 1 header.
+** Root ports shall implement all capabilities specified in the PCIe Base
+specification for a root port.
+** Root ports shall forward type 1 configuration access when the bus number in
+the TLP is greater than the root port's secondary bus number and less than or
+equal to the root port's subordinate bus number.
+** Root ports shall convert type 1 configuration access to a type 0
+configuration access when bus number in the TLP is equal to the root port's
+secondary bus number.
+** Root ports shall respond to any type 0 configuration accesses it receives.
+** Root ports shall forward memory accesses targeting its prefetch/non-prefetch
+memory windows to downstream components. If address of the transaction does not
+fall within the regions claimed by prefetch/non-prefetch memory windows then
+the root port shall generate a Unsupported Request.
+** Root port requester id or completer id shall be formed using the bdf of the
+root port.
+** The root ports shall support the CRS software visibility.
+** The root port shall implement the AER capability.
+** Root ports shall return all 1s in the following cases:
+*** Config read to non existent functions and devices on secondary bus.
+*** Config reads that receive Unsupported Request from downstream components.
+*** Config read when root port's link is down.
+
+* RCiEP +
+All the requirements for RCiEP in the PCIe Base specification shall be
+implemented.
+In addition the following requirements shall be met:
+** If RCiEP is implemented then RCEC shall be implemented as well. All
+requirements for RCEC specified in the PCIe Base specification shall be
+implemented. RCEC is required to terminate the AER and PME messages from RCiEP.
+** If both the topologies mentioned above are supported then RCiEP and RCEC
+shall be implemented in a separate PCIe domain and shall be addressable via a
+separate ECAM I/O region.
+
+===== PCIe Device Firmware Requirement
+PCI expansion ROM code type 3 (UEFI) image must be provided by PCIe device for
+OS/A server extension platform according to
+https://pcisig.com/specifications/conventional/pci_firmware[PCI Firmware Specification Revision 3.3]
+if that PCIe device is utilized during UEFI firmware boot process. The image
+stored in PCI expansion ROM is an UEFI driver that must be compliant with
+https://uefi.org/specifications[UEFI specification 2.9] 14.4.2 PCI Option ROMs.
+
 
 ==== Secure Boot
 * TEE
