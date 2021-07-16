@@ -638,6 +638,28 @@ https://lists.riscv.org/g/tech-privileged/message/404[Sstc] extension.
 mode. If the 'H' extension is implemented then the platforms are required to
 delegate the virtual supervisor timer interrupt to 'VS' mode.
 
+===== Watchdog Timers
+Implementation of a two-stage watchdog timer, as defined in the WatchDog Timer
+appendix footnote:[Watchdog Timer Appendix (TBD)] ,is required. Software must
+periodically refresh the watchdog timer, otherwise a first-stage watchdog
+timeout occurs. If the watchdog timer remains un-refreshed for a second period,
+then a second-stage watchdog timeout occurs.
+
+If a first-stage watchdog timeout occurs, a Supervisor-level interrupt request
+is generated and sent to the system interrupt controller, targeting a specific
+hart.
+
+If a second-stage watchdog timeout occurs, a system-level interrupt request is
+generated and sent to a system component more privileged than Supervisor-mode
+such as:
+
+- The system interrupt controller, with a Machine-level interrupt request
+targeting a specific hart
+- A platform management processor
+- Dedicated reset control logic
+
+The resultant action taken is platform-specific.
+
 ===== System Real-time[[SystemRealTime]]
 In order to facilitate server manageability, server extension platform is
 required to provide the mechanism to maintain system date and time. The
