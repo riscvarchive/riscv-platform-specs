@@ -7,8 +7,7 @@ DITAA = ditaa
 IMAGES = pcie-topology.png
 PLATFORM_SPEC = riscv-platform-spec
 PANDOC = pandoc
-PARTS = changelog.adoc contributors.adoc introduction.adoc licensing.adoc \
-	user-level.adoc
+PARTS = changelog.adoc contributors.adoc introduction.adoc licensing.adoc
 
 # Build the platform spec in several formats
 all: $(IMAGES) $(PLATFORM_SPEC).md $(PLATFORM_SPEC).pdf $(PLATFORM_SPEC).html
