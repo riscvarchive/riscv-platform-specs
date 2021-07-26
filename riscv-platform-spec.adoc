@@ -96,9 +96,9 @@ The M platform has the following extensions:
 |SPECIFICATION      | VERSION 
 |link:https://uefi.org/sites/default/files/resources/UEFI_Spec_2_9_2021_03_18.pdf[UEFI Specification]         | v2.9    
 |link:https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3[Devicetree Specification]  | v0.3
-|link:https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc[SBI Specification]                    | v0.3-rc0
+|link:https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc[SBI Specification]                    | v0.3
 |link:[RVA22 Specification]                                                                                   | TBD
-|link:https://arm-software.github.io/ebbr/[EBBR Specification]                                                | v2.0.0-pre1    
+|link:https://arm-software.github.io/ebbr/[EBBR Specification]                                                | v2.0.0    
 |link:https://uefi.org/sites/default/files/resources/ACPI_Spec_6_4_Jan22.pdf[ACPI Specification]              | v6.4
 |link:https://uefi.org/specs/ACPI/6.4/18_ACPI_Platform_Error_Interfaces/ACPI_PLatform_Error_Interfaces.html[APEI Specification]              | v6.4
 |link:https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.4.0.pdf[SMBIOS Specification]    | v3.4.0
@@ -510,7 +510,7 @@ the base spec requirements.
 .Required UEFI Protocols
 [cols="3,1,1", width=95%, align="center", options="header"]
 |===
-|Protocol                              | UEFI 2.9 $ | Note
+|Protocol                              | UEFI Section | Note
 |EFI_LOAD_FILE2_PROTOCOL               | 13.2       |
 |EFI_DECOMPRESS_PROTOCOL               | 19.5       |
 |===
@@ -532,47 +532,55 @@ The required ACPI System Description Tables, Device Objects and Methods are
 listed below.
 
 .Required ACPI System Description Tables
-[cols="3,1,2", width=95%, align="center", options="header"]
+[cols="3,2,2", width=95%, align="center", options="header"]
 |===
-|ACPI Table                                    |ACPI 6.4+ $|Note
+|ACPI Table                                    |ACPI Section|Note
 |Root System Description Pointer (RSDP)        |5.2.5      |
 |Extended System Description Table (XSDT)      |5.2.8      |
 |Fixed ACPI Description Table (FADT)           |5.2.9      |
 |Differentiated System Description Table (DSDT)|5.2.11.1   |
-|Multiple APIC Description Table (MADT)        |5.2.12     |*TBD*: Need ECR
-                                                            to add
-                                                            APLIC & IMSIC
-                                                            (AIA) to MADT
-|RISC-V Timer Description Table                |New        |*TBD*: _DSD to
-                                                            communicate
-                                                            timebase-frequency?
-|Processor Properties Topology Table (PPTT)    |5.2.29     |CPU/Cache topology
+|Multiple APIC Description Table (MADT)        |5.2.12     |
+|RISC-V Timer Description Table                |           |timebase-frequency
+|Processor Properties Topology Table (PPTT)    |5.2.29     |CPU and Cache 
+                                                            topology
                                                             information
-|Memory-mapped ConFiGuration space (MCFG)      |PCI-SIG    |Required for PCIe
+|Memory-mapped Configuration space (MCFG)      |See Links to ACPI-Related 
+                                                Documents (http://uefi.org/acpi)
+                                                under the heading 
+                                                "PCI Sig”       |Required for PCIe
                                                             support
-|Debug Port Table 2 (DBG2)                     |Microsoft  |*TBD*: 16550D?
-|Serial Port Console Redirection (SPCR)        |Microsoft  |*TBD*: 16550D?
+|Debug Port Table 2 (DBG2)                     |See Links to ACPI-Related 
+                                                Documents (http://uefi.org/acpi)
+                                                under the heading 
+                                                “Debug Port Table 2” |
+|Serial Port Console Redirection (SPCR)        |See Links to ACPI-Related 
+                                                Documents (http://uefi.org/acpi)
+                                                under the heading 
+                                                “Serial Port Console 
+                                                Redirection Table” |
 |System Resource Affinity Table (SRAT)         |5.2.16     |Required if the
-                                                            platform supports NUMA
+                                                            platform supports 
+                                                            NUMA
 |System Locality Information Table (SLIT)      |5.2.17     |Required if the
-                                                            platform supports NUMA
-|IOMMU Information Table                       |           |*TBD*: New IOMMU
-                                                            table need to be
-                                                            defined (like IVRS)
-|Software Delegated Exception Interface (SDEI) |SDEI       |*TBD*: New table
-                                                            and SBI extension
-                                                            also may be required
-|PMU event mapping table?                      |New        |*TBD*: New table
-                                                            required
+                                                            platform supports 
+                                                            NUMA
+|IOMMU Information Table                       |           |IOMMU table 
+                                                            (like IVRS)
+|Software Delegated Exception Interface (SDEI) |See Links to ACPI-Related 
+                                                Documents (http://uefi.org/acpi)
+                                                under the heading 
+                                                "Software Delegated Exceptions
+                                                Interface”       |
+|PMU event mapping table                       |          |
 |===
 
 
 .Required Device Objects and Methods
 [cols="1,2,3", width=95%, align="center", options="header"]
 |===
-|Object/Method | ACPI 6.4+ $ | Note
-|_AEI          | 5.6.5.2     | Required for GPIO-signalled events.
-|_EVT          | 5.6.5.3     | Required for interrupt-signalled events.
+|Object/Method | ACPI Section | Note
+|_AEI          | 5.6.5.2     | Required for GPIO-signalled events
+|_EVT          | 5.6.5.3     | Required for interrupt-signalled events
 |_ADR          | 6.1.1       | Required for PCI
 |_HID          | 6.1.5       |
 |_UID          | 6.1.12      |
@@ -596,9 +604,9 @@ In addition to the conformance guidelines as mentioned in *ANNEX A / 6.2* of
 the SMBIOS specification 3.4.0, below additional structures are required.
 
 .Required SMBIOS structures
-[cols="4,1,2", width=95%, align="center", options="header"]
+[cols="3,2,2", width=95%, align="center", options="header"]
 |===
-|Structure Type                                 | SMBIOS 3.4.0 $ | Note
+|Structure Type                                 | SMBIOS Section | Note
 |Management Controller Host Interface (Type 42) | 7.43           | Required for
 Redfish Host Interface.
 |Processor Additional Information (Type 44)     | 7.45           | This
@@ -615,9 +623,9 @@ process.
 The UEFI run time services listed below are required to be implemented.
 
 .Required UEFI Runtime Services
-[cols="3,1,3", width=95%, align="center", options="header"]
+[cols="3,2,3", width=95%, align="center", options="header"]
 |===
-|Service                   | UEFI 2.9 $ | Note
+|Service                   | UEFI Section | Note
 |GetVariable               | 8.2        |
 |GetNextVariableName       | 8.2        |
 |SetVariable               | 8.2        | A dedicated storage for firmware is
