@@ -524,9 +524,7 @@ listed below.
 |Fixed ACPI Description Table (FADT)           |5.2.9      |
 |Differentiated System Description Table (DSDT)|5.2.11.1   |
 |Multiple APIC Description Table (MADT)        |5.2.12     |
-|RISC-V Timer Description Table                |           |_DSD to
-                                                            communicate
-                                                            timebase-frequency
+|RISC-V Timer Description Table                |           |timebase-frequency
 |Processor Properties Topology Table (PPTT)    |5.2.29     |CPU and Cache 
                                                             topology
                                                             information
