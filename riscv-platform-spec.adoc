@@ -50,7 +50,7 @@ The M platform has the following extensions:
 == OS-A Platform
 
 === Terminology
-[cols="1,2", width=80%, align="left", options="header"]
+[cols="1,4", width=80%, align="left", options="header"]
 |===
 |TERM      | DESCRIPTION 
 |SBI       | Supervisor Binary Interface    
@@ -67,9 +67,9 @@ The M platform has the following extensions:
 |RV64GC    | RISC-V 64-bit general purpose ISA described as RV64IMAFDC.
 |RAS       | Reliability, Availability, and Serviceability
 |CLINT     | Legacy Core-Local Interrupt Controller
-|ACLINT    | Advanced CLINT
+|ACLINT    | Advanced Core-Local Interrupt Controller
 |PLIC      | Legacy Platform-Level Interrupt Controller
-|APLIC     | Advanced PLIC
+|APLIC     | Advanced Platform-Level Interrupt Controller
 |AIA       | Advanced Interrupt Architecture 
 |IMSIC     | Incomning MSI Controller
 |L1D       | L1 Data cache
@@ -92,18 +92,22 @@ The M platform has the following extensions:
 |===
 
 === Specifications
-[cols="1,2", width=80%, align="left", options="header"]
+[cols="3,1", width=80%, align="left", options="header"]
 |===
 |SPECIFICATION      | VERSION 
 |link:https://uefi.org/sites/default/files/resources/UEFI_Spec_2_9_2021_03_18.pdf[UEFI Specification]         | v2.9    
 |link:https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3[Devicetree Specification]  | v0.3
-|link:https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc[SBI Specification]                    | v0.3
-|link:[RVA22 Specification]                                                                                   | TBD
+|link:https://github.com/riscv/riscv-isa-manual/releases/download/draft-20210726-2026469/riscv-spec.pdf[RISC-V Unprivileged Architecture Specification] | 20191214-draft
+|link:https://github.com/riscv/riscv-isa-manual/releases/download/draft-20210726-2026469/riscv-privileged.pdf[RISC-V Privileged Architecture Specification] | v1.12-draft
+|link:https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc[RISC-V SBI Specification] | v0.3
+|link:https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc[RISC-V PLIC Specification] | v1.0
+|link:https://github.com/riscv/riscv-aclint/releases/download/v1.0-draft2/riscv-aclint-1.0-draft2.pdf[RISC-V ACLINT Specification] | v1.0-draft2
+|link:https://github.com/riscv/riscv-aia/releases/download/0.2-draft.24/riscv-interrupts-024.pdf[RISC-V AIA Specification] | v0.2-draft.24
+|link:https://github.com/riscv/riscv-profiles/blob/master/profiles.adoc[RISC-V Profiles Specification]| Draft
 |link:https://arm-software.github.io/ebbr/[EBBR Specification]                                                | v2.0.0    
 |link:https://uefi.org/sites/default/files/resources/ACPI_Spec_6_4_Jan22.pdf[ACPI Specification]              | v6.4
 |link:https://uefi.org/specs/ACPI/6.4/18_ACPI_Platform_Error_Interfaces/ACPI_PLatform_Error_Interfaces.html[APEI Specification]              | v6.4
 |link:https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.4.0.pdf[SMBIOS Specification]    | v3.4.0
-|link:[Platform Policy]                                                                                       | TBD
 |===
 
 // Base feature set for OS-A Platform
