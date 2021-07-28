@@ -118,8 +118,22 @@ The M platform has the following extensions:
   value stored to that location.  (That is, the fetched instruction is not an
   unpredictable value, nor is it a hybrid of the bytes of the old and new
   values.)
+** Upon illegal instruction fault taken into M-mode, the `mtval` CSR must
+   provide faulting instruction bits
+** Upon illegal instruction fault taken into S-mode, the `stval` CSR must
+   provide faulting instruction bits
 ** Platforms is allowed to operate only in little-endian mode i.e.
   implementations must hardwire the mstatus.MBE field to 0.
+** If the H-extension is implemented then the OS-A platform must comply with
+   the following additional requirements:
+*** Upon virtual instruction fault taken into M-mode, the `mtval` CSR must
+    provide faulting instruction bits
+*** Upon virtual instruction fault taken into S-mode, the `stval` CSR must
+    provide faulting instruction bits
+*** Upon guest page faults taken into HS-mode, the `htval` CSR must provide
+    the guest physical address right shifted by 2.
+*** Upon guest page faults taken into M-mode, the `mtval2` CSR must provide
+    the guest physical address right shifted by 2.
 
 [sidebar]
 --
@@ -448,9 +462,13 @@ base with the additional requirements as below.
 ==== Architecture
 The platforms which conform to server extension are required to implement +
 
-- RV64 support
-- RISC-V H ISA extension
-- VMID support
+* RV64 support
+* RISC-V ISA H-extension with following additional requirements:
+** VMID support
+** Upon load/store/AMO exceptions taken into HS-mode, the `htinst` CSR must
+   provide transformed standard instruction.
+** Upon load/store/AMO exceptions taken into M-mode, the `mtinst` CSR must
+   provide transformed standard instruction.
 
 ==== PMU
 
