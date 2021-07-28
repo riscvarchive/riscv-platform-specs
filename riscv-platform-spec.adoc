@@ -451,35 +451,32 @@ mentioned in the requirements.
 
 
 ==== Runtime Services
+
 ===== SBI
 
-- Required SBI spec version is 0.3 or higher.
-- Required SBI extensions -
-
-[cols="1,2", width=80%, align="left", options="header"]
-|===
-|EXTENSION     |    CONDITIONS 
-|SBI TIME      |    if **stimecmp** CSR not available
-|SBI IPI       | 
-|SBI RFENCE    | 
-|SBI HSM       | 
-|SBI SRST      |    
-|SBI PMU       | 
-|===
-
-- Required responsibilities of M-Mode runtime also includes - 
-    ** Interrupt and Exception Delegation
-    ** Misaligned Load & Stores handling
-    ** Missing CSRs emulation 
-    ** PMP Configuration
-
-- Wherever applicable firmware must implement UEFI interfaces over similar 
-interfaces and services present in the SBI specification. For example, UEFI 
-runtime services must implement ResetSystem() via SBI Reset extension. 
+* The M-mode runtime must implement SBI specification version 0.3
+  or higher
+* Required SBI extensions include:
+** SBI TIME
+** SBI IPI
+** SBI RFENCE
+** SBI HSM
+** SBI SRST
+** SBI PMU
+* Required features of the M-Mode runtime also includes
+** Delegate interrupts and exceptions to S-mode
+** Handle misaligned load and store
+** Emulate missing CSRs
+** Configure PMP CSRs
 
 ===== UEFI
-- OS should prioritize calling the UEFI interfaces before the SBI or Platform 
-specific mechanisms.
+
+* Wherever applicable UEFI firmware must implement UEFI interfaces over
+  similar interfaces and services present in the SBI specification. For
+  example, the UEFI ResetSystem() service must be implemented via the
+  SBI System Reset Extension.
+* The operating system should prioritize calling the UEFI interfaces before
+  the SBI or platform specific mechanisms.
 
 ==== Software and ABIs
 The platform specification mandates the following requirements for
@@ -689,8 +686,6 @@ process.
 |===
 
 ===== Runtime services
-====== SBI
-*TBD*
 
 ====== UEFI
 The UEFI run time services listed below are required to be implemented.
