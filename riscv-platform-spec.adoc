@@ -123,8 +123,30 @@ The M platform has the following extensions:
   value stored to that location.  (That is, the fetched instruction is not an
   unpredictable value, nor is it a hybrid of the bytes of the old and new
   values.)
-** Platforms is allowed to operate only in little-endian mode i.e.
-  implementations must hardwire the mstatus.MBE field to 0.
+** When an illegal instruction trap is taken into M-mode, the faulting
+   instruction bits must be written to the `mtval` CSR as defined by the
+   RISC-V privileged specification.
+** When an illegal instruction trap is taken into S-mode, the faulting
+   instruction bits must be written to the `stval` CSR as defined by the
+   RISC-V privileged specification.
+** Platform must operate in little-endian mode (i.e. implementations must
+   set the mstatus.MBE field to 0).
+** If the RISC-V ISA H-extension is implemented then the OS-A platform must
+   comply with the following additional requirements:
+*** When virtual instruction trap is taken into M-mode, the faulting
+    instruction bits must be written to the `mtval` CSR as defined by the
+    RISC-V privileged specification.
+*** When virtual instruction trap is taken into S-mode, the faulting
+    instruction bits must be written to the `stval` CSR as defined by the
+    RISC-V privileged specification.
+*** When guest page fault is taken into M-mode, exception-specific
+    information must be written to the `mtval2` CSR.
+*** When guest page fault is taken into S-mode, exception-specific
+    information value must be written to the `htval` CSR.
+*** When load/store/AMO fault is taken into M-mode, exception-specific
+    non-zero value must be written to the `mtinst` CSR.
+*** When load/store/AMO fault is taken into S-mode, exception-specific
+    non-zero value must be written to the `htinst` CSR.
 
 [sidebar]
 --
@@ -462,9 +484,9 @@ base with the additional requirements as below.
 ==== Architecture
 The platforms which conform to server extension are required to implement +
 
-- RV64 support
-- RISC-V H ISA extension
-- VMID support
+* RV64 support
+* RISC-V ISA H-extension with following additional requirements:
+** VMID support
 
 ==== PMU
 
