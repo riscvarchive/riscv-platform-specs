@@ -35,8 +35,9 @@ toc::[]
 |RVA22     | RISC-V Application 2022 <<spec_profiles>>
 |EE        | Execution Environment
 |OSPM      | Operating System Power Management
-|RV32GC    | RISC-V 32-bit general purpose ISA described as RV32IMAFDC.
-|RV64GC    | RISC-V 64-bit general purpose ISA described as RV64IMAFDC.
+|RVA22U64  | RISC-V 2022 user-mode profile <<spec_profiles>>
+|RVA22S64  | RISC-V 2022 supervisor-mode profile <<spec_profiles>>
+|RVA22M64  | RISC-V 2022 machine-mode profile <<spec_profiles>>
 |RAS       | Reliability, Availability, and Serviceability
 |CLINT     | Legacy Core-Local Interrupt Controller
 |ACLINT    | Advanced Core-Local Interrupt Controller <<spec_aclint>>
@@ -97,7 +98,8 @@ The M platform has the following extensions:
 === Base
 ==== Architecture
 * ISA Requirements
-** The OS-A platform is required to comply with the RVA22 profile <<spec_profiles>>.
+** The OS-A platform harts are required to comply with the RVA22U64 and
+   RVA22S64 profiles <<spec_profiles>>.
 ** Within main-memory regions, aligned instruction fetch must be atomic, up to
   the smaller of ILEN and XLEN bits. In particular, if an aligned 4-byte word
   is stored with the `sw` instruction, then any processor attempts to execute
@@ -427,9 +429,6 @@ systems.
 discovery mechanism, etc. 
 - The requirements are operating system agnostic, specific firmware/bootloader
 implementation agnostic.
-- Any RV32GC or RV64GC platform seeking compatibility with the base 
-specification is required to implement all three privilege modes i.e. M, S and
-U mode.
 - For the generic mandatory requirements this base specification will refer to
 the EBBR Specification. Any deviation from the EBBR will be explicitly 
 mentioned in the requirements.
@@ -477,14 +476,13 @@ specific mechanisms.
 
 // Server extension for OS-A Platform
 === Server Extension
-The server extension specifies additional requirements for RV64I based server 
-class platforms. The server extension includes all of the requirements for the
+The server extension specifies additional requirements for server  class
+platforms. The server extension includes all of the requirements for the
 base with the additional requirements as below.
 
 ==== Architecture
 The platforms which conform to server extension are required to implement +
 
-* RV64 support
 * The `time` CSR must be implemented in hardware
 * The Sstc extension <<spec_priv_sstc>> must be implemented
 * RISC-V ISA H-extension with following additional requirements:
@@ -544,9 +542,9 @@ additional requirements:
 
 ==== Boot and Runtime Requirements
 =====  Firmware
-The boot and system firmware for the RV64I server platforms required to be
-based on UEFI as per the base specification with some additional
-requirements as mentioned below.
+The boot and system firmware for the server platforms must support UEFI as
+defined in by the OS-A base platform with some additional requirements
+described in following sub-setions.
 
 ====== PCIe support
 The platforms are required to implement *EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL* and other
@@ -575,10 +573,10 @@ the base spec requirements.
 
 ====== ACPI
 
-For RV64I server platforms, ACPI tables are required to be passed via UEFI
-to the operating system for the purpose of discovery and the configuration of
-the hardware. This section defines the required ACPI tables and objects. All
-other ACPI tables for RISC-V can be implemented as needed adhering to the ACPI
+For server platforms, ACPI tables are required to be passed via UEFI to the
+operating system for the purpose of discovery and the configuration of the
+hardware. This section defines the required ACPI tables and objects. All other
+ACPI tables for RISC-V can be implemented as needed adhering to the ACPI
 spec version 6.4+(RISC-V support when added).
 
 In ACPI namespace, processors are required to be defined under the System Bus
@@ -962,11 +960,8 @@ although they do not have to in order to meet the specification.
 
 === Base
 ==== Architecture
-The M Platform specification depends on the RVM22 specification and all
-requirements from RVM22 must be met.
-
-Any RISC-V system that uses at least RV32/64G can meet the M Platform
-specification.
+The M Platform harts must comply with the RVM22M64 profile specification
+<<spec_profiles>>.
 
 ==== Interrupt Controller
 Embedded systems are recommended to use a spec compliant PLIC <<spec_plic>>,
