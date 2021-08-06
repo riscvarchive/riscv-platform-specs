@@ -19,6 +19,49 @@
 // table of contents
 toc::[]
 
+[preface]
+== Terminology
+[cols="1,4", width=80%, align="left", options="header"]
+|===
+|TERM      | DESCRIPTION
+|SBI       | Supervisor Binary Interface <<spec_sbi>>
+|UEFI      | Unified Extensible Firmware Interface <<spec_uefi>>
+|ACPI      | Advanced Configuration and Power Interface <<spec_acpi>>
+|APEI      | ACPI Platform Error Interfaces <<spec_apei>>
+|SMBIOS    | System Management Basic I/O System <<spec_smbios>>
+|DTS       | Devicetree source file <<spec_dt>>
+|DTB       | Devicetree binary <<spec_dt>>
+|RVA22     | RISC-V Application 2022 <<spec_profiles>>
+|EE        | Execution Environment
+|OSPM      | Operating System Power Management
+|RV32GC    | RISC-V 32-bit general purpose ISA described as RV32IMAFDC.
+|RV64GC    | RISC-V 64-bit general purpose ISA described as RV64IMAFDC.
+|RAS       | Reliability, Availability, and Serviceability
+|CLINT     | Legacy Core-Local Interrupt Controller
+|ACLINT    | Advanced Core-Local Interrupt Controller <<spec_aclint>>
+|PLIC      | Legacy Platform-Level Interrupt Controller <<spec_plic>>
+|APLIC     | Advanced Platform-Level Interrupt Controller <<spec_aia>>
+|AIA       | Advanced Interrupt Architecture <<spec_aia>>
+|IMSIC     | Incomning MSI Controller <<spec_aia>>
+|L1D       | L1 Data cache
+|LL        | Last level cache
+|DTLB      | DATA TLB cache
+|PCIe      | PCI Express
+|ECAM      | Enhanced Configuration Access Mechanism
+|BAR       | Base Address Register
+|AER       | Advanced Error Reporting
+|CRS       | Configuration Request Retry Status
+|TLP       | Transaction Layer Packet
+|RCiEP     | Root Complex Integrated Endpoint
+|RCEC      | Root Complex Event Collector
+|PME       | Power Management Event
+|MSI       | Message Signaled Interrupts
+|MSI-X     | Enhanced Message Signaled Interrupts
+|INTx      | PCIe Legacy Interrupts
+|PMA       | Physical Memory Attributes
+|PRT       | PCI Routing Table
+|===
+
 == Introduction 
 The platform specification defines a set of platforms that specify requirements
 for interoperability between software and hardware. The platform policy 
@@ -49,72 +92,11 @@ The M platform has the following extensions:
 // OS-A Platform
 == OS-A Platform
 
-=== Terminology
-[cols="1,4", width=80%, align="left", options="header"]
-|===
-|TERM      | DESCRIPTION 
-|SBI       | Supervisor Binary Interface    
-|UEFI      | Unified Extensible Firmware Interface
-|ACPI      | Advanced Configuration and Power Interface
-|APEI      | ACPI Platform Error Interfaces 
-|SMBIOS    | System Management Basic I/O System
-|DTS       | Devicetree source file    
-|DTB       | Devicetree binary
-|RVA22     | RISC-V Application 2022
-|EE        | Execution Environment
-|OSPM      | Operating System Power Management
-|RV32GC    | RISC-V 32-bit general purpose ISA described as RV32IMAFDC.
-|RV64GC    | RISC-V 64-bit general purpose ISA described as RV64IMAFDC.
-|RAS       | Reliability, Availability, and Serviceability
-|CLINT     | Legacy Core-Local Interrupt Controller
-|ACLINT    | Advanced Core-Local Interrupt Controller
-|PLIC      | Legacy Platform-Level Interrupt Controller
-|APLIC     | Advanced Platform-Level Interrupt Controller
-|AIA       | Advanced Interrupt Architecture 
-|IMSIC     | Incomning MSI Controller
-|L1D       | L1 Data cache
-|LL	   | Last level cache
-|DTLB	   | DATA TLB cache
-|PCIe      | PCI Express
-|ECAM      | Enhanced Configuration Access Mechanism
-|BAR       | Base Address Register
-|AER       | Advanced Error Reporting
-|CRS       | Configuration Request Retry Status
-|TLP       | Transaction Layer Packet
-|RCiEP     | Root Complex Integrated Endpoint
-|RCEC      | Root Complex Event Collector
-|PME       | Power Management Event
-|MSI       | Message Signaled Interrupts
-|MSI-X     | Enhanced Message Signaled Interrupts
-|INTx      | PCIe Legacy Interrupts
-|PMA       | Physical Memory Attributes
-|PRT       | PCI Routing Table
-|===
-
-=== Specifications
-[cols="3,1", width=80%, align="left", options="header"]
-|===
-|SPECIFICATION      | VERSION 
-|link:https://uefi.org/sites/default/files/resources/UEFI_Spec_2_9_2021_03_18.pdf[UEFI Specification]         | v2.9    
-|link:https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3[Devicetree Specification]  | v0.3
-|link:https://github.com/riscv/riscv-isa-manual/releases/download/draft-20210726-2026469/riscv-spec.pdf[RISC-V Unprivileged Architecture Specification] | 20191214-draft
-|link:https://github.com/riscv/riscv-isa-manual/releases/download/draft-20210726-2026469/riscv-privileged.pdf[RISC-V Privileged Architecture Specification] | v1.12-draft
-|link:https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc[RISC-V SBI Specification] | v0.3
-|link:https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc[RISC-V PLIC Specification] | v1.0
-|link:https://github.com/riscv/riscv-aclint/releases/download/v1.0-draft2/riscv-aclint-1.0-draft2.pdf[RISC-V ACLINT Specification] | v1.0-draft2
-|link:https://github.com/riscv/riscv-aia/releases/download/0.2-draft.24/riscv-interrupts-024.pdf[RISC-V AIA Specification] | v0.2-draft.24
-|link:https://github.com/riscv/riscv-profiles/blob/master/profiles.adoc[RISC-V Profiles Specification]| Draft
-|link:https://arm-software.github.io/ebbr/[EBBR Specification]                                                | v2.0.0    
-|link:https://uefi.org/sites/default/files/resources/ACPI_Spec_6_4_Jan22.pdf[ACPI Specification]              | v6.4
-|link:https://uefi.org/specs/ACPI/6.4/18_ACPI_Platform_Error_Interfaces/ACPI_PLatform_Error_Interfaces.html[APEI Specification]              | v6.4
-|link:https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.4.0.pdf[SMBIOS Specification]    | v3.4.0
-|===
-
 // Base feature set for OS-A Platform
 === Base
 ==== Architecture
 * ISA Requirements
-** The OS-A platform is required to comply with the RVA22 profile.
+** The OS-A platform is required to comply with the RVA22 profile <<spec_profiles>>.
 ** Within main-memory regions, aligned instruction fetch must be atomic, up to
   the smaller of ILEN and XLEN bits. In particular, if an aligned 4-byte word
   is stored with the `sw` instruction, then any processor attempts to execute
@@ -679,8 +661,7 @@ implemented but it can return EFI_UNSUPPORTED.
 ==== System Peripherals
 ===== Clock and Timers
 ** Platforms are required to implement the time CSR.
-** Platforms are required to implement the
-https://lists.riscv.org/g/tech-privileged/message/404[Sstc] extension.
+** Platforms are required to implement the Sstc extension <<spec_priv_sstc>>.
 ** Platforms are required to delegate the supervisor timer interrupt to 'S'
 mode. If the 'H' extension is implemented then the platforms are required to
 delegate the virtual supervisor timer interrupt to 'VS' mode.
@@ -869,11 +850,10 @@ separate ECAM I/O region.
 
 ===== PCIe Device Firmware Requirement
 PCI expansion ROM code type 3 (UEFI) image must be provided by PCIe device for
-OS/A server extension platform according to
-https://pcisig.com/specifications/conventional/pci_firmware[PCI Firmware Specification Revision 3.3]
+OS/A server extension platform according to PCI Firmware Specification <<spec_pci_firmware>>
 if that PCIe device is utilized during UEFI firmware boot process. The image
 stored in PCI expansion ROM is an UEFI driver that must be compliant with
-https://uefi.org/specifications[UEFI specification 2.9] 14.4.2 PCI Option ROMs.
+UEFI specification <<spec_uefi>> 14.4.2 PCI Option ROMs.
 
 
 ==== Secure Boot
@@ -951,10 +931,8 @@ Any RISC-V system that uses at least RV32/64G can meet the M Platform
 specification.
 
 ==== Interrupt Controller
-Embedded systems are recommended to use a spec compliant
-https://github.com/riscv/riscv-plic-spec[PLIC], a spec compliant
-https://github.com/riscv/riscv-fast-interrupt/blob/master/clic.adoc[CLIC]
-or both a CLIC and and PLIC.
+Embedded systems are recommended to use a spec compliant PLIC <<spec_plic>>,
+a spec compliant CLIC <<spec_clic>> or both a CLIC and and PLIC.
 
 If using just a PLIC the system must continue to use the original basic
 `xsip`/`xtip`/`xeip` signals in the `xip` register to indicate pending
@@ -1014,3 +992,23 @@ also implement PMP support.
 When PMP is supported it is recommended to include at least 4 regions, although
 if possible more should be supported to allow more flexibility. Hardware
 implementations should aim for supporting at least 16 PMP regions.
+
+[bibliography]
+== References
+
+* [[[spec_uefi,1]]] link:https://uefi.org/sites/default/files/resources/UEFI_Spec_2_9_2021_03_18.pdf[UEFI Specification], Version: v2.9
+* [[[spec_dt,2]]] link:https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3[Devicetree Specification], Version: v0.3
+* [[[spec_unpriv,3]]] link:https://github.com/riscv/riscv-isa-manual/releases/download/draft-20210726-2026469/riscv-spec.pdf[RISC-V Unprivileged Architecture Specification], Version:20191214-draft
+* [[[spec_priv,4]]] link:https://github.com/riscv/riscv-isa-manual/releases/download/draft-20210726-2026469/riscv-privileged.pdf[RISC-V Privileged Architecture Specification], Version: v1.12-draft
+* [[[spec_priv_sstc,5]]] link:https://lists.riscv.org/g/tech-privileged/message/404[RISC-V Privleged Architecture Sstc Extension], Version: Draft
+* [[[spec_sbi,6]]] link:https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc[RISC-V SBI Specification], Version: v0.3
+* [[[spec_plic,7]]] link:https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc[RISC-V PLIC Specification], Version: v1.0
+* [[[spec_clic,8]]] link:https://github.com/riscv/riscv-fast-interrupt/blob/master/clic.adoc[RISC-V CLIC Specification], Version: Draft
+* [[[spec_aclint,9]]] link:https://github.com/riscv/riscv-aclint/releases/download/v1.0-draft2/riscv-aclint-1.0-draft2.pdf[RISC-V ACLINT Specification], Version: v1.0-draft2
+* [[[spec_aia,10]]] link:https://github.com/riscv/riscv-aia/releases/download/0.2-draft.24/riscv-interrupts-024.pdf[RISC-V AIA Specification], Version: v0.2-draft.24
+* [[[spec_profiles,11]]] link:https://github.com/riscv/riscv-profiles/blob/master/profiles.adoc[RISC-V Profiles Specification], Version: Draft
+* [[[spec_ebbr,12]]] link:https://arm-software.github.io/ebbr/[EBBR Specification], Version: v2.0.0    
+* [[[spec_acpi,13]]] link:https://uefi.org/sites/default/files/resources/ACPI_Spec_6_4_Jan22.pdf[ACPI Specification], Version: v6.4
+* [[[spec_apei,14]]] link:https://uefi.org/specs/ACPI/6.4/18_ACPI_Platform_Error_Interfaces/ACPI_PLatform_Error_Interfaces.html[APEI Specification], Version: v6.4
+* [[[spec_smbios,15]]] link:https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.4.0.pdf[SMBIOS Specification], Version: v3.4.0
+* [[[spec_pci_firmware,16]]] https://pcisig.com/specifications/conventional/pci_firmware[PCI Firmware Specification], Version: 3.3
