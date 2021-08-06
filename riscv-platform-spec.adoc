@@ -89,6 +89,8 @@ The M platform has the following extensions:
 |INTx      | PCIe Legacy Interrupts
 |PMA       | Physical Memory Attributes
 |PRT       | PCI Routing Table
+|ELF       | Executable and Linkable Format
+|DWARF     | Debugging With Arbitrary Record Formats
 |===
 
 === Specifications
@@ -104,6 +106,9 @@ The M platform has the following extensions:
 |link:https://uefi.org/specs/ACPI/6.4/18_ACPI_Platform_Error_Interfaces/ACPI_PLatform_Error_Interfaces.html[APEI Specification]              | v6.4
 |link:https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.4.0.pdf[SMBIOS Specification]    | v3.4.0
 |link:[Platform Policy]                                                                                       | TBD
+|link:[RISC-V procedure call standard]                                                                        | TBD
+|link:[RISC-V ELF specification]                                                                              | TBD
+|link:[RISC-V DWARF specification]                                                                            | TBD
 |===
 
 // Base feature set for OS-A Platform
@@ -438,6 +443,15 @@ runtime services must implement ResetSystem() via SBI Reset extension.
 ===== UEFI
 - OS should prioritize calling the UEFI interfaces before the SBI or Platform 
 specific mechanisms.
+
+==== Software and ABIs
+The platform specification mandates the following requirements for software components:
+
+* All RISC-V software components must comply with the `RISC-V procedure call standard`.
+* All RISC-V software components that use ELF files must comply with the `RISC-V ELF specification`.
+* All RISC-V software components that use DWARF files must comply with the `RISC-V DWARF specification`.
+
+Rationale: The platform specification intends to avoid fragmentation and promotes interoperability.
 
 // Server extension for OS-A Platform
 === Server Extension
