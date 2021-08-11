@@ -985,38 +985,10 @@ must be supported.
 Embedded systems cannot use a non-compliant interrupt controller and still
 call it a PLIC or CLIC.
 
-==== Machine Timer
-The RISC-V machine timer (controlled via `mtime` and `mtimecmp`) must be
-implemented. The two registers must be memory mapped as required by the RISC-V
-specification.
-
-The M Platform specification requires that the registers be mapped
-adjacent to each other with the `mtime` region at the lower address.
-
-The starting address of this region can be located anywhere in
-memory, including inside other peripherals, as long as the start address is
-4 byte aligned.
-
-An example of the memory layout for a 32-bit system with a single hart is below
-
--------------------------
-=========================
-| 0x00 |  mtime low     |
-| 0x04 |  mtime high    |
-| 0x08 |  mtimecmp low  |
-| 0x0C |  mtimecmp high |
-=========================
--------------------------
-
-and for a 64-bit system with 2 harts
-
----------------------------
-===========================
-| 0x00 |  mtime           |
-| 0x08 |  mtimecmp hart 1 |
-| 0x10 |  mtimecmp hart 2 |
-===========================
----------------------------
+==== Timer Support
+The M Platform must implement one or more RISC-V ACLINT MTIMER <<spec_aclint>>
+devices. This will provide the `mtime` and `mtimecmp` memory mapped registers
+as required by the RISC-V privilege specification <<spec_priv>>.
 
 The `mcounteren`.TM and `scounteren`.TM bits _must not_ be hardwired,
 regardless as to whether accesses to the `time` CSR are implemented
