@@ -646,16 +646,16 @@ The UEFI run time services listed below are required to be implemented.
 |SetVariable               | 8.2        | A dedicated storage for firmware is
 required so that there is no conflict in access by both firmware and the OS.
 |QueryVariableInfo         | 8.2        |
-|GetTime                   | 8.3        | System Real-time accessed by the
-OS and firmware.<<SystemRealTime,(Refer to System Real-time section)>>
-|SetTime                   | 8.3        | System Real-time set by the
-OS and firmware.<<SystemRealTime,(Refer to System Real-time section)>>
+|GetTime                   | 8.3        | System Date/Time accessed by the
+OS and firmware.<<SystemDateTime,(Refer to System Date/Time section)>>
+|SetTime                   | 8.3        | System Date/Time set by the
+OS and firmware.<<SystemDateTime,(Refer to System Date/Time section)>>
 |GetWakeupTime             | 8.3        | Interface is required to be
-implemented but it can return EFI_UNSUPPORTED.<<SystemRealTime,(Refer to
-System Real-time section)>>
+implemented but it can return EFI_UNSUPPORTED.<<SystemDateTime,(Refer to
+System Date/Time section)>>
 |SetWakeupTime             | 8.3        | Interface is required to be
-implemented but it can return EFI_UNSUPPORTED.<<SystemRealTime,(Refer to
-System Real-time section)>>
+implemented but it can return EFI_UNSUPPORTED.<<SystemDateTime,(Refer to
+System Date/Time section)>>
 |SetVirtualAddressMap      | 8.4        |
 |ConvertPointer            | 8.4        |
 |GetNextHighMonotonicCount | 8.5        |
@@ -699,27 +699,19 @@ targeting a specific hart
 
 The resultant action taken is platform-specific.
 
-===== System Real-time[[SystemRealTime]]
+===== System Date/Time[[SystemDateTime]]
 In order to facilitate server manageability, server extension platform is
-required to provide the mechanism to maintain system date and time. The
-mechanism could be the Real-time clock on platform as it mentioned in UEFI
-spec, or other implementations that can provide the date and time information
-to UEFI runtime Time service. +
-The GetTime() and SetTime() UEFI runtime service
-must be implemented by firmware to incorporate with the underlying system 
-Real-time mechanism, however the SetTime() is allowed to be unsupported if the
-platform doesn’t require the feature to set date and time or the system
-Real-time mechanism doesn’t have capability to set time. UEFI GetWakeupTime()
-and SetWakeupTime() runtime services are also required to be implemented on
-server extension platform. However, those two runtime services can return
-EFI_UNSUPPORTED to the caller if the wake up from time is not supported by the
-platform. +
-Timezone and Daylight Saving Time (DST) are also defined in UEFI runtime Time
-service, however the system Real-time mechanism may not have the capability
-to maintain this information. Firmware can always return the local time without
-timezone and DST information, or firmware incorporates with other facilities
-such as BMC, UEFI variable or boot time system configuration utility to
-maintain this information with the system Real-time mechanism.
+required to provide the mechanism to maintain system date/time for UEFI
+runtime Time service. +
+
+- UEFI Runtime Time Service
+  * GetTime() +
+    Must be implemented by firmware to incorporate with the underlying system
+    date/time mechanism.
+  * SetTime(), GetWakeupTime() and SetWakeupTime() +
+    These Time services must be implemented but allowed to return
+    EFI_UNSUPPORTED if the platform doesn't require the features or the system
+    date/time mechanism doesn’t have the capabilities.
 
 ===== PCIe
 Platforms are required to support at least PCIe Base Specification Revision 1.1
