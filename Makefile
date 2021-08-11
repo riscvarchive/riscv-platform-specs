@@ -36,7 +36,6 @@ clean:
 	rm -f $(PLATFORM_SPEC).md
 	rm -f $(PLATFORM_SPEC).pdf
 	rm -f $(PLATFORM_SPEC).html
-	rm -f $(IMAGES)
 
 # handy shortcuts for installing necessary packages: YMMV
 install-debs:
