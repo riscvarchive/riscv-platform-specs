@@ -13,11 +13,56 @@
 :doctype: book
 :sectnums:
 :sectnumlevels: 5
+:xrefstyle: short
 :toc: macro
 :toclevels: 5
 
 // table of contents
 toc::[]
+
+[preface]
+== Terminology
+[cols="1,4", width=80%, align="left", options="header"]
+|===
+|TERM      | DESCRIPTION
+|SBI       | Supervisor Binary Interface <<spec_sbi>>
+|UEFI      | Unified Extensible Firmware Interface <<spec_uefi>>
+|ACPI      | Advanced Configuration and Power Interface <<spec_acpi>>
+|APEI      | ACPI Platform Error Interfaces <<spec_apei>>
+|SMBIOS    | System Management Basic I/O System <<spec_smbios>>
+|DTS       | Devicetree source file <<spec_dt>>
+|DTB       | Devicetree binary <<spec_dt>>
+|RVA22     | RISC-V Application 2022 <<spec_profiles>>
+|EE        | Execution Environment
+|OSPM      | Operating System Power Management
+|RVA22U64  | RISC-V 2022 user-mode profile <<spec_profiles>>
+|RVA22S64  | RISC-V 2022 supervisor-mode profile <<spec_profiles>>
+|RVA22M64  | RISC-V 2022 machine-mode profile <<spec_profiles>>
+|RAS       | Reliability, Availability, and Serviceability
+|CLINT     | Legacy Core-Local Interrupt Controller
+|ACLINT    | Advanced Core-Local Interrupt Controller <<spec_aclint>>
+|PLIC      | Legacy Platform-Level Interrupt Controller <<spec_plic>>
+|APLIC     | Advanced Platform-Level Interrupt Controller <<spec_aia>>
+|AIA       | Advanced Interrupt Architecture <<spec_aia>>
+|IMSIC     | Incomning MSI Controller <<spec_aia>>
+|L1D       | L1 Data cache
+|LL        | Last level cache
+|DTLB      | DATA TLB cache
+|PCIe      | PCI Express
+|ECAM      | Enhanced Configuration Access Mechanism
+|BAR       | Base Address Register
+|AER       | Advanced Error Reporting
+|CRS       | Configuration Request Retry Status
+|TLP       | Transaction Layer Packet
+|RCiEP     | Root Complex Integrated Endpoint
+|RCEC      | Root Complex Event Collector
+|PME       | Power Management Event
+|MSI       | Message Signaled Interrupts
+|MSI-X     | Enhanced Message Signaled Interrupts
+|INTx      | PCIe Legacy Interrupts
+|PMA       | Physical Memory Attributes
+|PRT       | PCI Routing Table
+|===
 
 == Introduction 
 The platform specification defines a set of platforms that specify requirements
@@ -49,73 +94,15 @@ The M platform has the following extensions:
 // OS-A Platform
 == OS-A Platform
 
-=== Terminology
-[cols="1,2", width=80%, align="left", options="header"]
-|===
-|TERM      | DESCRIPTION 
-|SBI       | Supervisor Binary Interface    
-|UEFI      | Unified Extensible Firmware Interface
-|ACPI      | Advanced Configuration and Power Interface
-|APEI      | ACPI Platform Error Interfaces 
-|SMBIOS    | System Management Basic I/O System
-|DTS       | Devicetree source file    
-|DTB       | Devicetree binary
-|RVA22     | RISC-V Application 2022
-|EE        | Execution Environment
-|OSPM      | Operating System Power Management
-|RV32GC    | RISC-V 32-bit general purpose ISA described as RV32IMAFDC.
-|RV64GC    | RISC-V 64-bit general purpose ISA described as RV64IMAFDC.
-|RAS       | Reliability, Availability, and Serviceability
-|CLINT     | Legacy Core-Local Interrupt Controller
-|ACLINT    | Advanced CLINT
-|PLIC      | Legacy Platform-Level Interrupt Controller
-|APLIC     | Advanced PLIC
-|AIA       | Advanced Interrupt Architecture 
-|IMSIC     | Incomning MSI Controller
-|L1D       | L1 Data cache
-|LL	   | Last level cache
-|DTLB	   | DATA TLB cache
-|PCIe      | PCI Express
-|ECAM      | Enhanced Configuration Access Mechanism
-|BAR       | Base Address Register
-|AER       | Advanced Error Reporting
-|CRS       | Configuration Request Retry Status
-|TLP       | Transaction Layer Packet
-|RCiEP     | Root Complex Integrated Endpoint
-|RCEC      | Root Complex Event Collector
-|PME       | Power Management Event
-|MSI       | Message Signaled Interrupts
-|MSI-X     | Enhanced Message Signaled Interrupts
-|INTx      | PCIe Legacy Interrupts
-|PMA       | Physical Memory Attributes
-|PRT       | PCI Routing Table
-|ELF       | Executable and Linkable Format
-|DWARF     | Debugging With Arbitrary Record Formats
-|===
-
-=== Specifications
-[cols="1,2", width=80%, align="left", options="header"]
-|===
-|SPECIFICATION      | VERSION 
-|link:https://uefi.org/sites/default/files/resources/UEFI_Spec_2_9_2021_03_18.pdf[UEFI Specification]         | v2.9    
-|link:https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3[Devicetree Specification]  | v0.3
-|link:https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc[SBI Specification]                    | v0.3
-|link:[RVA22 Specification]                                                                                   | TBD
-|link:https://arm-software.github.io/ebbr/[EBBR Specification]                                                | v2.0.0    
-|link:https://uefi.org/sites/default/files/resources/ACPI_Spec_6_4_Jan22.pdf[ACPI Specification]              | v6.4
-|link:https://uefi.org/specs/ACPI/6.4/18_ACPI_Platform_Error_Interfaces/ACPI_PLatform_Error_Interfaces.html[APEI Specification]              | v6.4
-|link:https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.4.0.pdf[SMBIOS Specification]    | v3.4.0
-|link:[Platform Policy]                                                                                       | TBD
-|link:[RISC-V procedure call standard]                                                                        | TBD
-|link:[RISC-V ELF specification]                                                                              | TBD
-|link:[RISC-V DWARF specification]                                                                            | TBD
-|===
-
 // Base feature set for OS-A Platform
 === Base
 ==== Architecture
+
+The OS-A platform must comply with the RVA22U, RVA22S and RVA22M profiles
+defined by the RISC-V profiles specification <<spec_profiles>> with the
+following additional requirements:
+
 * ISA Requirements
-** The OS-A platform is required to comply with the RVA22 profile.
 ** Within main-memory regions, aligned instruction fetch must be atomic, up to
   the smaller of ILEN and XLEN bits. In particular, if an aligned 4-byte word
   is stored with the `sw` instruction, then any processor attempts to execute
@@ -123,8 +110,30 @@ The M platform has the following extensions:
   value stored to that location.  (That is, the fetched instruction is not an
   unpredictable value, nor is it a hybrid of the bytes of the old and new
   values.)
-** Platforms is allowed to operate only in little-endian mode i.e.
-  implementations must hardwire the mstatus.MBE field to 0.
+** When an illegal instruction trap is taken into M-mode, the faulting
+   instruction bits must be written to the `mtval` CSR as defined by the
+   RISC-V privileged specification.
+** When an illegal instruction trap is taken into S-mode, the faulting
+   instruction bits must be written to the `stval` CSR as defined by the
+   RISC-V privileged specification.
+** Platform must operate in little-endian mode (i.e. implementations must
+   set the mstatus.MBE field to 0).
+** If the RISC-V ISA H-extension is implemented then the OS-A platform must
+   comply with the following additional requirements:
+*** When virtual instruction trap is taken into M-mode, the faulting
+    instruction bits must be written to the `mtval` CSR as defined by the
+    RISC-V privileged specification.
+*** When virtual instruction trap is taken into S-mode, the faulting
+    instruction bits must be written to the `stval` CSR as defined by the
+    RISC-V privileged specification.
+*** When guest page fault is taken into M-mode, exception-specific
+    information must be written to the `mtval2` CSR.
+*** When guest page fault is taken into S-mode, exception-specific
+    information value must be written to the `htval` CSR.
+*** When load/store/AMO fault is taken into M-mode, exception-specific
+    non-zero value must be written to the `mtinst` CSR.
+*** When load/store/AMO fault is taken into S-mode, exception-specific
+    non-zero value must be written to the `htinst` CSR.
 
 [sidebar]
 --
@@ -240,114 +249,168 @@ each must be 1
     The default should allow code that's sensitive to these requirements to be
     debugged.
 
-==== Interrupt Controller, Software Interrupt, and Timer Requirements
-In the following requirements,
-https://github.com/riscv/riscv-aia[*AIA*] refers to the Advanced Interrupt Architecture, https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[*ACLINT*]
-refers to the Advanced *CLINT*. AIA comprises two separate components: `IMSICs` and `APLICs`. 
-If supported, there is an `IMSIC` device associated with each hart. 
-If supported, *APLIC* devices are global to all harts, and there may be one or
-multiple in a system. *ACLINT* comprises three separate components: `MTIMER` for
-Timer support, and `MSWI` and `SSWI` for Machine-level and Supervisor-level
-Software Interrupt (IPI) support. +
-https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc[*PLIC*]
-refers to the legacy Platform-Level Interrupt Controller that provides
-facilities to route external interrupts to a hart context with a given privilege
-mode. The number of non-local interrupt sources supported by PLIC and how does
-each of them connect to the hart context is PLIC core implementation-specific. +
-*CLINT* is a legacy Core-Local Interrupt Controller that is a compatible subset of
-ACLINT which provides facilities to trigger Software (IPI) and Timer interrupts to
-hart.
+==== Interrupts and Timer
 
-.The following table summarizes what features are supported for four classes of OS/A platforms.
-[width="100%",cols="^,^,^,^,^,^,^,^,^,^,^,^,^"]
-|=======
-.2+|*OS-A Platform* 3+|*MSIs* 3+|*Wired Interrupts* 3+|*IPIs* 3+|*Timer*
-|M-level|S-level|VS-level|M-level|S-level|VS-level|M-level|S-level|VS-level|M-level|S-level|VS-level
-|Existing|NA|NA|NA|PLIC|PLIC|PLIC + 
-_(Trap and emulate)_|MSWI +
-https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|
-SBI IPI +
-https://github.com/riscv/riscv-sbi-doc[`*SBI*`]|SBI IPI +
-https://github.com/riscv/riscv-sbi-doc[`*SBI*`]|MTIMER +
-https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|SBI Timer +
-https://github.com/riscv/riscv-sbi-doc[`*SBI*`]|SBI Timer +
-https://github.com/riscv/riscv-sbi-doc[`*SBI*`]
-|Only Wired IRQs|NA|NA|NA|APLIC M-level +
-https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level +
-https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level +
-_(Trap and emulate)_ +
-https://github.com/riscv/riscv-aia[`*AIA*`]|MSWI +
-https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|
-SSWI +
-https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|
-SBI IPI +
-https://github.com/riscv/riscv-sbi-doc[`*SBI*`]|MTIMER +
-https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|
-Priv Sstc +
-https://github.com/riscv/riscv-isa-manual/releases[`*Priv Spec*`]|
-Priv Sstc +
-https://github.com/riscv/riscv-isa-manual/releases[`*Priv Spec*`]
-|MSIs and Wired IRQs|IMSIC M-level + 
-https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC S-level +
-https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level +
-_(Trap and emulate)_ +
-https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC M-level + 
-https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level + 
-https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level + 
-_(Trap and emulate)_ +
-https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC M-level +
-https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC S-level +
-https://github.com/riscv/riscv-aia[`*AIA*`]|SBI IPI +
-https://github.com/riscv/riscv-sbi-doc[`*SBI*`]|MTIMER +
-https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|
-Priv Sstc +
-https://github.com/riscv/riscv-isa-manual/releases[`*Priv Spec*`]|
-Priv Sstc +
-https://github.com/riscv/riscv-isa-manual/releases[`*Priv Spec*`]
-|MSIs, Virtual MSIs and Wired IRQs|IMSIC M-level +
-https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC S-level +
-https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC VS-level +
-https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC M-level +
-https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level +
-https://github.com/riscv/riscv-aia[`*AIA*`]|APLIC S-level + 
-_(Trap and emulate)_ +
-https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC M-level +
-https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC S-level +
-https://github.com/riscv/riscv-aia[`*AIA*`]|IMSIC VS-level +
-https://github.com/riscv/riscv-aia[`*AIA*`]|MTIMER +
-https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc[`*ACLINT*`]|
-Priv Sstc +
-https://github.com/riscv/riscv-isa-manual/releases[`*Priv Spec*`]|
-Priv Sstc +
-https://github.com/riscv/riscv-isa-manual/releases[`*Priv Spec*`]
-|=======
+===== Timer support
 
-* For Timer support, one or more ACLINT MTIMER devices are Required for OS-A platform.
-One MTIMER may be used for all harts, or multiple MTIMERs may be used with
-multiple topological groups of harts. The base address of MTIMER memory map registers
-is platform implementation-specific, however, the format of MTIMER operation parameters
-(`mtime` and `mtimecmp` registers) must be compliant with
-https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc#21-register-map[ACLINT MTIMER Register Map]
+* One or more ACLINT MTIMER devices are required for the OS-A platform
+* Platform must support a default ACLINT MTIME counter resolution of 10ns
+  (i.e. an increment by 1 represents 10 ns).
+* The ACLINT MTIME update frequency (i.e. hardware clock) must be between
+  10 MHz and 100 MHz, and updates must be strictly monotonic.
 
-* For Interrupt Controller and Software Interrupt support, one of the following three
-choices below is Required
-  ** PLIC plus one or more ACLINT MSWI devices - DEPRECATED
-    *** One MSWI may be used for all harts, or multiple MSWIs may be used with
-multiple topological groups of harts
-    *** Only wired interrupts and M-mode IPIs are supported
-    *** Virtualization is not supported
-    *** This compatibly supports legacy PLIC + CLINT designs
-  ** One or more AIA APLIC devices plus one or more pairs of ACLINT MSWI and ACLINT SSWI devices
-    *** One MSWI/SSWI pair may be used for all harts, or multiple MSWI/SSWI
-pairs may be used with multiple topological groups of harts
-    *** Only wired interrupts are supported
-    *** Both M-mode and S-mode IPIs are supported
-    *** Virtualization is not supported
-  ** Zero, one, or more AIA APLIC devices plus per-hart AIA IMSIC devices
-    *** Both wired and MSI external interrupts are supported
-    *** Both M-mode and S-mode IPIs are supported via IMSICs
-    *** Virtualization is supported
-    *** Zero APLICs if there are no wired interrupts and only MSIs
+[sidebar]
+--
+[underline]*_Implementation Note:_*
+For example, if the MTIME counter update frequency (i.e. hardware clock) is
+25 MHz then the MTIME counter would increment by 4 upon every hardware clock
+tick for MTIME counter resolution of 10ns.
+--
+
+===== Interrupts support
+
+The OS-A platform must comply with one of the four interrupt support
+categories described in following sub-sections.
+
+[#legacy_wired_irqs]
+====== Legacy wired IRQs - DEPRECATED
+** One or more PLIC devices to support wired interrupts
+** One or more ACLINT MSWI devices to support M-mode software interrupts
+** Software interrupts for S-mode and VS-mode supported using the
+   SBI IPI extension
+** Compatibile with legacy platforms having PLIC plus CLINT devices
+** MSI external interrupts not supported
+** MSI virtualization is not supported
+
+[#only_wired_irqs]
+====== Only Wired IRQs
+** One or more AIA APLIC devices to support wired interrupts
+** One or more ACLINT MSWI devices to support M-mode software interrupts
+** One or more ACLINT SSWI devices to support S/HS-mode software interrupts
+** Software interrupts for VS-mode supported using the SBI IPI extension
+** MSI external interrupts not supported
+** MSI virtualization is not supported
+
+[#msis_and_wired_irqs]
+====== MSIs and Wired IRQs
+** AIA local interrupt CSRs must be supported by each hart
+*** `siselect` CSR must support holding 9-bit value
+*** `vsiselect` CSR must support holding 9-bit value if H-extension is
+    implemented
+** Per-hart AIA IMSIC devices must support MSIs for M-mode and S/HS-mode
+*** Must support IPRIOLEN = 6 to 8
+*** Must support at least 63 distinct interrupt identities
+*** Must implement `seteipnum_le` memory-mapped register
+** One, or more AIA APLIC devices to support wired interrupts
+*** EIID and IID fields must be 6 to 8 bits wide matching the number of
+    interrrupt identities supported by AIA IMSIC
+** Software interrupts for M-mode and S/HS-mode supported using AIA IMSIC
+   devices
+** Software interrupts for VS-mode supported using the SBI IPI extension
+** MSI virtualization is not supported
+
+[#msis_virtual_msis_and_wired_irqs]
+====== MSIs, Virtual MSIs, and Wired IRQs
+** The H-extension must be implemeted by each hart to support virtual MSIs
+*** GEILEN must be 1 or more
+** AIA local interrupt CSRs must be supported by each hart
+*** `siselect` CSR must support holding 9-bit value
+*** `vsiselect` CSR must support holding 9-bit value
+** Per-hart AIA IMSIC devices to support MSIs for M-mode, HS-mode and VS-mode
+*** Must support IPRIOLEN = 6 to 8
+*** Must support at least 63 distinct interrupt identities
+*** Must implement `seteipnum_le` memory-mapped register
+*** Must implement at least 1 guest interrupt file
+** One, or more AIA APLIC devices to support wired interrupts
+*** EIID and IID fields must be 6 to 8 bits wide matching the number of
+    interrrupt identities supported by AIA IMSIC
+** Software interrupts for M-mode, HS-mode and VS-mode supported using
+   AIA IMSIC devices
+** MSI virtualization is supported
+
+===== Summary
+
+The <<table_interrutps_and_timer_osa_platforms>> below summarizes the four
+categories of interrupt support and timer support allowed in a OS-A platorm.
+
+[#table_interrutps_and_timer_osa_platforms]
+.Interrupts and Timer support in OS-A platforms
+[stripes="none", width="100%", cols="^2s,^1s,^1s,^1s,^1s,^1s,^1s,^1s,^1s,^1s,^1s,^1s,^1s"]
+|===
+.2+|+++<font size=".8em">OS-A Platform</font>+++
+3+|+++<font size=".8em">MSIs</font>+++
+3+|+++<font size=".8em">Wired Interrupts</font>+++
+3+|+++<font size=".8em">Software Interrupts</font>+++
+3+|+++<font size=".8em">Timer</font>+++
+|+++<font size=".6em">M-mode</font>+++
+|+++<font size=".6em">S-mode</font>+++
+|+++<font size=".6em">VS-mode</font>+++
+|+++<font size=".6em">M-mode</font>+++
+|+++<font size=".6em">S-mode</font>+++
+|+++<font size=".6em">VS-mode</font>+++
+|+++<font size=".6em">M-mode</font>+++
+|+++<font size=".6em">S-mode</font>+++
+|+++<font size=".6em">VS-mode</font>+++
+|+++<font size=".6em">M-mode</font>+++
+|+++<font size=".6em">S-mode</font>+++
+|+++<font size=".6em">VS-mode</font>+++
+
+|+++<font size=".8em">Legacy Wired IRQs</font>+++
+|+++<font size=".6em">NA</font>+++
+|+++<font size=".6em">NA</font>+++
+|+++<font size=".6em">NA</font>+++
+|+++<font size=".6em">PLIC</font>+++ ^<<spec_plic>>^
+|+++<font size=".6em">PLIC</font>+++ ^<<spec_plic>>^
+|+++<font size=".6em">PLIC (emulate)</font>+++ ^<<spec_plic>>^
+|+++<color rgb="#6aa84f"><font size=".6em">MSWI</font></color>+++ ^<<spec_aclint>>^
+|+++<color rgb="#e06666"><font size=".6em">SBI IPI</font></color>+++ ^<<spec_sbi>>^
+|+++<color rgb="#e06666"><font size=".6em">SBI IPI</font></color>+++ ^<<spec_sbi>>^
+|+++<color rgb="#6aa84f"><font size=".6em">MTIMER</font></color>+++ ^<<spec_aclint>>^
+|+++<color rgb="#e06666"><font size=".6em">SBI Timer</font></color>+++ ^<<spec_sbi>>^
+|+++<color rgb="#e06666"><font size=".6em">SBI Timer</font></color>+++ ^<<spec_sbi>>^
+
+|+++<font size=".8em">Only Wired IRQs</font>+++
+|+++<font size=".6em">NA</font>+++
+|+++<font size=".6em">NA</font>+++
+|+++<font size=".6em">NA</font>+++
+|+++<color rgb="#738dc5"><font size=".6em">APLIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">APLIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">APLIC (emulate)</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#6aa84f"><font size=".6em">MSWI</font></color>+++ ^<<spec_aclint>>^
+|+++<color rgb="#6aa84f"><font size=".6em">SSWI</font></color>+++ ^<<spec_aclint>>^
+|+++<color rgb="#e06666"><font size=".6em">SBI IPI</font></color>+++ ^<<spec_sbi>>^
+|+++<color rgb="#6aa84f"><font size=".6em">MTIMER</font></color>+++ ^<<spec_aclint>>^
+|+++<color rgb="#e69138"><font size=".6em">Priv Sstc</font></color>+++ ^<<spec_priv_sstc>>^
+|+++<color rgb="#e69138"><font size=".6em">Priv Sstc</font></color>+++ ^<<spec_priv_sstc>>^
+
+|+++<font size=".8em">MSIs and Wired IRQs</font>+++
+|+++<color rgb="#738dc5"><font size=".6em">IMSIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">IMSIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">IMSIC (emulate)</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">APLIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">APLIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">APLIC (emulate)</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">IMSIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">IMSIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#e06666"><font size=".6em">SBI IPI</font></color>+++ ^<<spec_sbi>>^
+|+++<color rgb="#6aa84f"><font size=".6em">MTIMER</font></color>+++ ^<<spec_aclint>>^
+|+++<color rgb="#e69138"><font size=".6em">Priv Sstc</font></color>+++ ^<<spec_priv_sstc>>^
+|+++<color rgb="#e69138"><font size=".6em">Priv Sstc</font></color>+++ ^<<spec_priv_sstc>>^
+
+|+++<font size=".8em">MSIs, Virtual MSIs and Wired IRQs</font>+++
+|+++<color rgb="#738dc5"><font size=".6em">IMSIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">IMSIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">IMSIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">APLIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">APLIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">APLIC (emulate)</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">IMSIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">IMSIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#738dc5"><font size=".6em">IMSIC</font></color>+++ ^<<spec_aia>>^
+|+++<color rgb="#6aa84f"><font size=".6em">MTIMER</font></color>+++ ^<<spec_aclint>>^
+|+++<color rgb="#e69138"><font size=".6em">Priv Sstc</font></color>+++ ^<<spec_priv_sstc>>^
+|+++<color rgb="#e69138"><font size=".6em">Priv Sstc</font></color>+++ ^<<spec_priv_sstc>>^
+|===
 
 ==== System Peripherals
 * UART/Serial Console
@@ -364,27 +427,6 @@ of the following:
 ** UART 16550 - _REQUIRED_
 ** UART 8250 - _DEPRECATED_
 
-* Clock and Timers
-** Platforms are required to provide an at least 10ns resolution 64-bit counter
-with strictly monotonic updates.
-** The hardware clock that drives the counter is required to operate at a minimum
-frequency of 10MHz.
-** Platforms that use DT for hardware discovery are required to advertise the
-timebase to the operating systems via the `timebase-frequency` property of the
-"/cpus" node
-footnote:[https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/riscv/cpus.yaml].
-
-[sidebar]
---
-[underline]*_Implementation Note_*
-
-For a counter with 10ns resolution the `timebase-frequency` value would be 100000000
-(100 MHz) which would also be the minimum possible value for `timebase-frequency`.
-From the software perspective a unit increment of the mtime value would correspond
-to a 10ns interval. However the hardware clock driving the counter could operate at a
-lower frequency, thereby incrementing the mtime value by more than one unit per
-clock tick.
---
 ==== Boot Process
 - The base specification defines the interface between the firmware and the 
 operating system suitable for the RISC-V platforms with rich operating 
@@ -393,9 +435,6 @@ systems.
 discovery mechanism, etc. 
 - The requirements are operating system agnostic, specific firmware/bootloader
 implementation agnostic.
-- Any RV32GC or RV64GC platform seeking compatibility with the base 
-specification is required to implement all three privilege modes i.e. M, S and
-U mode.
 - For the generic mandatory requirements this base specification will refer to
 the EBBR Specification. Any deviation from the EBBR will be explicitly 
 mentioned in the requirements.
@@ -414,57 +453,60 @@ mentioned in the requirements.
 
 
 ==== Runtime Services
+
 ===== SBI
 
-- Required SBI spec version is 0.3 or higher.
-- Required SBI extensions -
-
-[cols="1,2", width=80%, align="left", options="header"]
-|===
-|EXTENSION     |    CONDITIONS 
-|SBI TIME      |    if **stimecmp** CSR not available
-|SBI IPI       | 
-|SBI RFENCE    | 
-|SBI HSM       | 
-|SBI SRST      |    
-|SBI PMU       | 
-|===
-
-- Required responsibilities of M-Mode runtime also includes - 
-    ** Interrupt and Exception Delegation
-    ** Misaligned Load & Stores handling
-    ** Missing CSRs emulation 
-    ** PMP Configuration
-
-- Wherever applicable firmware must implement UEFI interfaces over similar 
-interfaces and services present in the SBI specification. For example, UEFI 
-runtime services must implement ResetSystem() via SBI Reset extension. 
+* The M-mode runtime must implement SBI specification version 0.3
+  or higher
+* Required SBI extensions include:
+** SBI TIME
+** SBI IPI
+** SBI RFENCE
+** SBI HSM
+** SBI SRST
+** SBI PMU
+* Required features of the M-Mode runtime also includes
+** Delegate interrupts and exceptions to S-mode
+** Handle misaligned load and store
+** Emulate missing CSRs
+** Configure PMP CSRs
 
 ===== UEFI
-- OS should prioritize calling the UEFI interfaces before the SBI or Platform 
-specific mechanisms.
+
+* Wherever applicable UEFI firmware must implement UEFI interfaces over
+  similar interfaces and services present in the SBI specification. For
+  example, the UEFI ResetSystem() service must be implemented via the
+  SBI System Reset Extension.
+* The operating system should prioritize calling the UEFI interfaces before
+  the SBI or platform specific mechanisms.
 
 ==== Software and ABIs
-The platform specification mandates the following requirements for software components:
+The platform specification mandates the following requirements for
+software components:
 
-* All RISC-V software components must comply with the `RISC-V procedure call standard`.
-* All RISC-V software components that use ELF files must comply with the `RISC-V ELF specification`.
-* All RISC-V software components that use DWARF files must comply with the `RISC-V DWARF specification`.
+* All RISC-V software components must comply with the
+  RISC-V procedure call standard <<spec_proc_call>>.
+* All RISC-V software components that use ELF files must comply with the
+  RISC-V ELF specification <<spec_elf>>.
+* All RISC-V software components that use DWARF files must comply with the
+  RISC-V DWARF specification <<spec_dwarf>>.
 
-Rationale: The platform specification intends to avoid fragmentation and promotes interoperability.
+Rationale: The platform specification intends to avoid fragmentation and
+promotes interoperability.
 
 // Server extension for OS-A Platform
 === Server Extension
-The server extension specifies additional requirements for RV64I based server 
-class platforms. The server extension includes all of the requirements for the
+The server extension specifies additional requirements for server  class
+platforms. The server extension includes all of the requirements for the
 base with the additional requirements as below.
 
 ==== Architecture
 The platforms which conform to server extension are required to implement +
 
-- RV64 support
-- RISC-V H ISA extension
-- VMID support
+* The `time` CSR must be implemented in hardware
+* The Sstc extension <<spec_priv_sstc>> must be implemented
+* RISC-V ISA H-extension with following additional requirements:
+** VMID support
 
 ==== PMU
 
@@ -499,13 +541,27 @@ above.
 respect to all harts connected to the DM
   * Rationale: Debuggers must be able to view memory coherently
 
-==== Interrupt Controller 
+==== Interrupts and Timer
+
+===== Interrupts support
+
+The OS-A server platform must comply with interrupt support described in
+<<msis_virtual_msis_and_wired_irqs>>  of the OS-A base platform with
+following additional requirements:
+
+* The H-extension implemented by each hart must support GEILEN = 3 or more
+* Per-hart AIA IMSIC devices
+** Must implement at least 3 guest interrupt files
+** Must support at least 255 distinct interrupt identities
+** Must support IPRIOLEN = 8
+* EIID and IID fields of AIA APLIC devices must be at least 8 bits wide
+  matching the number of interrrupt identities supported by AIA IMSIC
 
 ==== Boot and Runtime Requirements
 =====  Firmware
-The boot and system firmware for the RV64I server platforms required to be
-based on UEFI as per the base specification with some additional
-requirements as mentioned below.
+The boot and system firmware for the server platforms must support UEFI as
+defined in by the OS-A base platform with some additional requirements
+described in following sub-setions.
 
 ====== PCIe support
 The platforms are required to implement *EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL* and other
@@ -534,10 +590,10 @@ the base spec requirements.
 
 ====== ACPI
 
-For RV64I server platforms, ACPI tables are required to be passed via UEFI
-to the operating system for the purpose of discovery and the configuration of
-the hardware. This section defines the required ACPI tables and objects. All
-other ACPI tables for RISC-V can be implemented as needed adhering to the ACPI
+For server platforms, ACPI tables are required to be passed via UEFI to the
+operating system for the purpose of discovery and the configuration of the
+hardware. This section defines the required ACPI tables and objects. All other
+ACPI tables for RISC-V can be implemented as needed adhering to the ACPI
 spec version 6.4+(RISC-V support when added).
 
 In ACPI namespace, processors are required to be defined under the System Bus
@@ -631,8 +687,6 @@ process.
 |===
 
 ===== Runtime services
-====== SBI
-*TBD*
 
 ====== UEFI
 The UEFI run time services listed below are required to be implemented.
@@ -669,13 +723,6 @@ implemented but it can return EFI_UNSUPPORTED.
 |===
 
 ==== System Peripherals
-===== Clock and Timers
-** Platforms are required to implement the time CSR.
-** Platforms are required to implement the
-https://lists.riscv.org/g/tech-privileged/message/404[Sstc] extension.
-** Platforms are required to delegate the supervisor timer interrupt to 'S'
-mode. If the 'H' extension is implemented then the platforms are required to
-delegate the virtual supervisor timer interrupt to 'VS' mode.
 
 ===== Watchdog Timers
 Implementation of a two-stage watchdog timer, as defined in the WatchDog Timer
@@ -853,11 +900,10 @@ separate ECAM I/O region.
 
 ===== PCIe Device Firmware Requirement
 PCI expansion ROM code type 3 (UEFI) image must be provided by PCIe device for
-OS/A server extension platform according to
-https://pcisig.com/specifications/conventional/pci_firmware[PCI Firmware Specification Revision 3.3]
+OS/A server extension platform according to PCI Firmware Specification <<spec_pci_firmware>>
 if that PCIe device is utilized during UEFI firmware boot process. The image
 stored in PCI expansion ROM is an UEFI driver that must be compliant with
-https://uefi.org/specifications[UEFI specification 2.9] 14.4.2 PCI Option ROMs.
+UEFI specification <<spec_uefi>> 14.4.2 PCI Option ROMs.
 
 
 ==== Secure Boot
@@ -901,11 +947,6 @@ in the physical RV processor. +
 * Logging and/or reporting of errors can be masked. +
 * PCIe AER capability is required. +
 
-==== Interrupt Controller, Software Interrupt, and Timer Requirements
-  * For Timer support, ACLINT MTIMER devices is/are Required
-  * For Interrupt Controller and Software Interrupt support, the following one choice is Required
-    - Zero, one, or more AIA APLIC devices plus per-hart AIA IMSIC devices
-
 // M Platform
 == M Platform 
 
@@ -928,17 +969,12 @@ although they do not have to in order to meet the specification.
 
 === Base
 ==== Architecture
-The M Platform specification depends on the RVM22 specification and all
-requirements from RVM22 must be met.
-
-Any RISC-V system that uses at least RV32/64G can meet the M Platform
-specification.
+The M Platform must comply with the RVM22M profile defined by the RISC-V
+profiles specification <<spec_profiles>>.
 
 ==== Interrupt Controller
-Embedded systems are recommended to use a spec compliant
-https://github.com/riscv/riscv-plic-spec[PLIC], a spec compliant
-https://github.com/riscv/riscv-fast-interrupt/blob/master/clic.adoc[CLIC]
-or both a CLIC and and PLIC.
+Embedded systems are recommended to use a spec compliant PLIC <<spec_plic>>,
+a spec compliant CLIC <<spec_clic>> or both a CLIC and and PLIC.
 
 If using just a PLIC the system must continue to use the original basic
 `xsip`/`xtip`/`xeip` signals in the `xip` register to indicate pending
@@ -949,38 +985,10 @@ must be supported.
 Embedded systems cannot use a non-compliant interrupt controller and still
 call it a PLIC or CLIC.
 
-==== Machine Timer
-The RISC-V machine timer (controlled via `mtime` and `mtimecmp`) must be
-implemented. The two registers must be memory mapped as required by the RISC-V
-specification.
-
-The M Platform specification requires that the registers be mapped
-adjacent to each other with the `mtime` region at the lower address.
-
-The starting address of this region can be located anywhere in
-memory, including inside other peripherals, as long as the start address is
-4 byte aligned.
-
-An example of the memory layout for a 32-bit system with a single hart is below
-
--------------------------
-=========================
-| 0x00 |  mtime low     |
-| 0x04 |  mtime high    |
-| 0x08 |  mtimecmp low  |
-| 0x0C |  mtimecmp high |
-=========================
--------------------------
-
-and for a 64-bit system with 2 harts
-
----------------------------
-===========================
-| 0x00 |  mtime           |
-| 0x08 |  mtimecmp hart 1 |
-| 0x10 |  mtimecmp hart 2 |
-===========================
----------------------------
+==== Timer Support
+The M Platform must implement one or more RISC-V ACLINT MTIMER <<spec_aclint>>
+devices. This will provide the `mtime` and `mtimecmp` memory mapped registers
+as required by the RISC-V privilege specification <<spec_priv>>.
 
 The `mcounteren`.TM and `scounteren`.TM bits _must not_ be hardwired,
 regardless as to whether accesses to the `time` CSR are implemented
@@ -998,3 +1006,26 @@ also implement PMP support.
 When PMP is supported it is recommended to include at least 4 regions, although
 if possible more should be supported to allow more flexibility. Hardware
 implementations should aim for supporting at least 16 PMP regions.
+
+[bibliography]
+== References
+
+* [[[spec_uefi,1]]] link:https://uefi.org/sites/default/files/resources/UEFI_Spec_2_9_2021_03_18.pdf[UEFI Specification], Version: v2.9
+* [[[spec_dt,2]]] link:https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3[Devicetree Specification], Version: v0.3
+* [[[spec_unpriv,3]]] link:https://github.com/riscv/riscv-isa-manual/releases/download/draft-20210726-2026469/riscv-spec.pdf[RISC-V Unprivileged Architecture Specification], Version:20191214-draft
+* [[[spec_priv,4]]] link:https://github.com/riscv/riscv-isa-manual/releases/download/draft-20210726-2026469/riscv-privileged.pdf[RISC-V Privileged Architecture Specification], Version: v1.12-draft
+* [[[spec_priv_sstc,5]]] link:https://lists.riscv.org/g/tech-privileged/message/404[RISC-V Privleged Architecture Sstc Extension], Version: Draft
+* [[[spec_sbi,6]]] link:https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc[RISC-V SBI Specification], Version: v0.3
+* [[[spec_plic,7]]] link:https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc[RISC-V PLIC Specification], Version: v1.0-draft
+* [[[spec_clic,8]]] link:https://github.com/riscv/riscv-fast-interrupt/blob/master/clic.adoc[RISC-V CLIC Specification], Version: draft-bc89a5e3d61d
+* [[[spec_aclint,9]]] link:https://github.com/riscv/riscv-aclint/releases/download/v1.0-draft2/riscv-aclint-1.0-draft2.pdf[RISC-V ACLINT Specification], Version: v1.0-draft2
+* [[[spec_aia,10]]] link:https://github.com/riscv/riscv-aia/releases/download/0.2-draft.24/riscv-interrupts-024.pdf[RISC-V AIA Specification], Version: v0.2-draft.24
+* [[[spec_profiles,11]]] link:https://github.com/riscv/riscv-profiles/blob/master/profiles.adoc[RISC-V Profiles Specification], Version: draft-8e8951987e2a
+* [[[spec_proc_call,12]]] link:https://github.com/riscv/riscv-elf-psabi-doc[RISC-V Procedure call standard], Version: draft-20210810
+* [[[spec_elf,13]]] link:https://github.com/riscv/riscv-elf-psabi-doc[RISC-V ELF specification], Version: draft-20210810
+* [[[spec_dwarf,14]]] link:https://github.com/riscv/riscv-elf-psabi-doc[RISC-V DWARF specification], Version: draft-20210810
+* [[[spec_ebbr,15]]] link:https://arm-software.github.io/ebbr/[EBBR Specification], Version: v2.0.1    
+* [[[spec_acpi,16]]] link:https://uefi.org/sites/default/files/resources/ACPI_Spec_6_4_Jan22.pdf[ACPI Specification], Version: v6.4
+* [[[spec_apei,17]]] link:https://uefi.org/specs/ACPI/6.4/18_ACPI_Platform_Error_Interfaces/ACPI_PLatform_Error_Interfaces.html[APEI Specification], Version: v6.4
+* [[[spec_smbios,18]]] link:https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.4.0.pdf[SMBIOS Specification], Version: v3.4.0
+* [[[spec_pci_firmware,19]]] https://pcisig.com/specifications/conventional/pci_firmware[PCI Firmware Specification], Version: 3.3

@@ -22,8 +22,8 @@ $(PLATFORM_SPEC).md: $(PLATFORM_SPEC).xml
 $(PLATFORM_SPEC).xml: $(PLATFORM_SPEC).adoc
 	$(ASCIIDOCTOR) -d book -b docbook $<
 
-$(PLATFORM_SPEC).pdf: $(PLATFORM_SPEC).adoc $(IMAGES)
-	$(ASCIIDOCTOR) -d book -r asciidoctor-pdf -b pdf $<
+$(PLATFORM_SPEC).pdf: $(PLATFORM_SPEC).adoc $(IMAGES) $(PLATFORM_SPEC).yml
+	$(ASCIIDOCTOR) -d book -r asciidoctor-pdf -a pdf-style=$(PLATFORM_SPEC).yml -b pdf $<
 
 $(PLATFORM_SPEC).html: $(PLATFORM_SPEC).adoc $(IMAGES)
 	$(ASCIIDOCTOR) -d book -b html $<
@@ -36,7 +36,6 @@ clean:
 	rm -f $(PLATFORM_SPEC).md
 	rm -f $(PLATFORM_SPEC).pdf
 	rm -f $(PLATFORM_SPEC).html
-	rm -f $(IMAGES)
 
 # handy shortcuts for installing necessary packages: YMMV
 install-debs:
