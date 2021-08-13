@@ -589,76 +589,9 @@ the base spec requirements.
 ===== Hardware Discovery Mechanisms
 
 ====== ACPI
-
-For server platforms, ACPI tables are required to be passed via UEFI to the
-operating system for the purpose of discovery and the configuration of the
-hardware. This section defines the required ACPI tables and objects. All other
-ACPI tables for RISC-V can be implemented as needed adhering to the ACPI
-spec version 6.4+(RISC-V support when added).
-
-In ACPI namespace, processors are required to be defined under the System Bus
-*(\_SB)* name space.
-
-The required ACPI System Description Tables, Device Objects and Methods are
-listed below.
-
-.Required ACPI System Description Tables
-[cols="3,2,2", width=95%, align="center", options="header"]
-|===
-|ACPI Table                                    |ACPI Section|Note
-|Root System Description Pointer (RSDP)        |5.2.5      |
-|Extended System Description Table (XSDT)      |5.2.8      |
-|Fixed ACPI Description Table (FADT)           |5.2.9      |
-|Differentiated System Description Table (DSDT)|5.2.11.1   |
-|Multiple APIC Description Table (MADT)        |5.2.12     |
-|RISC-V Timer Description Table                |           |timebase-frequency
-|Processor Properties Topology Table (PPTT)    |5.2.29     |CPU and Cache 
-                                                            topology
-                                                            information
-|Memory-mapped Configuration space (MCFG)      |See Links to ACPI-Related 
-                                                Documents (http://uefi.org/acpi)
-                                                under the heading 
-                                                "PCI Sig”       |Required for PCIe
-                                                            support
-|Debug Port Table 2 (DBG2)                     |See Links to ACPI-Related 
-                                                Documents (http://uefi.org/acpi)
-                                                under the heading 
-                                                “Debug Port Table 2” |
-|Serial Port Console Redirection (SPCR)        |See Links to ACPI-Related 
-                                                Documents (http://uefi.org/acpi)
-                                                under the heading 
-                                                “Serial Port Console 
-                                                Redirection Table” |
-|System Resource Affinity Table (SRAT)         |5.2.16     |Required if the
-                                                            platform supports 
-                                                            NUMA
-|System Locality Information Table (SLIT)      |5.2.17     |Required if the
-                                                            platform supports 
-                                                            NUMA
-|IOMMU Information Table                       |           |IOMMU table 
-                                                            (like IVRS)
-|Software Delegated Exception Interface (SDEI) |See Links to ACPI-Related 
-                                                Documents (http://uefi.org/acpi)
-                                                under the heading 
-                                                "Software Delegated Exceptions
-                                                Interface”       |
-|PMU event mapping table                       |          |
-|===
-
-
-.Required Device Objects and Methods
-[cols="1,2,3", width=95%, align="center", options="header"]
-|===
-|Object/Method | ACPI Section | Note
-|_AEI          | 5.6.5.2     | Required for GPIO-signalled events
-|_EVT          | 5.6.5.3     | Required for interrupt-signalled events
-|_ADR          | 6.1.1       | Required for PCI
-|_HID          | 6.1.5       |
-|_UID          | 6.1.12      |
-|_CRS          | 6.2.2       |
-|_CCA          | 6.2.17      | Required for DMA capable devices
-|_STA          | 6.3.7/7.2.4 | Device status
-|===
+ACPI is the required mechanism for the hardware discovery and configuration.
+Server platforms are required to adhere to the RISC-V ACPI Platform Requirements
+Specification<<spec_riscv_acpi>>.
 
 ====== SMBIOS
 
@@ -1036,3 +969,4 @@ implementations should aim for supporting at least 16 PMP regions.
 * [[[spec_smbios,18]]] link:https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.4.0.pdf[SMBIOS Specification], Version: v3.4.0
 * [[[spec_pci_firmware,19]]] https://pcisig.com/specifications/conventional/pci_firmware[PCI Firmware Specification], Version: 3.3
 * [[[spec_unified_discovery,20]]] Unified Discovery Specification (TBD)
+* [[[spec_riscv_acpi,21]]] link:https://github.com/riscv/riscv-acpi/blob/master/riscv-acpi-platform-req.adoc[RISC-V ACPI Platform Requirements Specification], Version: Draft-20210812
