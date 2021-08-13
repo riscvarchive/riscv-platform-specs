@@ -80,14 +80,16 @@ and “automotive”.
 The platform specification currently defines two platforms:
 
 * *OS-A Platform*: This specifies a rich-OS platform for 
-Linux/FreeBSD/Windows...flavors that run on enterprise and embedded class 
-application processors. +
-The OS-A platform has the following extensions:
+Linux/FreeBSD/Windows - flavors that run on enterprise and embedded class 
+application processors. The OS-A platform has a base feature set and extensions
+as shown below: +
+** *Base*
 ** *Server Extension*
 
 * *M Platform*: This specifies an RTOS platform for bare-metal applications and 
-small operating systems running on a microcontroller. +
-The M platform has the following extensions:
+small operating systems running on a microcontroller. The M platform has a base 
+feature set and extensions as shown below: +
+** *Base*
 ** *Physical Memory Protection (PMP) Extension*
 
 
