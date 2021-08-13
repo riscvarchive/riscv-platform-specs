@@ -117,7 +117,7 @@ following additional requirements:
    instruction bits must be written to the `stval` CSR as defined by the
    RISC-V privileged specification.
 ** Platform must operate in little-endian mode (i.e. implementations must
-   set the mstatus.MBE field to 0).
+   set the `mstatus.MBE` field to 0).
 ** If the RISC-V ISA H-extension is implemented then the OS-A platform must
    comply with the following additional requirements:
 *** When virtual instruction trap is taken into M-mode, the faulting
@@ -157,24 +157,23 @@ these programmable counters. This section defines the minimum number of programm
 counters and hardware events required for an OS-A compatible platform.
 
 * Counters
-** The platform do not require to implement any of the programmable counters.
+** The platform does not require to implement any of the programmable counters.
 * Events
-** The platform do not require to implement any of the hardware events defined
+** The platform does not require to implement any of the hardware events defined
 in SBI PMU extensions.
 
 ==== Debug
 The OS-A base platform requirements are -
 
 - Implement resethaltreq
-  * Rationale: Debugging immediately out of reset is a useful debug tool and
-    is required by item 5 in chapter 3. The resethaltreq mechanism provides a
-    standard way to do this.
+  * Rationale: Debugging immediately out of reset is a useful debug tool.
+    The resethaltreq mechanism provides a standard way to do this.
 - Implement the program buffer
   * Rationale: The program buffer is easier for most implementations than
     abstract access.
   * Rationale: Debuggers need to be able to insert ebreak instructions into
     memory and make sure that the ebreak is visible to subsequent instruction
-    fetches.  Abstract access has no support for fence.i (or similar
+    fetches.  Abstract access has no support for `fence.i` (or similar
     mechanisms).
 - abstractcs.relaxedpriv must be 0
   * Rationale: Doing otherwise is a potential security problem.
@@ -438,8 +437,6 @@ implementation agnostic.
 - For the generic mandatory requirements this base specification will refer to
 the EBBR Specification. Any deviation from the EBBR will be explicitly 
 mentioned in the requirements.
-- Specifications followed are mentioned in the  
-<<Specifications,Specification Section>>
 
 
 ===== Firmware
@@ -449,7 +446,8 @@ mentioned in the requirements.
 
 ===== Discovery Mechanisms 
 - Device Tree (DT) is the required mechanism for system description.
-- Compliance with the System Description Specification is required – TBD
+- Platforms must support the Unified Discovery specification for all pre-boot 
+information population <<spec_unified_discovery>>
 
 
 ==== Runtime Services
@@ -726,7 +724,7 @@ implemented but it can return EFI_UNSUPPORTED.
 
 ===== Watchdog Timers
 Implementation of a two-stage watchdog timer, as defined in the WatchDog Timer
-appendix footnote:[Watchdog Timer Appendix (TBD)] ,is required. Software must
+appendix footnote:[Watchdog Timer Appendix (TBD)] is required. Software must
 periodically refresh the watchdog timer, otherwise a first-stage watchdog
 timeout occurs. If the watchdog timer remains un-refreshed for a second period,
 then a second-stage watchdog timeout occurs.
@@ -906,11 +904,17 @@ stored in PCI expansion ROM is an UEFI driver that must be compliant with
 UEFI specification <<spec_uefi>> 14.4.2 PCI Option ROMs.
 
 
-==== Secure Boot
+==== Security 
+Platforms must implement the following security features
+
+* Root of Trust 
+* Secure Key Storage 
+* PKA support
+* Hardware TRNG support
+* Secure Boot
 * TEE
-* Root of Trust
-* E-Fuse
-* PKA/TRNG
+* PMP/ePMP
+** Minimum of 16 PMP regions support
 
 ==== RAS
 All the below mentioned RAS features are required for the OS-A platform server
@@ -1029,3 +1033,4 @@ implementations should aim for supporting at least 16 PMP regions.
 * [[[spec_apei,17]]] link:https://uefi.org/specs/ACPI/6.4/18_ACPI_Platform_Error_Interfaces/ACPI_PLatform_Error_Interfaces.html[APEI Specification], Version: v6.4
 * [[[spec_smbios,18]]] link:https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.4.0.pdf[SMBIOS Specification], Version: v3.4.0
 * [[[spec_pci_firmware,19]]] https://pcisig.com/specifications/conventional/pci_firmware[PCI Firmware Specification], Version: 3.3
+* [[[spec_unified_discovery,20]]] Unified Discovery Specification (TBD)
