@@ -98,44 +98,129 @@ feature set and extensions as shown below: +
 
 // Base feature set for OS-A Platform
 === Base
-==== Architecture
-
+==== ISA Requirements
 The OS-A platform must comply with the RVA22U, RVA22S and RVA22M profiles
 defined by the RISC-V profiles specification <<spec_profiles>> with the
 following additional requirements:
 
-* ISA Requirements
-** Within main-memory regions, aligned instruction fetch must be atomic, up to
-  the smaller of ILEN and XLEN bits. In particular, if an aligned 4-byte word
-  is stored with the `sw` instruction, then any processor attempts to execute
-  that word, the processor either fetches the newly stored word, or some previous
-  value stored to that location.  (That is, the fetched instruction is not an
-  unpredictable value, nor is it a hybrid of the bytes of the old and new
-  values.)
-** When an illegal instruction trap is taken into M-mode, the faulting
-   instruction bits must be written to the `mtval` CSR as defined by the
-   RISC-V privileged specification.
-** When an illegal instruction trap is taken into S-mode, the faulting
-   instruction bits must be written to the `stval` CSR as defined by the
-   RISC-V privileged specification.
-** Platform must operate in little-endian mode (i.e. implementations must
-   set the `mstatus.MBE` field to 0).
-** If the RISC-V ISA H-extension is implemented then the OS-A platform must
-   comply with the following additional requirements:
-*** When virtual instruction trap is taken into M-mode, the faulting
-    instruction bits must be written to the `mtval` CSR as defined by the
-    RISC-V privileged specification.
-*** When virtual instruction trap is taken into S-mode, the faulting
-    instruction bits must be written to the `stval` CSR as defined by the
-    RISC-V privileged specification.
-*** When guest page fault is taken into M-mode, exception-specific
-    information must be written to the `mtval2` CSR.
-*** When guest page fault is taken into S-mode, exception-specific
-    information value must be written to the `htval` CSR.
-*** When load/store/AMO fault is taken into M-mode, exception-specific
-    non-zero value must be written to the `mtinst` CSR.
-*** When load/store/AMO fault is taken into S-mode, exception-specific
-    non-zero value must be written to the `htinst` CSR.
+==== General
+* A non-conforming extension that conflicts with a supported standard extensions
+must satisfy at least one of the following:
+** It must be disabled by default.
+** The supported standard extension must be declared as unsupported in all
+feature discovery structures used by software. This option is allowed only
+if the standard extension is not Required.
+* The LR/SC reservation set size must be at least 16B and at most 128B
+* Cacheable main memory regions must support instruction fetch, AMOArithmetic,
+RsrvEventual, and PTE reads and writes
+* All reserved and unimplemented (or disabled) opcodes and CSRs must raise an
+Illegal Instruction exception
+* Within main-memory regions, aligned instruction fetch must be atomic, up to
+the smaller of ILEN and XLEN bits. In particular, if an aligned 4-byte word
+is stored with the `sw` instruction, then any processor attempts to execute
+that word, the processor either fetches the newly stored word, or some previous
+value stored to that location.  (That is, the fetched instruction is not an
+unpredictable value, nor is it a hybrid of the bytes of the old and new
+values.)
+* All harts must adhere to the RVWMO memory model.
+* All hart PMA regions for main memory must be marked as coherent.
+* Memory accesses by I/O masters can be coherent or non-coherent with respect
+to all hart-related caches.
+
+==== Machine mode
+* mvendorid, marchid, mimpid and mhartid registers must be supported and not
+hardwired to 0.
+
+* misa
+** if H extension is supported then the H bit must be writable
+* mstatus
+** TVM bit must not be hardwired to 0
+** TW bit must not be hardwired to 0
+** TSR bit must not be hardwired to 0
+** MBE, SBE and UBE must each be either hardwired to 0 or writable and
+initialized by reset or boot firmware for LE operation
+
+* mtvec
+** Both direct and vectored modes must be supported.
+** The alignment constraint for BASE fields must be at most 256B
+
+* medeleg
+** All bits for defined and supported exceptions except 'Environment call
+from M-mode' must be writable
+
+* mideleg
+** Bits for MSI, MTI and MEI must be hardwired to 0
+
+* mcounteren
+** writeable bits must be implemented for all supported (not hardwired to zero)
+hpmcounters
+
+* mcountinhibit
+** writeable bits must be implemented for all supported (not hardwired to zero)
+hpmcounters
+
+* mtval
+** mtval must not be hardwired to 0 and in all cases must be written with
+non-zero and zero values as architecturally defined
+
+* mtval2
+**  If H extension is supported then mtval2 must not be hardwired to 0 and in
+all cases must be written with non-zero and zero values as architecturally
+defined.
+
+==== Supervisor mode
+* sstatus
+** sstatus.UBE must support the same access attribute (read-only or writable)
+as mstatus.UBE
+
+* stvec
+** Both direct and vectored modes must be supported.
+** The alignment constraint for BASE fields must be at most 256B
+
+* scounteren
+** writeable bits must be implemented for all supported (not hardwired to zero)
+hpmcounters
+
+* stval
+** stval must not be hardwired to 0 and in all cases must be written with
+non-zero and zero values as architecturally defined
+
+* satp:
+** For RV32, Bare and Sv32 translation modes must be supported
+** For RV64, Bare and Sv39 translation modes must be supported
+
+==== Hypervisor extension
+* hstatus
+** VTW bit must not be hardwired t0 0
+** VTVM bit must not be hardwired to 0
+
+* hcounteren
+** writeable bits must be implemented for all supported (not hardwired to zero)
+hpmcounters
+
+* htval
+** htval must not be hardwired to 0 and in all cases must be written with
+non-zero and zero values as architecturally defined
+
+* htinst/mtinst
+** htinst and mtinst must not be hardwired to 0 and must be written with a
+transformed instruction (versus zero) when defined and allowed architecturally
+
+* hgatp
+** For RV32, Bare and Sv32x4 translation modes must be supported
+** For RV64, Bare and Sv39x4 translation modes must be supported
+
+* vstvec
+** Both direct and vectored modes must be supported.
+** The alignment constraint for BASE fields must be at most 256B
+
+* vstval
+** vstval must not be hardwired to 0 and in all cases must be written with
+non-zero and zero values as architecturally defined
+
+* vsatp
+** For RV32, Bare and Sv32 translation modes must be supported
+** For RV64, Bare and Sv39 translation modes must be supported
 
 [sidebar]
 --
@@ -144,12 +229,6 @@ following additional requirements:
 User-mode programs should not execute the `fence.i` instruction.
 
 --
-* Cache Coherency
-** All harts must adhere to the RVWMO memory model.
-** All hart PMA regions for main memory must be marked as coherent.
-** Memory accesses by I/O masters can be coherent or non-coherent with respect
-to all hart-related caches.
-
 ==== PMU 
 
 The RVA22 profile defines 32 PMU counters out-of-which first three counters are
@@ -500,13 +579,26 @@ The server extension specifies additional requirements for server  class
 platforms. The server extension includes all of the requirements for the
 base with the additional requirements as below.
 
-==== Architecture
-The platforms which conform to server extension are required to implement +
-
+==== ISA Requirements
+===== General
+* There must be hardware support for all misaligned accesses
+* The Zam extension must be supported for misaligned addresses within at least aligned 16B regions
 * The `time` CSR must be implemented in hardware
 * The Sstc extension <<spec_priv_sstc>> must be implemented
-* RISC-V ISA H-extension with following additional requirements:
-** VMID support
+
+===== Supervisor mode
+* satp
+** For RV64, Sv48 translation mode must be supported
+** At least 8 ASID bits must be supported and not hardwired to 0.
+
+===== Hypervisor extension
+* hgatp
+** For RV64, Sv48x4 translation mode must be supported
+** At least 8 VMID bits must be supported and not hardwired to 0.
+
+* vsatp
+** For RV64, Sv48 translation mode must be supported
+** At least 8 ASID bits must be supported and not hardwired to 0.
 
 ==== PMU
 
