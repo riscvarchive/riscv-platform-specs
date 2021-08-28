@@ -842,12 +842,6 @@ UEFI specification <<spec_uefi>> 14.4.2 PCI Option ROMs.
 ==== Security 
 Platforms must implement the following security features
 
-* Root of Trust 
-* Secure Key Storage 
-* PKA support
-* Hardware TRNG support
-* Secure Boot
-* TEE
 * PMP/ePMP
 ** Minimum of 16 PMP regions support
 
