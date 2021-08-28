@@ -312,8 +312,8 @@ categories described in following sub-sections.
 
 [#msis_virtual_msis_and_wired_irqs]
 ====== MSIs, Virtual MSIs, and Wired IRQs
-** The H-extension must be implemeted by each hart to support virtual MSIs
-*** GEILEN must be 1 or more
+** To support virtual MSIs, the H-extension must be implemented
+*** GEILEN must be 3 or more
 ** AIA local interrupt CSRs must be supported by each hart
 *** `siselect` CSR must support holding 9-bit value
 *** `vsiselect` CSR must support holding 9-bit value
@@ -321,7 +321,7 @@ categories described in following sub-sections.
 *** Must support IPRIOLEN = 6 to 8
 *** Must support at least 63 distinct interrupt identities
 *** Must implement `seteipnum_le` memory-mapped register
-*** Must implement at least 1 guest interrupt file
+*** Must implement at least 3 guest interrupt files
 ** One, or more AIA APLIC devices to support wired interrupts
 *** EIID and IID fields must be 6 to 8 bits wide matching the number of
     interrrupt identities supported by AIA IMSIC
@@ -549,9 +549,9 @@ The OS-A server platform must comply with interrupt support described in
 <<msis_virtual_msis_and_wired_irqs>>  of the OS-A base platform with
 following additional requirements:
 
-* The H-extension implemented by each hart must support GEILEN = 3 or more
+* The H-extension implemented by each hart must support GEILEN = 5 or more
 * Per-hart AIA IMSIC devices
-** Must implement at least 3 guest interrupt files
+** Must implement at least 5 guest interrupt files
 ** Must support at least 255 distinct interrupt identities
 ** Must support IPRIOLEN = 8
 * EIID and IID fields of AIA APLIC devices must be at least 8 bits wide
