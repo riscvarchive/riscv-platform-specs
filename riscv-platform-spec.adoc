@@ -102,7 +102,7 @@ feature set and extensions as shown below: +
 
 ===== ISA Profile Requirements
 * The OS-A platform must comply with the following profiles defined by the
-RISC-V profiles specification <<spec_profiles>>
+RISC-V profiles specification <<spec_profiles>>.
 ** RVA22U profile for user-mode.
 ** RVA22S profile for supervisor-mode.
 ** RVM20M64 profile for machine-mode.
@@ -114,7 +114,7 @@ must satisfy at least one of the following:
 ** It must be disabled by default.
 ** The supported standard extension must be declared as unsupported in all
 feature discovery structures used by software. This option is allowed only
-if the standard extension is not Required.
+if the standard extension is not required.
 * The LR/SC reservation set size must be at least 16B and at most 128B.
 * Cacheable main memory regions must support instruction fetch, AMOArithmetic,
 RsrvEventual, and PTE reads and writes.
@@ -199,13 +199,13 @@ hpmcounters.
 ** stval must not be hardwired to 0 and in all cases must be written with
 non-zero and zero values as architecturally defined.
 
-* satp:
+* satp
 ** For RV32, Bare and Sv32 translation modes must be supported.
 ** For RV64, Bare and Sv39 translation modes must be supported.
 
 ===== Hypervisor extension
 * hstatus
-** VTW bit must not be hardwired t0 0.
+** VTW bit must not be hardwired to 0.
 ** VTVM bit must not be hardwired to 0.
 
 * hcounteren
@@ -252,7 +252,7 @@ platform.
 in SBI PMU extensions.
 
 ==== Debug
-The OS-A base platform requirements are -
+The OS-A base platform requirements are the following:
 
 - Implement resethaltreq
   * Rationale: Debugging immediately out of reset is a useful debug tool.
@@ -267,51 +267,51 @@ The OS-A base platform requirements are -
 - abstractcs.relaxedpriv must be 0
   * Rationale: Doing otherwise is a potential security problem.
 - abstractauto must be implemented
-  * Rationale: autoexecprogbuf allows faster instruction-stuffing
-  * Rationale: autoexecdata allows fast read/write of a region of memory
+  * Rationale: autoexecprogbuf allows faster instruction-stuffing.
+  * Rationale: autoexecdata allows fast read/write of a region of memory.
 - dcsr.mprven must be tied to 1
   * Rationale: Emulating two-stage table walks and PMP checks and endianness
     swapping is a heavy burden on the debugger.
 - In textra, sselect must support the value 0 and either value 1 or 2 (or
-both).
+both)
   * Rationale: There must be some way to limit triggers to only match in a
     particular user context and a way to ignore user context.
 - If textra.sselect=1 is supported, the number of implemented bits of svalue
-must be at least the number of implemented bits of scontext.
+must be at least the number of implemented bits of scontext
   * Rationale: This allows matching on every possible scontext.
 - If textra.sselect=2 is supported, the number of implemented bits of svalue
-must be at least ASIDLEN to match every possible ASID.
-- In textra, mhselect must support the value 0.  If the H extension is
+must be at least ASIDLEN to match every possible ASID
+- In textra, mhselect must support the value 0. If the H extension is
 supported then mhselect must also support either values 1 and 5 or values 2
-and 6 (or all four).
+and 6 (or all four)
   * Rationale: There must be some way to limit triggers to only match in a
     particular guest context and a way to ignore guest context.
 - If textra.mhselect=1,5 are supported and if H is the number of implemented
 bits of hcontext then, unless all bits of mhvalue are implemented, at least
-H-1 bits of mhvalue must be implemented.
+H-1 bits of mhvalue must be implemented
   * Rationale: This allows matching on every possible hcontext (up to the limit
     of the field width).  It is H-1 bits instead of H because mhselect[2]
     provides one bit.
 - If textra.mhselect=2,6 are supported, the number of implemented bits of
-mhvalue must be at least VMIDLEN-1.
+mhvalue must be at least VMIDLEN-1
   * Rationale: This allows matching on every possible VMID.  It is VMIDLEN-1
     instead of VMIDLEN because mhselect[2] provides one bit.
 - Implement at least four mcontrol6 triggers that can support matching on PC
 (select=0, execute=1, match=0) with timing=0 and full support for mode
 filtering (vs, vu, m, s, u) for all supported modes and support for textra as
-above.
+above
   * Rationale: The debugger needs breakpoints and 4 is a sufficient baseline.
 - Implement at least four mcontrol6 triggers that can support matching on load
  and store addresses (select=0, match=0, and all combinations of load/store)
  with timing=0 and full support for mode filtering (vs, vu, m, s, u) for all
- supported modes and support for textra as above.
+ supported modes and support for textra as above
   * Rationale: The debugger needs watchpoints and 4 is a sufficient baseline.
 - Implement at least one trigger capable of icount and support for textra as
 above for self-hosted single step needs this
 - Implement at least one trigger capable of etrigger and support for textra as
-above to catch exceptions.
+above to catch exceptions
 - Implement at least one trigger capable of itrigger and support for textra as
-above to catch interrupts.
+above to catch interrupts
 - The minimum trigger requirements must be met for action=0 and for action=1
 (possibly by the same triggers)
   * Rationale: The intent is to have full support for external debug and full
@@ -322,9 +322,9 @@ above to catch interrupts.
 - For implementations with multiple cores, support for at least one halt group
 and one resume group (in addition to group 0)
   * Rationale: Allows stopping all harts (approximately) simultaneously which
-    is useful for debugging MP software
-- dcsr.stepie must support the 0 setting.  It is optional to support the 1
-setting.
+    is useful for debugging MP software.
+- dcsr.stepie must support the 0 setting. It is optional to support the 1
+setting
   * Rationale: It is not generally useful to step into interrupt handlers.
 - dcsr.stopcount and dcsr.stoptime must be supported and the reset value of
 each must be 1
@@ -337,7 +337,7 @@ each must be 1
 
 ===== Timer support
 
-* One or more ACLINT MTIMER devices are required for the OS-A platform
+* One or more ACLINT MTIMER devices are required for the OS-A platform.
 * Platform must support a default ACLINT MTIME counter resolution of 10ns
   (i.e. an increment by 1 represents 10 ns).
 * The ACLINT MTIME update frequency (i.e. hardware clock) must be between
@@ -358,64 +358,65 @@ categories described in following sub-sections.
 
 [#legacy_wired_irqs]
 ====== Legacy wired IRQs - DEPRECATED
-** One or more PLIC devices are required to support wired interrupts
-** One or more ACLINT MSWI devices are required to support M-mode software interrupts
+** One or more PLIC devices are required to support wired interrupts.
+** One or more ACLINT MSWI devices are required to support M-mode software interrupts.
 ** Software interrupts for S-mode and VS-mode are supported using the
-   SBI IPI extension
-** This category is ompatibile with legacy platforms having PLIC plus CLINT devices
-** MSI external interrupts are not supported
-** MSI virtualization is not supported
+   SBI IPI extension.
+** This category is compatibile with legacy platforms having PLIC plus CLINT 
+devices.
+** MSI external interrupts are not supported.
+** MSI virtualization is not supported.
 
 [#only_wired_irqs]
 ====== Only Wired IRQs
-** One or more AIA APLIC devices are required to support wired interrupts
-** One or more ACLINT MSWI devices are required to support M-mode software interrupts
-** One or more ACLINT SSWI devices are required to support S/HS-mode software interrupts
-** Software interrupts for VS-mode are supported using the SBI IPI extension
-** MSI external interrupts are not supported
-** MSI virtualization is not supported
+** One or more AIA APLIC devices are required to support wired interrupts.
+** One or more ACLINT MSWI devices are required to support M-mode software interrupts.
+** One or more ACLINT SSWI devices are required to support S/HS-mode software interrupts.
+** Software interrupts for VS-mode are supported using the SBI IPI extension.
+** MSI external interrupts are not supported.
+** MSI virtualization is not supported.
 
 [#msis_and_wired_irqs]
 ====== MSIs and Wired IRQs
-** AIA local interrupt CSRs must be supported by each hart
-*** `siselect` CSR must support holding 9-bit value
+** AIA local interrupt CSRs must be supported by each hart.
+*** `siselect` CSR must support holding 9-bit value.
 *** `vsiselect` CSR must support holding 9-bit value if H-extension is
-    implemented
-** Per-hart AIA IMSIC devices must support MSIs for M-mode and S/HS-mode
-*** Must support IPRIOLEN = 6 to 8
-*** Must support at least 63 distinct interrupt identities
-*** Must implement `seteipnum_le` memory-mapped register
-** One, or more AIA APLIC devices to support wired interrupts
+    implemented.
+** Per-hart AIA IMSIC devices must support MSIs for M-mode and S/HS-mode.
+*** Must support IPRIOLEN = 6 to 8.
+*** Must support at least 63 distinct interrupt identities.
+*** Must implement `seteipnum_le` memory-mapped register.
+** One, or more AIA APLIC devices to support wired interrupts.
 *** EIID and IID fields must be 6 to 8 bits wide matching the number of
-    interrrupt identities supported by AIA IMSIC
+    interrrupt identities supported by AIA IMSIC.
 ** Software interrupts for M-mode and S/HS-mode are supported using AIA IMSIC
-   devices
-** Software interrupts for VS-mode are supported using the SBI IPI extension
-** MSI virtualization is not supported
+   devices.
+** Software interrupts for VS-mode are supported using the SBI IPI extension.
+** MSI virtualization is not supported.
 
 [#msis_virtual_msis_and_wired_irqs]
 ====== MSIs, Virtual MSIs, and Wired IRQs
-** To support virtual MSIs, the H-extension must be implemented
-*** GEILEN must be 3 or more
-** AIA local interrupt CSRs must be supported by each hart
-*** `siselect` CSR must support holding 9-bit value
-*** `vsiselect` CSR must support holding 9-bit value
-** Per-hart AIA IMSIC devices to support MSIs for M-mode, HS-mode and VS-mode
-*** Must support IPRIOLEN = 6 to 8
-*** Must support at least 63 distinct interrupt identities
-*** Must implement `seteipnum_le` memory-mapped register
-*** Must implement at least 3 guest interrupt files
-** One, or more AIA APLIC devices are required to support wired interrupts
+** To support virtual MSIs, the H-extension must be implemented.
+*** GEILEN must be 3 or more.
+** AIA local interrupt CSRs must be supported by each hart.
+*** `siselect` CSR must support holding 9-bit value.
+*** `vsiselect` CSR must support holding 9-bit value.
+** Per-hart AIA IMSIC devices to support MSIs for M-mode, HS-mode and VS-mode.
+*** Must support IPRIOLEN = 6 to 8.
+*** Must support at least 63 distinct interrupt identities.
+*** Must implement `seteipnum_le` memory-mapped register.
+*** Must implement at least 3 guest interrupt files.
+** One, or more AIA APLIC devices are required to support wired interrupts.
 *** EIID and IID fields must be 6 to 8 bits wide matching the number of
-    interrrupt identities supported by AIA IMSIC
+    interrrupt identities supported by AIA IMSIC.
 ** Software interrupts for M-mode, HS-mode and VS-mode are supported using
-   AIA IMSIC devices
-** MSI virtualization is supported
+   AIA IMSIC devices.
+** MSI virtualization is supported.
 
 ===== Summary
 
 The <<table_interrutps_and_timer_osa_platforms>> below summarizes the four
-categories of interrupt support and timer support allowed in a OS-A platorm.
+categories of interrupt support and timer support allowed on an OS-A platorm.
 
 [#table_interrutps_and_timer_osa_platforms]
 .Interrupts and Timer support in OS-A platforms
@@ -527,12 +528,12 @@ mentioned in the requirements.
 ===== Firmware
 ====== Storage and Partitioning
 - GPT partitioning required for shared storage.
-- MBR support is not required
+- MBR support is not required.
 
 ===== Hardware Discovery Mechanisms
 - Device Tree (DT) is the required mechanism for system description.
 - Platforms must support the Unified Discovery specification for all pre-boot
-information population <<spec_unified_discovery>>
+information population <<spec_unified_discovery>>.
 
 
 ==== Runtime Services
@@ -540,7 +541,7 @@ information population <<spec_unified_discovery>>
 ===== SBI
 
 * The M-mode runtime must implement SBI specification version 0.3
-  or higher
+  or higher.
 * Required SBI extensions include:
 ** SBI TIME
 ** SBI IPI
@@ -548,11 +549,11 @@ information population <<spec_unified_discovery>>
 ** SBI HSM
 ** SBI SRST
 ** SBI PMU
-* Required features of the M-Mode runtime also includes
-** Delegate interrupts and exceptions to S-mode
-** Handle misaligned load and store
-** Emulate missing CSRs
-** Configure PMP CSRs
+* Required features of the M-Mode runtime also include:
+** Delegate interrupts and exceptions to S-mode.
+** Handle misaligned load and store.
+** Emulate missing CSRs.
+** Configure PMP CSRs.
 
 ===== UEFI
 
@@ -585,10 +586,10 @@ base with the additional requirements as below.
 
 ==== ISA Requirements
 ===== General
-* There must be hardware support for all misaligned accesses
-* The Zam extension must be supported for misaligned addresses within at least aligned 16B regions
-* The `time` CSR must be implemented in hardware
-* The Sstc extension <<spec_priv_sstc>> must be implemented
+* There must be hardware support for all misaligned accesses.
+* The Zam extension must be supported for misaligned addresses within at least aligned 16B regions.
+* The `time` CSR must be implemented in hardware.
+* The Sstc extension <<spec_priv_sstc>> must be implemented.
 
 ===== Machine Mode
 * PMP/ePMP
@@ -596,16 +597,16 @@ base with the additional requirements as below.
 
 ===== Supervisor mode
 * satp
-** For RV64, Sv48 translation mode must be supported
+** For RV64, Sv48 translation mode must be supported.
 ** At least 8 ASID bits must be supported and not hardwired to 0.
 
 ===== Hypervisor extension
 * hgatp
-** For RV64, Sv48x4 translation mode must be supported
+** For RV64, Sv48x4 translation mode must be supported.
 ** At least 8 VMID bits must be supported and not hardwired to 0.
 
 * vsatp
-** For RV64, Sv48 translation mode must be supported
+** For RV64, Sv48 translation mode must be supported.
 ** At least 8 ASID bits must be supported and not hardwired to 0.
 
 ==== PMU
@@ -617,8 +618,9 @@ base with the additional requirements as below.
 *** The platform must implement all of the general hardware events defined by
 the SBI PMU extension.
 ** Hardware cache events
-*** The platform must implement all of the hardware cache events for READ operations
-while WRITE operation must be implemented for L1D, LL and DTLB caches.
+*** The platform must implement all of the hardware cache events for READ 
+operations while WRITE operation must be implemented for L1D, LL and DTLB 
+caches.
 
 [sidebar]
 --
@@ -634,28 +636,28 @@ The OS-A server platform requirements are all of the base above plus:
 - Implement at least six mcontrol6 triggers that can support matching on PC
 (select=0, execute=1, match=0) with timing=0 and full support for mode
 filtering (vs, vu, m, s, u) for all supported modes and support for textra as
-above.
+above
   * Rationale: Other architectures have found that 4 breakpoints are
     insufficient in more capable systems and recommend 6.
 - If system bus access is implemented then accesses must be coherent with
 respect to all harts connected to the DM
-  * Rationale: Debuggers must be able to view memory coherently
+  * Rationale: Debuggers must be able to view memory coherently.
 
 ==== Interrupts and Timer
 
 ===== Interrupts support
 
 The OS-A server platform must comply with interrupt support described in
-<<msis_virtual_msis_and_wired_irqs>>  of the OS-A base platform with
+<<msis_virtual_msis_and_wired_irqs>> of the OS-A base platform with
 following additional requirements:
 
-* The H-extension implemented by each hart must support GEILEN = 5 or more
-* Per-hart AIA IMSIC devices
-** Must implement at least 5 guest interrupt files
-** Must support at least 255 distinct interrupt identities
-** Must support IPRIOLEN = 8
+* The H-extension implemented by each hart must support GEILEN = 5 or more.
+* Per-hart AIA IMSIC devices.
+** Must implement at least 5 guest interrupt files.
+** Must support at least 255 distinct interrupt identities.
+** Must support IPRIOLEN = 8.
 * EIID and IID fields of AIA APLIC devices must be at least 8 bits wide
-  matching the number of interrrupt identities supported by AIA IMSIC
+  matching the number of interrrupt identities supported by AIA IMSIC.
 
 ==== Boot Process
 =====  Firmware
@@ -664,11 +666,11 @@ defined in by the OS-A base platform with some additional requirements
 described in following sub-setions.
 
 ====== PCIe support
-The platforms are required to implement *EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL* and other
-protocols as specified in Chapter 14 of UEFI specification version 2.9.
+The platforms are required to implement *EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL* and 
+other protocols as specified in Chapter 14 of <<spec_uefi>>.
 
 ====== UEFI configuration tables
-The platforms are required to provide following tables.
+The platforms are required to provide following tables:
 
 * *EFI_ACPI_20_TABLE_GUID* ACPI configuration table which is at version 6.4+ or
 newer with HW-Reduced ACPI model.
@@ -773,9 +775,9 @@ generated and sent to a system component more privileged than Supervisor-mode
 such as:
 
 - The system interrupt controller, with a Machine-level interrupt request
-targeting a specific hart
-- A platform management processor
-- Dedicated reset control logic
+targeting a specific hart.
+- A platform management processor.
+- Dedicated reset control logic.
 
 The resultant action taken is platform-specific.
 
@@ -803,8 +805,8 @@ in the PCIe Base specification.
 * The entire config space for a single PCIe domain must be accessible via a
 single ECAM I/O region.
 * Platform firmware must implement the MCFG table as listed in the ACPI System
-Description Tables above to allow the operating systems to discover the supported
-PCIe domains and map the ECAM I/O region for each domain.
+Description Tables above to allow the operating systems to discover the 
+supported PCIe domains and map the ECAM I/O region for each domain.
 * Platform software must configure ECAM I/O regions such that the effective
 memory attributes are that of a PMA I/O region (i.e. strongly-ordered,
 non-cacheable, non-idempotent).
@@ -812,7 +814,7 @@ non-cacheable, non-idempotent).
 ====== PCIe Memory Space
 Platforms are required to map PCIe address space directly in the system address
 space and not have any address translation for outbound accesses from harts or
-for inbound accesses to any component in the system address space
+for inbound accesses to any component in the system address space.
 
 * PCIe Outbound Memory +
 PCIe devices and bridges/switches frequently implement BARs which only support
@@ -933,10 +935,11 @@ separate ECAM I/O region.
 
 ===== PCIe Device Firmware Requirement
 PCI expansion ROM code type 3 (UEFI) image must be provided by PCIe device for
-OS/A server extension platform according to PCI Firmware Specification <<spec_pci_firmware>>
-if that PCIe device is utilized during UEFI firmware boot process. The image
-stored in PCI expansion ROM is an UEFI driver that must be compliant with
-UEFI specification <<spec_uefi>> 14.4.2 PCI Option ROMs.
+OS/A server extension platform according to PCI Firmware 
+Specification <<spec_pci_firmware>> if that PCIe device is utilized during 
+UEFI firmware boot process. The image stored in PCI expansion ROM is a UEFI 
+driver that must be compliant with UEFI specification <<spec_uefi>> 14.4.2 
+PCI Option ROMs.
 
 
 ==== Security
@@ -965,7 +968,7 @@ protected by secure boot.
 
 ==== RAS
 All the below mentioned RAS features are required for the OS-A platform server
-extension
+extension:
 
 *  Main memory must be protected with SECDED-ECC. +
 *  All cache structures must be protected. +
@@ -1082,6 +1085,6 @@ implementations should aim for supporting at least 16 PMP regions.
 * [[[spec_pci_firmware,19]]] https://pcisig.com/specifications/conventional/pci_firmware[PCI Firmware Specification], Version: 3.3
 * [[[spec_unified_discovery,20]]] Unified Discovery Specification (TBD)
 * [[[spec_riscv_acpi,21]]] link:https://github.com/riscv/riscv-acpi/blob/master/riscv-acpi-platform-req.adoc[RISC-V ACPI Platform Requirements Specification], Version: Draft-20210812
-* [[[spec_riscv_watchdog,22]]] RISC-V Watchdog Specification (TBD)
+* [[[spec_riscv_watchdog,22]]] RISC-V Watchdog Timer Specification (TBD)
 * [[[spec_riscv_platform_policy,23]]] link:https://docs.google.com/document/d/1U5qLoztZpCRSnw2s8tx4rB0SFPMQ27Svrr9jWRsOziY/edit[RISC-V Platform Platform Policy], Version: 1.0
 * [[[spec_pcie_sig,24]]] link:https://pcisig.com/specifications[PCIe Base Specification Revision], Revision: 1.1
