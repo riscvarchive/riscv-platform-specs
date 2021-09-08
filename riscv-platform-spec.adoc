@@ -1085,6 +1085,6 @@ implementations should aim for supporting at least 16 PMP regions.
 * [[[spec_pci_firmware,19]]] https://pcisig.com/specifications/conventional/pci_firmware[PCI Firmware Specification], Version: 3.3
 * [[[spec_unified_discovery,20]]] Unified Discovery Specification (TBD)
 * [[[spec_riscv_acpi,21]]] link:https://github.com/riscv/riscv-acpi/blob/master/riscv-acpi-platform-req.adoc[RISC-V ACPI Platform Requirements Specification], Version: Draft-20210812
-* [[[spec_riscv_watchdog,22]]] RISC-V Watchdog Timer Specification (TBD)
+* [[[spec_riscv_watchdog,22]]] link:https://github.com/riscv-non-isa/riscv-watchdog/blob/main/riscv-watchdog.adoc[RISC-V Watchdog Timer Specification], Version: Version 1.0
 * [[[spec_riscv_platform_policy,23]]] link:https://docs.google.com/document/d/1U5qLoztZpCRSnw2s8tx4rB0SFPMQ27Svrr9jWRsOziY/edit[RISC-V Platform Platform Policy], Version: 1.0
 * [[[spec_pcie_sig,24]]] link:https://pcisig.com/specifications[PCIe Base Specification Revision], Revision: 1.1
