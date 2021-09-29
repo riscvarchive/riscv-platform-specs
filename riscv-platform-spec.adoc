@@ -6,10 +6,10 @@
 // the overall Profile and Platform Specification.
 //
 = RISC-V Platform Specification
-:author: RISC-V Platform Specification Task Group
+:author: RISC-V Platform Horizontal Subcommittee (RISC-V Platform HSC) 
 :email: tech-unixplatformspec@lists.riscv.org
-:revnumber: 0.2-rc0
-:revdate: Apr 2021
+:revnumber: 0.2
+:revdate: Setpember 2021
 :doctype: book
 :sectnums:
 :sectnumlevels: 5
