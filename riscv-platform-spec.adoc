@@ -860,7 +860,7 @@ enabled via the root error command register of the AER capability and the root
 port does not support MSI/MSI-X capability, then the platform is required to
 generate an INTx interrupt via the APLIC.
 * Following are the requirements for MSI:
-** As per the RISC-V AIA specification since the number 0 is not a valid
+** As per the RISC-V AIA specification, since the number 0 is not a valid
 interrupt identity, the platform software is required to ensure that MSI data
 value assigned to a PCIe function is never 0. For e.g for a PCIe function which
 requests 16 MSI vectors the minimum MSI data value assigned by the platform
