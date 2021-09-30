@@ -626,7 +626,7 @@ caches.
 --
 [underline]*_Implementation Note_*
 
-Any platform that do not implement the micro-architectural features related to
+Any platform that does not implement the micro-architectural features related to
 a hardware event may hardwire the event value to zero.
 --
 
