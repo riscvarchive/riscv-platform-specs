@@ -663,7 +663,7 @@ following additional requirements:
 =====  Firmware
 The boot and system firmware for the server platforms must support UEFI as
 defined in by the OS-A base platform with some additional requirements
-described in following sub-setions.
+described in following sub-sections.
 
 ====== PCIe support
 The platforms are required to implement *EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL* and 
