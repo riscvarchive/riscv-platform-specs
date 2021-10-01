@@ -7,7 +7,7 @@
 [preface]
 ## Change Log
 
-### version 0.2
+### version 0.2-draft
 * 2021-09-01:
 ** Draft version for internal reviews
 * 2021-05-20:
@@ -22,7 +22,7 @@
 ** Added 2022 platforms
 ** Added individual sections and sub-sections for the content
 
-### version 0.1
+### version 0.1-draft
 * 2020-10-07:
 ** Initial changes for structure and future maintenance.
 ** Break content down into include files; more structure, but easier
