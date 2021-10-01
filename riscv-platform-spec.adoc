@@ -657,17 +657,13 @@ following additional requirements:
 ** Must support at least 255 distinct interrupt identities.
 ** Must support IPRIOLEN = 8.
 * EIID and IID fields of AIA APLIC devices must be at least 8 bits wide
-  matching the number of interrrupt identities supported by AIA IMSIC.
+  matching the number of interrupt identities supported by AIA IMSIC.
 
 ==== Boot Process
 =====  Firmware
 The boot and system firmware for the server platforms must support UEFI as
-defined in by the OS-A base platform with some additional requirements
-described in following sub-sections.
-
-====== PCIe support
-The platforms are required to implement *EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL* and 
-other protocols as specified in Chapter 14 of <<spec_uefi>>.
+defined in the section 2.6 of the UEFI Specification <<spec_uefi>> with some
+additional requirements described in following sub-sections.
 
 ====== UEFI configuration tables
 The platforms are required to provide following tables:
@@ -684,8 +680,9 @@ the base spec requirements.
 [cols="3,1,1", width=95%, align="center", options="header"]
 |===
 |Protocol                              | UEFI Section | Note
-|EFI_LOAD_FILE2_PROTOCOL               | 13.2       |
-|EFI_DECOMPRESS_PROTOCOL               | 19.5       |
+|EFI_LOAD_FILE2_PROTOCOL               | 13.2         |
+|EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL       | 14           |
+|EFI_PCI_IO_PROTOCOL                   | 14.4         |
 |===
 
 ===== Hardware Discovery Mechanisms
@@ -693,7 +690,8 @@ the base spec requirements.
 ====== ACPI
 ACPI is the required mechanism for the hardware discovery and configuration.
 Server platforms are required to adhere to the RISC-V ACPI Platform Requirements
-Specification<<spec_riscv_acpi>>.
+Specification<<spec_riscv_acpi>>. Platform firmware must implement ACPI and the
+runtime OS environment must use ACPI for device discovery and configuration.
 
 ====== SMBIOS
 
