@@ -8,8 +8,8 @@
 = RISC-V Platform Specification
 :author: RISC-V Platform Horizontal Subcommittee (RISC-V Platform HSC) 
 :email: tech-unixplatformspec@lists.riscv.org
-:revnumber: 0.2
-:revdate: Setpember 2021
+:revnumber: 0.2-draft
+:revdate: September 2021
 :doctype: book
 :sectnums:
 :sectnumlevels: 5
@@ -62,6 +62,7 @@ toc::[]
 |INTx      | PCIe Legacy Interrupts
 |PMA       | Physical Memory Attributes
 |PRT       | PCI Routing Table
+|EBBR      | Embedded Base Boot Requirements <<spec_ebbr>>
 |===
 
 == Introduction
@@ -71,7 +72,12 @@ defines the various terms used in this platform specification. The platform
 policy also provides the needed detail regarding the scope, coverage, naming,
 versioning, structure, life cycle and compatibility claims for the platform
 specification. It is recommended that readers get familiar with the platform
-policy while reading this specification.
+policy while reading this specification. All the requirements in this 
+specification are MANDATORY unless specifically called out in the relevant 
+sections. Any hardware platform seeking compatibility with the platform 
+specification has to be self certified by the platform compatibility test 
+suite (PCT). More details about the PCT are available in the platform policy 
+specification.
 
 Platforms are augmented with extensions for industry specific target
 market verticals like “server”, “mobile”, “edge computing”, “machine-learning”
@@ -118,7 +124,7 @@ if the standard extension is not required.
 * The LR/SC reservation set size must be at least 16B and at most 128B.
 * Cacheable main memory regions must support instruction fetch, AMOArithmetic,
 RsrvEventual, and PTE reads and writes.
-* All reserved and unimplemented (or disabled) opcodes and CSRs must raise an
+* All unimplemented or disabled opcodes and CSRs must raise an
 Illegal Instruction exception.
 * Within main-memory regions, aligned instruction fetch must be atomic, up to
 the smaller of ILEN and XLEN bits. In particular, if an aligned 4-byte word
@@ -133,8 +139,7 @@ values).
 to all hart-related caches.
 [sidebar]
 --
-[underline]*_Recommendation_*
-
+[underline]*_Recommendation_* +
 User-mode programs should not execute the `fence.i` instruction.
 
 --
@@ -142,8 +147,6 @@ User-mode programs should not execute the `fence.i` instruction.
 * mvendorid, marchid, mimpid and mhartid registers must be supported and not
 hardwired to 0.
 
-* misa
-** If H extension is supported then the H bit must be writable.
 * mstatus
 ** TVM bit must not be hardwired to 0.
 ** TW bit must not be hardwired to 0.
@@ -351,15 +354,18 @@ For example, if the MTIME counter update frequency (i.e. hardware clock) is
 tick for MTIME counter resolution of 10ns.
 --
 
-===== Interrupts support
+===== Interrupts Support
 
 The OS-A platform must comply with one of the four interrupt support
-categories described in following sub-sections.
+categories described in following sub-sections. The hardware must support at
+least one of the four interrupt categories while software must support all of 
+the interrupt categories described below.
 
 [#legacy_wired_irqs]
 ====== Legacy wired IRQs - DEPRECATED
 ** One or more PLIC devices are required to support wired interrupts.
-** One or more ACLINT MSWI devices are required to support M-mode software interrupts.
+** One or more ACLINT MSWI devices are required to support M-mode software 
+interrupts.
 ** Software interrupts for S-mode and VS-mode are supported using the
    SBI IPI extension.
 ** This category is compatibile with legacy platforms having PLIC plus CLINT 
@@ -500,17 +506,17 @@ categories of interrupt support and timer support allowed on an OS-A platorm.
 ==== System Peripherals
 ===== UART/Serial Console
 
-In order to facilitate the bring-up and debug of the low level initial platform
-software(firmware, bootloaders, kernel etc), platforms are required to
-implement a UART port which confirms to the following requirements:
+In order to facilitate the bring-up and debug of the low level initial 
+platform, hardware is required to implement a UART port that confirms to the
+following requirements and firmware must support the console using this UART:
 
 * The UART register addresses are required to be aligned to 4 byte boundaries.
 If the implemented register width is less than 4 bytes then the implemented
 bytes are required to be mapped starting at the smallest address.
 * The UART port implementation is required to be register-compatible with one
 of the following:
-** UART 16550 - _REQUIRED_
-** UART 8250 - _DEPRECATED_
+** UART 16550 - MANDATORY 
+** UART 8250 - DEPRECATED
 
 ==== Boot Process
 - The base specification defines the interface between the firmware and the
@@ -521,8 +527,8 @@ discovery mechanism, etc.
 - The requirements are operating system agnostic, specific firmware/bootloader
 implementation agnostic.
 - For the generic mandatory requirements this base specification will refer to
-the EBBR Specification. Any deviation from the EBBR will be explicitly
-mentioned in the requirements.
+the EBBR specification <<spec_ebbr>>. Any deviation from the EBBR will be 
+explicitly mentioned in the requirements.
 
 
 ===== Firmware
@@ -540,8 +546,7 @@ information population <<spec_unified_discovery>>.
 
 ===== SBI
 
-* The M-mode runtime must implement SBI specification version 0.3
-  or higher.
+* The M-mode runtime must implement SBI specification <<spec_sbi>> or higher.
 * Required SBI extensions include:
 ** SBI TIME
 ** SBI IPI
@@ -582,14 +587,21 @@ promotes interoperability.
 === Server Extension
 The server extension specifies additional requirements for server  class
 platforms. The server extension includes all of the requirements for the
-base with the additional requirements as below.
+base with the additional requirements as below. The server extension, besides
+placing additional requirements on top of the underlying base specification, 
+can also restrict the options allowed in the underlying base specification for
+satisfying a requirement.
 
 ==== ISA Requirements
 ===== General
-* There must be hardware support for all misaligned accesses.
+* The hypervisor H-extension must be supported.
 * The Zam extension must be supported for misaligned addresses within at least aligned 16B regions.
 * The `time` CSR must be implemented in hardware.
-* The Sstc extension <<spec_priv_sstc>> must be implemented.
+* The Sstc extension <<spec_priv_sstc>> must be implemented. +
+
+[underline]*_Recommendation_* +
+There should be hardware support for all misaligned accesses; misaligned
+accesses should not take address misaligned exceptions.
 
 ===== Machine Mode
 * PMP/ePMP
@@ -631,7 +643,8 @@ a hardware event may hardwire the event value to zero.
 --
 
 ==== Debug
-The OS-A server platform requirements are all of the base above plus:
+The server extension requirements are all of the base specification 
+requirements plus:
 
 - Implement at least six mcontrol6 triggers that can support matching on PC
 (select=0, execute=1, match=0) with timing=0 and full support for mode
@@ -647,17 +660,20 @@ respect to all harts connected to the DM
 
 ===== Interrupts support
 
-The OS-A server platform must comply with interrupt support described in
-<<msis_virtual_msis_and_wired_irqs>> of the OS-A base platform with
-following additional requirements:
+The server extension must comply with interrupt support described in
+<<msis_virtual_msis_and_wired_irqs>> with the following additional 
+requirements:
 
 * The H-extension implemented by each hart must support GEILEN = 5 or more.
 * Per-hart AIA IMSIC devices.
-** Must implement at least 5 guest interrupt files.
 ** Must support at least 255 distinct interrupt identities.
 ** Must support IPRIOLEN = 8.
 * EIID and IID fields of AIA APLIC devices must be at least 8 bits wide
   matching the number of interrupt identities supported by AIA IMSIC.
+
+[underline]*_Recommendation_* +
+Platforms should implement at least 5 guest interrupt files. More guest
+interrupt files allow for better VM oversubscription on the same hart.
 
 ==== Boot Process
 =====  Firmware
@@ -665,14 +681,18 @@ The boot and system firmware for the server platforms must support UEFI as
 defined in the section 2.6 of the UEFI Specification <<spec_uefi>> with some
 additional requirements described in following sub-sections.
 
-====== UEFI configuration tables
+====== PCIe support
+The platforms are required to implement *EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL* and 
+other protocols as specified in Chapter 14 of <<spec_uefi>>.
+
+====== UEFI Configuration Tables
 The platforms are required to provide following tables:
 
 * *EFI_ACPI_20_TABLE_GUID* ACPI configuration table which is at version 6.4+ or
 newer with HW-Reduced ACPI model.
 * *SMBIOS3_TABLE_GUID* SMBIOS table which conforms to version 3.4 or later.
 
-====== UEFI Protocol support
+====== UEFI Protocol Support
 The UEFI protocols listed below are required to be implemented in addition to
 the base spec requirements.
 
@@ -690,11 +710,10 @@ the base spec requirements.
 ====== ACPI
 ACPI is the required mechanism for the hardware discovery and configuration.
 Server platforms are required to adhere to the RISC-V ACPI Platform Requirements
-Specification<<spec_riscv_acpi>>. Platform firmware must implement ACPI and the
-runtime OS environment must use ACPI for device discovery and configuration.
+Specification <<spec_riscv_acpi>>. Platform firmware must support ACPI and 
+the runtime OS environment must use ACPI for device discovery and configuration.
 
 ====== SMBIOS
-
 The System Management BIOS (SMBIOS) table is required for the platform
 conforming to server extension. The SMBIOS records provide basic hardware and
 firmware configuration information used widely by the platform management
@@ -982,9 +1001,9 @@ recovered by hardware, transparent to system operation and to software. +
 * Hardware must provide status of these correctable errors via RAS registers. +
 * Uncorrectable errors must be reported by the hardware via RAS error
 registers for system software to take the needed corrective action. +
-* Attempted use of corrupted (uncorrectable) data must result in a precise
-exception on that instruction with a distinguishing custom exception cause
-code. +
+* Attempted use of corrupted uncorrectable data must result in an exception
+ with a distinguishing custom exception code; preferably a precise exception
+on that instruction if possible. +
 * The platform should provide the capability to configure each RAS
 error to trigger firmware-first or OS-first error interrupt. +
 * Errors logged in RAS registers must be able to generate an interrupt request
