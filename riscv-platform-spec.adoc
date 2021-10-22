@@ -678,12 +678,8 @@ interrupt files allow for better VM oversubscription on the same hart.
 ==== Boot Process
 =====  Firmware
 The boot and system firmware for the server platforms must support UEFI as
-defined in the section 2.6 of the UEFI Specification <<spec_uefi>> with some
+defined in the section 2.6.1 of the UEFI Specification <<spec_uefi>> with some
 additional requirements described in following sub-sections.
-
-====== PCIe support
-The platforms are required to implement *EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL* and 
-other protocols as specified in Chapter 14 of <<spec_uefi>>.
 
 ====== UEFI Configuration Tables
 The platforms are required to provide following tables:
@@ -693,16 +689,14 @@ newer with HW-Reduced ACPI model.
 * *SMBIOS3_TABLE_GUID* SMBIOS table which conforms to version 3.4 or later.
 
 ====== UEFI Protocol Support
-The UEFI protocols listed below are required to be implemented in addition to
-the base spec requirements.
+The UEFI protocols listed below are required to be implemented.
 
-.Required UEFI Protocols
+.Additional UEFI Protocols
 [cols="3,1,1", width=95%, align="center", options="header"]
 |===
 |Protocol                              | UEFI Section | Note
-|EFI_LOAD_FILE2_PROTOCOL               | 13.2         |
-|EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL       | 14           |
-|EFI_PCI_IO_PROTOCOL                   | 14.4         |
+|EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL       | 14           | For PCIe support
+|EFI_PCI_IO_PROTOCOL                   | 14.4         | For PCIe support
 |===
 
 ===== Hardware Discovery Mechanisms
