@@ -37,7 +37,6 @@ toc::[]
 |OSPM      | Operating System Power Management
 |RVA22U64  | RISC-V 2022 user-mode profile <<spec_profiles>>
 |RVA22S64  | RISC-V 2022 supervisor-mode profile <<spec_profiles>>
-|RVA22M64  | RISC-V 2022 machine-mode profile <<spec_profiles>>
 |RAS       | Reliability, Availability, and Serviceability
 |CLINT     | Legacy Core-Local Interrupt Controller
 |ACLINT    | Advanced Core-Local Interrupt Controller <<spec_aclint>>
@@ -98,6 +97,10 @@ feature set and extensions as shown below: +
 ** *Base*
 ** *Physical Memory Protection (PMP) Extension*
 
+The current version of this platform spec targets the standardization of
+functionality available in S, U, VS and VU modes, and the standardization of
+the SBI (Supervisory Binary Interface as defined in <<spec_sbi>>) between
+Supervisor level (S-mode/VS-mode) and M-mode/HS-mode respectively.
 
 // OS-A Platform
 == OS-A Platform
@@ -111,7 +114,6 @@ feature set and extensions as shown below: +
 RISC-V profiles specification <<spec_profiles>>.
 ** RVA22U profile for user-mode.
 ** RVA22S profile for supervisor-mode.
-** RVM20M64 profile for machine-mode.
 *** The I, M, A, C extensions must be supported.
 
 ===== General
@@ -143,48 +145,6 @@ to all hart-related caches.
 User-mode programs should not execute the `fence.i` instruction.
 
 --
-===== Machine Mode
-* mvendorid, marchid, mimpid and mhartid registers must be supported and not
-hardwired to 0.
-
-* mstatus
-** TVM bit must not be hardwired to 0.
-** TW bit must not be hardwired to 0.
-** TSR bit must not be hardwired to 0.
-** MBE, SBE and UBE must each be either hardwired to 0 or writable and
-initialized by reset or boot firmware for LE operation.
-
-* mtvec
-** Both direct and vectored modes must be supported.
-** The alignment constraint for BASE fields must be at most 256B.
-
-* medeleg
-** All bits for defined and supported exceptions except 'Environment call
-from M-mode' must be writable.
-
-* mideleg
-** Bits for MSI, MTI and MEI must be hardwired to 0.
-
-* mcounteren
-** Writeable bits must be implemented for all supported (not hardwired to zero)
-hpmcounters.
-
-* mcountinhibit
-** Writeable bits must be implemented for all supported (not hardwired to zero)
-hpmcounters.
-
-* mtval
-** mtval must not be hardwired to 0 and in all cases must be written with
-non-zero and zero values as architecturally defined.
-
-* mtval2
-**  If H extension is supported then mtval2 must not be hardwired to 0 and in
-all cases must be written with non-zero and zero values as architecturally
-defined.
-
-* PMP
-** Minimum of 4 PMP regions must be supported.
-
 ===== Supervisor mode
 * sstatus
 ** sstatus.UBE must support the same access attribute (read-only or writable)
@@ -556,11 +516,6 @@ information population <<spec_unified_discovery>>.
 ** SBI HSM
 ** SBI SRST
 ** SBI PMU
-* Required features of the M-Mode runtime also include:
-** Delegate interrupts and exceptions to S-mode.
-** Handle misaligned load and store.
-** Emulate missing CSRs.
-** Configure PMP CSRs.
 
 ===== UEFI
 
@@ -604,10 +559,6 @@ satisfying a requirement.
 [underline]*_Recommendation_* +
 There should be hardware support for all misaligned accesses; misaligned
 accesses should not take address misaligned exceptions.
-
-===== Machine Mode
-* PMP/ePMP
-** Minimum of 16 PMP regions must be supported.
 
 ===== Supervisor mode
 * satp
