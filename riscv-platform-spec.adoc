@@ -392,7 +392,8 @@ devices.
 *** Must support IPRIOLEN = 6 to 8.
 *** Must support at least 63 distinct interrupt identities.
 *** Must implement `seteipnum_le` memory-mapped register.
-** One, or more AIA APLIC devices to support wired interrupts.
+** One, or more AIA APLIC devices to support wired interrupts if the platform
+support wired irqs.
 *** EIID and IID fields must be 6 to 8 bits wide matching the number of
     interrrupt identities supported by AIA IMSIC.
 ** Software interrupts for M-mode and S/HS-mode are supported using AIA IMSIC
@@ -412,7 +413,8 @@ devices.
 *** Must support at least 63 distinct interrupt identities.
 *** Must implement `seteipnum_le` memory-mapped register.
 *** Must implement at least 3 guest interrupt files.
-** One, or more AIA APLIC devices are required to support wired interrupts.
+** One, or more AIA APLIC devices are required to support wired interrupts if the
+platform support wired irqs.
 *** EIID and IID fields must be 6 to 8 bits wide matching the number of
     interrrupt identities supported by AIA IMSIC.
 ** Software interrupts for M-mode, HS-mode and VS-mode are supported using
