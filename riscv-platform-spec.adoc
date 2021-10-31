@@ -540,6 +540,18 @@ software components:
 Rationale: The platform specification intends to avoid fragmentation and
 promotes interoperability.
 
+=== Security
+** If M-mode is supported in the platform, all machine mode assets, such as
+code and data, shall be protected from all non-machine mode accesses from the
+harts in the system. Additionally, I/O agent access protection must be 
+required within the system to protect machine mode assets. Therefore, the
+following requirements are mandatory for platforms with M-mode:
+
+*** Platform must provide a protection mechanism from non-machine mode hart
+transactions that precisely traps if violated.
+*** Platform must provide a protection mechanism from I/O agents manipulating
+or accessing machine mode assets.
+
 // Server extension for OS-A Platform
 === Server Extension
 The server extension specifies additional requirements for server  class
@@ -929,6 +941,16 @@ configuration.
 ** It is clearly understood what aspects of the platform boot process are
 protected by secure boot.
 
+** If M-mode is supported in the platform, all machine mode assets, such as
+code and data, shall be protected from all non-machine mode accesses from the
+harts in the system. Additionally, I/O agent access protection must be 
+required within the system to protect machine mode assets. Therefore, the
+following requirements are mandatory for platforms with M-mode:
+
+*** Platform must provide a protection mechanism from non-machine mode hart
+transactions that precisely traps if violated.
+*** Platform must provide a protection mechanism from I/O agents manipulating
+or accessing machine mode assets.
 
 ==== RAS
 All the below mentioned RAS features are required for the OS-A platform server
