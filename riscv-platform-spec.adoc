@@ -319,7 +319,8 @@ tick for MTIME counter resolution of 10ns.
 The OS-A platform must comply with one of the four interrupt support
 categories described in following sub-sections. The hardware must support at
 least one of the four interrupt categories while software must support all of 
-the interrupt categories described below.
+the interrupt categories described below. Any hardware requirement for a specific
+privilege mode is only applicable for platforms supporting that privilege mode.
 
 [#legacy_wired_irqs]
 ====== Legacy wired IRQs - DEPRECATED
@@ -368,7 +369,7 @@ support wired irqs.
 ** AIA local interrupt CSRs must be supported by each hart.
 *** `siselect` CSR must support holding 9-bit value.
 *** `vsiselect` CSR must support holding 9-bit value.
-** Per-hart AIA IMSIC devices to support MSIs for M-mode, HS-mode and VS-mode.
+** Per-hart AIA IMSIC devices are required to support MSIs for M-mode, HS-mode and VS-mode.
 *** Must support IPRIOLEN = 6 to 8.
 *** Must support at least 63 distinct interrupt identities.
 *** Must implement `seteipnum_le` memory-mapped register.
