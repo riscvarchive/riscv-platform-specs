@@ -810,9 +810,9 @@ I/O or memory.
 --
 
 * PCIe Inbound Memory +
-For security reasons, platforms must provide a mechanism controlled by M-mode
-software to restrict inbound PCIe accesses from accessing regions of address
-space intended to be accessible only to M-mode software.
+For security reasons, platforms with M-mode must provide a mechanism controlled
+by M-mode software to restrict inbound PCIe accesses from accessing regions of
+address space intended to be accessible only to M-mode software.
 
 [sidebar]
 --
