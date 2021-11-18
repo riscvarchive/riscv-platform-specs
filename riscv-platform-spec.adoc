@@ -595,9 +595,10 @@ accesses should not take address misaligned exceptions.
 *** The platform must implement all of the general hardware events defined by
 the SBI PMU extension.
 ** Hardware cache events
-*** The platform must implement all of the hardware cache events for READ 
-operations while WRITE operation must be implemented for L1D, LL and DTLB 
-caches.
+*** The platform must implement READ operations for all of the hardware cache
+events except SBI_PMU_HW_CACHE_NODE and SBI_PMU_HW_CACHE_LL defined in the SBI
+PMU extension.
+*** The platform must implement WRITE operation for L1D, and DTLB caches.
 
 [sidebar]
 --
