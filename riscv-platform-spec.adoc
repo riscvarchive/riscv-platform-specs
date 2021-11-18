@@ -108,43 +108,22 @@ Supervisor level (S-mode/VS-mode) and M-mode/HS-mode respectively.
 // Base feature set for OS-A Platform
 === Base
 ==== ISA Requirements
-
-===== ISA Profile Requirements
-* The OS-A platform must comply with the following profiles defined by the
-RISC-V profiles specification <<spec_profiles>>.
-** RVA22U profile for user-mode.
-** RVA22S profile for supervisor-mode.
-*** The I, M, A, C extensions must be supported.
-
 ===== General
+
+* This OS-A platform must comply with the RVA22U and RVA22S ISA profiles as
+defined in the RISC-V ISA Profiles specification [11].
 * A non-conforming extension that conflicts with a supported standard extensions
 must satisfy at least one of the following:
 ** It must be disabled by default.
 ** The supported standard extension must be declared as unsupported in all
 feature discovery structures used by software. This option is allowed only
 if the standard extension is not required.
-* The LR/SC reservation set size must be at least 16B and at most 128B.
-* Cacheable main memory regions must support instruction fetch, AMOArithmetic,
-RsrvEventual, and PTE reads and writes.
-* All unimplemented or disabled opcodes and CSRs must raise an
-Illegal Instruction exception.
-* Within main-memory regions, aligned instruction fetch must be atomic, up to
-the smaller of ILEN and XLEN bits. In particular, if an aligned 4-byte word
-is stored with the `sw` instruction, then any processor attempts to execute
-that word, the processor either fetches the newly stored word, or some previous
-value stored to that location.  (That is, the fetched instruction is not an
-unpredictable value, nor is it a hybrid of the bytes of the old and new
-values).
-* All harts must adhere to the RVWMO memory model.
 * All hart PMA regions for main memory must be marked as coherent.
 * Memory accesses by I/O masters can be coherent or non-coherent with respect
 to all hart-related caches.
 [sidebar]
---
-[underline]*_Recommendation_* +
-User-mode programs should not execute the `fence.i` instruction.
+---
 
---
 ===== Supervisor mode
 * sstatus
 ** sstatus.UBE must support the same access attribute (read-only or writable)
@@ -540,6 +519,15 @@ software components:
 
 Rationale: The platform specification intends to avoid fragmentation and
 promotes interoperability.
+
+* To order older stores before younger instruction fetches, user-level programs must
+use system-supplied library calls (e.g. GNU libc's `__riscv_flush_icache`, which
+invokes the Linux kernel's corresponding vDSO routine), rather than executing
+the `fence.i` instruction directly.
+
+Rationale: The `fence.i` instruction only orders the current hart's instruction
+fetches - which is insufficient even for single-threaded programs since a thread
+may migrate to a different hart.
 
 === Security
 ** If M-mode is supported in the platform, all machine mode assets, such as
