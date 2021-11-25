@@ -37,7 +37,6 @@ toc::[]
 |OSPM      | Operating System Power Management
 |RVA22U64  | RISC-V 2022 user-mode profile <<spec_profiles>>
 |RVA22S64  | RISC-V 2022 supervisor-mode profile <<spec_profiles>>
-|RVA22M64  | RISC-V 2022 machine-mode profile <<spec_profiles>>
 |RAS       | Reliability, Availability, and Serviceability
 |CLINT     | Legacy Core-Local Interrupt Controller
 |ACLINT    | Advanced Core-Local Interrupt Controller <<spec_aclint>>
@@ -98,6 +97,10 @@ feature set and extensions as shown below: +
 ** *Base*
 ** *Physical Memory Protection (PMP) Extension*
 
+The current version of this platform spec targets the standardization of
+functionality available in S, U, VS and VU modes, and the standardization of
+the SBI (Supervisory Binary Interface as defined in <<spec_sbi>>) between
+Supervisor level (S-mode/VS-mode) and M-mode/HS-mode respectively.
 
 // OS-A Platform
 == OS-A Platform
@@ -105,85 +108,21 @@ feature set and extensions as shown below: +
 // Base feature set for OS-A Platform
 === Base
 ==== ISA Requirements
-
-===== ISA Profile Requirements
-* The OS-A platform must comply with the following profiles defined by the
-RISC-V profiles specification <<spec_profiles>>.
-** RVA22U profile for user-mode.
-** RVA22S profile for supervisor-mode.
-** RVM20M64 profile for machine-mode.
-*** The I, M, A, C extensions must be supported.
-
 ===== General
+
+* This OS-A platform must comply with the RVA22U and RVA22S ISA profiles as
+defined in the RISC-V ISA Profiles specification [11].
 * A non-conforming extension that conflicts with a supported standard extensions
 must satisfy at least one of the following:
 ** It must be disabled by default.
 ** The supported standard extension must be declared as unsupported in all
 feature discovery structures used by software. This option is allowed only
 if the standard extension is not required.
-* The LR/SC reservation set size must be at least 16B and at most 128B.
-* Cacheable main memory regions must support instruction fetch, AMOArithmetic,
-RsrvEventual, and PTE reads and writes.
-* All unimplemented or disabled opcodes and CSRs must raise an
-Illegal Instruction exception.
-* Within main-memory regions, aligned instruction fetch must be atomic, up to
-the smaller of ILEN and XLEN bits. In particular, if an aligned 4-byte word
-is stored with the `sw` instruction, then any processor attempts to execute
-that word, the processor either fetches the newly stored word, or some previous
-value stored to that location.  (That is, the fetched instruction is not an
-unpredictable value, nor is it a hybrid of the bytes of the old and new
-values).
-* All harts must adhere to the RVWMO memory model.
 * All hart PMA regions for main memory must be marked as coherent.
 * Memory accesses by I/O masters can be coherent or non-coherent with respect
 to all hart-related caches.
 [sidebar]
---
-[underline]*_Recommendation_* +
-User-mode programs should not execute the `fence.i` instruction.
-
---
-===== Machine Mode
-* mvendorid, marchid, mimpid and mhartid registers must be supported and not
-hardwired to 0.
-
-* mstatus
-** TVM bit must not be hardwired to 0.
-** TW bit must not be hardwired to 0.
-** TSR bit must not be hardwired to 0.
-** MBE, SBE and UBE must each be either hardwired to 0 or writable and
-initialized by reset or boot firmware for LE operation.
-
-* mtvec
-** Both direct and vectored modes must be supported.
-** The alignment constraint for BASE fields must be at most 256B.
-
-* medeleg
-** All bits for defined and supported exceptions except 'Environment call
-from M-mode' must be writable.
-
-* mideleg
-** Bits for MSI, MTI and MEI must be hardwired to 0.
-
-* mcounteren
-** Writeable bits must be implemented for all supported (not hardwired to zero)
-hpmcounters.
-
-* mcountinhibit
-** Writeable bits must be implemented for all supported (not hardwired to zero)
-hpmcounters.
-
-* mtval
-** mtval must not be hardwired to 0 and in all cases must be written with
-non-zero and zero values as architecturally defined.
-
-* mtval2
-**  If H extension is supported then mtval2 must not be hardwired to 0 and in
-all cases must be written with non-zero and zero values as architecturally
-defined.
-
-* PMP
-** Minimum of 4 PMP regions must be supported.
+---
 
 ===== Supervisor mode
 * sstatus
@@ -359,7 +298,8 @@ tick for MTIME counter resolution of 10ns.
 The OS-A platform must comply with one of the four interrupt support
 categories described in following sub-sections. The hardware must support at
 least one of the four interrupt categories while software must support all of 
-the interrupt categories described below.
+the interrupt categories described below. Any hardware requirement for a specific
+privilege mode is only applicable for platforms supporting that privilege mode.
 
 [#legacy_wired_irqs]
 ====== Legacy wired IRQs - DEPRECATED
@@ -408,7 +348,7 @@ support wired irqs.
 ** AIA local interrupt CSRs must be supported by each hart.
 *** `siselect` CSR must support holding 9-bit value.
 *** `vsiselect` CSR must support holding 9-bit value.
-** Per-hart AIA IMSIC devices to support MSIs for M-mode, HS-mode and VS-mode.
+** Per-hart AIA IMSIC devices are required to support MSIs for M-mode, HS-mode and VS-mode.
 *** Must support IPRIOLEN = 6 to 8.
 *** Must support at least 63 distinct interrupt identities.
 *** Must implement `seteipnum_le` memory-mapped register.
@@ -556,11 +496,6 @@ information population <<spec_unified_discovery>>.
 ** SBI HSM
 ** SBI SRST
 ** SBI PMU
-* Required features of the M-Mode runtime also include:
-** Delegate interrupts and exceptions to S-mode.
-** Handle misaligned load and store.
-** Emulate missing CSRs.
-** Configure PMP CSRs.
 
 ===== UEFI
 
@@ -585,6 +520,27 @@ software components:
 Rationale: The platform specification intends to avoid fragmentation and
 promotes interoperability.
 
+* To order older stores before younger instruction fetches, user-level programs must
+use system-supplied library calls (e.g. GNU libc's `__riscv_flush_icache`, which
+invokes the Linux kernel's corresponding vDSO routine), rather than executing
+the `fence.i` instruction directly.
+
+Rationale: The `fence.i` instruction only orders the current hart's instruction
+fetches - which is insufficient even for single-threaded programs since a thread
+may migrate to a different hart.
+
+=== Security
+** If M-mode is supported in the platform, all machine mode assets, such as
+code and data, shall be protected from all non-machine mode accesses from the
+harts in the system. Additionally, I/O agent access protection must be 
+required within the system to protect machine mode assets. Therefore, the
+following requirements are mandatory for platforms with M-mode:
+
+*** Platform must provide a protection mechanism from non-machine mode hart
+transactions that precisely traps if violated.
+*** Platform must provide a protection mechanism from I/O agents manipulating
+or accessing machine mode assets.
+
 // Server extension for OS-A Platform
 === Server Extension
 The server extension specifies additional requirements for server  class
@@ -604,10 +560,6 @@ satisfying a requirement.
 [underline]*_Recommendation_* +
 There should be hardware support for all misaligned accesses; misaligned
 accesses should not take address misaligned exceptions.
-
-===== Machine Mode
-* PMP/ePMP
-** Minimum of 16 PMP regions must be supported.
 
 ===== Supervisor mode
 * satp
@@ -632,9 +584,10 @@ accesses should not take address misaligned exceptions.
 *** The platform must implement all of the general hardware events defined by
 the SBI PMU extension.
 ** Hardware cache events
-*** The platform must implement all of the hardware cache events for READ 
-operations while WRITE operation must be implemented for L1D, LL and DTLB 
-caches.
+*** The platform must implement READ operations for all of the hardware cache
+events except SBI_PMU_HW_CACHE_NODE and SBI_PMU_HW_CACHE_LL defined in the SBI
+PMU extension.
+*** The platform must implement WRITE operation for L1D, and DTLB caches.
 
 [sidebar]
 --
@@ -847,9 +800,9 @@ I/O or memory.
 --
 
 * PCIe Inbound Memory +
-For security reasons, platforms must provide a mechanism controlled by M-mode
-software to restrict inbound PCIe accesses from accessing regions of address
-space intended to be accessible only to M-mode software.
+For security reasons, platforms with M-mode must provide a mechanism controlled
+by M-mode software to restrict inbound PCIe accesses from accessing regions of
+address space intended to be accessible only to M-mode software.
 
 [sidebar]
 --
@@ -978,6 +931,16 @@ configuration.
 ** It is clearly understood what aspects of the platform boot process are
 protected by secure boot.
 
+** If M-mode is supported in the platform, all machine mode assets, such as
+code and data, shall be protected from all non-machine mode accesses from the
+harts in the system. Additionally, I/O agent access protection must be 
+required within the system to protect machine mode assets. Therefore, the
+following requirements are mandatory for platforms with M-mode:
+
+*** Platform must provide a protection mechanism from non-machine mode hart
+transactions that precisely traps if violated.
+*** Platform must provide a protection mechanism from I/O agents manipulating
+or accessing machine mode assets.
 
 ==== RAS
 All the below mentioned RAS features are required for the OS-A platform server
