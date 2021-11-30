@@ -22,6 +22,16 @@ The files in this repository are licensed under the Creative Commons
 Attribution 4.0 International License (CC-BY 4.0).  The full license
 text is available at https://creativecommons.org/licenses/by/4.0/.
 
+# Copyright information
+
+This RISC-V Platform Specification is
+
+&copy; 2017 Krste Asanovic &lt;<krste@sifive.com>&gt; \
+&copy; 2017-2019 Palmer Dabbelt &lt;<palmer@sifive.com>&gt; \
+&copy; 2017 Andrew Waterman &lt;<andrew@sifive.com>&gt; \
+&copy; 2020 Al Stone &lt;<ahs3@redhat.com>&gt; \
+&copy; 2021 Kumar Sankaran &lt;<ksankaran@ventanamicro.com>&gt;
+
 # Repository Content
 * **Makefile** => 'make' in this directory will produce the HTML, markdown,
 and PDF versions of the current spec
