@@ -1030,7 +1030,7 @@ address `0x8000_0000`.
 
 // PMP extension for M Platform
 === Physical Memory Protection (PMP) Extension
-It is recommended that any systems that implement more then just machine mode
+It is recommended that any system that implement more than just machine mode
 also implement PMP support.
 
 When PMP is supported it is recommended to include at least 4 regions, although
