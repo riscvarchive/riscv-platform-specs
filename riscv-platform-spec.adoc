@@ -8,8 +8,8 @@
 = RISC-V Platform Specification
 :author: RISC-V Platform Horizontal Subcommittee (RISC-V Platform HSC) 
 :email: tech-unixplatformspec@lists.riscv.org
-:revnumber: 0.2-draft
-:revdate: September 2021
+:revnumber: 0.3-draft
+:revdate: December 2021
 :doctype: book
 :sectnums:
 :sectnumlevels: 5
