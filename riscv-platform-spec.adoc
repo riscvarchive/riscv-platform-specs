@@ -20,6 +20,12 @@
 // table of contents
 toc::[]
 
+// document copyright and licensing information
+include::licensing.adoc[]
+
+// changelog for the document
+include::changelog.adoc[]
+
 [preface]
 == Terminology
 [cols="1,4", width=80%, align="left", options="header"]
@@ -78,20 +84,26 @@ specification has to be self certified by the platform compatibility test
 suite (PCT). More details about the PCT are available in the platform policy 
 specification.
 
-Platforms are augmented with extensions for industry specific target
-market verticals like “server”, “mobile”, “edge computing”, “machine-learning”
-and “automotive”.
+The platform specification currently defines two platforms as shown below. 
+Additional platforms are expected to be defined in the future for industry 
+specific target market verticals like “mobile”, “edge computing”, 
+“machine-learning” "desktop", “automotive” and more.
 
-The platform specification currently defines two platforms:
+* *OS-A Platform*: The OS-A platform specifies a category of rich-OS platforms 
+that support operating systems like Linux, FreeBSD, Windows and more; 
+flavors that run on enterprise and embedded class application processors. 
+Each OS-A platform that is defined below is independent in its representation 
+and is not dependent on any other platform for its features or specifications. 
+Requirements common across multiple platforms are bundled together in the OS-A 
+Common Requirements section in order to prevent duplication of content. The
+specific platform can include all or some of the requirements in the common
+section and add or modify these as per the specific requirements.
+The OS-A platforms that are currently defined are the following: +
+** *OS-A Embedded Platform*
+** *OS-A Server Platform*
 
-* *OS-A Platform*: This specifies a rich-OS platform for
-Linux/FreeBSD/Windows - flavors that run on enterprise and embedded class
-application processors. The OS-A platform has a base feature set and extensions
-as shown below: +
-** *Base*
-** *Server Extension*
-
-* *M Platform*: This specifies an RTOS platform for bare-metal applications and
+* *M Platform*: The M platform specifies an RTOS platform for bare-metal 
+applications and
 small operating systems running on a microcontroller. The M platform has a base
 feature set and extensions as shown below: +
 ** *Base*
@@ -102,13 +114,11 @@ functionality available in S, U, VS and VU modes, and the standardization of
 the SBI (Supervisory Binary Interface as defined in <<spec_sbi>>) between
 Supervisor level (S-mode/VS-mode) and M-mode/HS-mode respectively.
 
-// OS-A Platform
-== OS-A Platform
+// OS-A Platform Common requirements
+== OS-A Common Requirements 
 
-// Base feature set for OS-A Platform
-=== Base
-==== ISA Requirements
-===== General
+=== ISA Requirements
+==== General
 
 * This OS-A platform must comply with the RVA22U and RVA22S ISA profiles as
 defined in the RISC-V ISA Profiles specification [11].
@@ -121,10 +131,8 @@ if the standard extension is not required.
 * All hart PMA regions for main memory must be marked as coherent.
 * Memory accesses by I/O masters can be coherent or non-coherent with respect
 to all hart-related caches.
-[sidebar]
----
 
-===== Supervisor mode
+==== Supervisor mode
 * sstatus
 ** sstatus.UBE must support the same access attribute (read-only or writable)
 as mstatus.UBE.
@@ -145,7 +153,7 @@ non-zero and zero values as architecturally defined.
 ** For RV32, Bare and Sv32 translation modes must be supported.
 ** For RV64, Bare and Sv39 translation modes must be supported.
 
-===== Hypervisor extension
+==== Hypervisor extension
 * hstatus
 ** VTW bit must not be hardwired to 0.
 ** VTVM bit must not be hardwired to 0.
@@ -178,23 +186,8 @@ non-zero and zero values as architecturally defined.
 ** For RV32, Bare and Sv32 translation modes must be supported.
 ** For RV64, Bare and Sv39 translation modes must be supported.
 
-==== PMU
-
-The RVA22 profile defines 32 PMU counters out-of-which first three counters are
-defined by the privilege specification while other 29 counters are programmable.
-The SBI PMU extension defines a set of hardware events that can be monitored
-using these programmable counters. This section defines the minimum number of
-programmable counters and hardware events required for an OS-A compatible
-platform.
-
-* Counters
-** The platform does not require to implement any of the programmable counters.
-* Events
-** The platform does not require to implement any of the hardware events defined
-in SBI PMU extensions.
-
-==== Debug
-The OS-A base platform requirements are the following:
+=== Debug
+The OS-A platform common requirements are the following:
 
 - Implement resethaltreq
   * Rationale: Debugging immediately out of reset is a useful debug tool.
@@ -275,26 +268,12 @@ each must be 1
     The default should allow code that's sensitive to these requirements to be
     debugged.
 
-==== Interrupts and Timer
-
-===== Timer support
-
+=== Timers
 * One or more ACLINT MTIMER devices are required for the OS-A platform.
-* Platform must support a default ACLINT MTIME counter resolution of 10ns
-  (i.e. an increment by 1 represents 10 ns).
-* The ACLINT MTIME update frequency (i.e. hardware clock) must be between
-  10 MHz and 100 MHz, and updates must be strictly monotonic.
+* Platform must support an ACLINT MTIME counter resolution of 100ns or less
+(corresponding to a clock tick frequency of at least 10 MHz).
 
-[sidebar]
---
-[underline]*_Implementation Note:_*
-For example, if the MTIME counter update frequency (i.e. hardware clock) is
-25 MHz then the MTIME counter would increment by 4 upon every hardware clock
-tick for MTIME counter resolution of 10ns.
---
-
-===== Interrupts Support
-
+=== Interrupts
 The OS-A platform must comply with one of the four interrupt support
 categories described in following sub-sections. The hardware must support at
 least one of the four interrupt categories while software must support all of 
@@ -302,7 +281,7 @@ the interrupt categories described below. Any hardware requirement for a specifi
 privilege mode is only applicable for platforms supporting that privilege mode.
 
 [#legacy_wired_irqs]
-====== Legacy wired IRQs - DEPRECATED
+==== Legacy wired IRQs - DEPRECATED
 ** One or more PLIC devices are required to support wired interrupts.
 ** One or more ACLINT MSWI devices are required to support M-mode software 
 interrupts.
@@ -314,7 +293,7 @@ devices.
 ** MSI virtualization is not supported.
 
 [#only_wired_irqs]
-====== Only Wired IRQs
+==== Only Wired IRQs
 ** One or more AIA APLIC devices are required to support wired interrupts.
 ** One or more ACLINT MSWI devices are required to support M-mode software interrupts.
 ** One or more ACLINT SSWI devices are required to support S/HS-mode software interrupts.
@@ -323,7 +302,7 @@ devices.
 ** MSI virtualization is not supported.
 
 [#msis_and_wired_irqs]
-====== MSIs and Wired IRQs
+==== MSIs and Wired IRQs
 ** AIA local interrupt CSRs must be supported by each hart.
 *** `siselect` CSR must support holding 9-bit value.
 *** `vsiselect` CSR must support holding 9-bit value if H-extension is
@@ -342,7 +321,7 @@ support wired irqs.
 ** MSI virtualization is not supported.
 
 [#msis_virtual_msis_and_wired_irqs]
-====== MSIs, Virtual MSIs, and Wired IRQs
+==== MSIs, Virtual MSIs, and Wired IRQs
 ** To support virtual MSIs, the H-extension must be implemented.
 *** GEILEN must be 3 or more.
 ** AIA local interrupt CSRs must be supported by each hart.
@@ -361,7 +340,7 @@ platform support wired irqs.
    AIA IMSIC devices.
 ** MSI virtualization is supported.
 
-===== Summary
+==== Summary
 
 The <<table_interrutps_and_timer_osa_platforms>> below summarizes the four
 categories of interrupt support and timer support allowed on an OS-A platorm.
@@ -445,8 +424,8 @@ categories of interrupt support and timer support allowed on an OS-A platorm.
 |+++<color rgb="#e69138"><font size=".6em">Priv Sstc</font></color>+++
 |===
 
-==== System Peripherals
-===== UART/Serial Console
+=== System Peripherals
+==== UART/Serial Console
 
 In order to facilitate the bring-up and debug of the low level initial 
 platform, hardware is required to implement a UART port that confirms to the
@@ -460,33 +439,10 @@ of the following:
 ** UART 16550 - MANDATORY 
 ** UART 8250 - DEPRECATED
 
-==== Boot Process
-- The base specification defines the interface between the firmware and the
-operating system suitable for the RISC-V platforms with rich operating
-systems.
-- These requirements specify the required boot and runtime services, device
-discovery mechanism, etc.
-- The requirements are operating system agnostic, specific firmware/bootloader
-implementation agnostic.
-- For the generic mandatory requirements this base specification will refer to
-the EBBR specification <<spec_ebbr>>. Any deviation from the EBBR will be 
-explicitly mentioned in the requirements.
 
+=== Runtime Services
 
-===== Firmware
-====== Storage and Partitioning
-- GPT partitioning required for shared storage.
-- MBR support is not required.
-
-===== Hardware Discovery Mechanisms
-- Device Tree (DT) is the required mechanism for system description.
-- Platforms must support the Unified Discovery specification for all pre-boot
-information population <<spec_unified_discovery>>.
-
-
-==== Runtime Services
-
-===== SBI
+==== SBI
 
 * The M-mode runtime must implement SBI specification <<spec_sbi>> or higher.
 * Required SBI extensions include:
@@ -497,7 +453,7 @@ information population <<spec_unified_discovery>>.
 ** SBI SRST
 ** SBI PMU
 
-===== UEFI
+==== UEFI
 
 * Wherever applicable UEFI firmware must implement UEFI interfaces over
   similar interfaces and services present in the SBI specification. For
@@ -506,7 +462,7 @@ information population <<spec_unified_discovery>>.
 * The operating system should prioritize calling the UEFI interfaces before
   the SBI or platform specific mechanisms.
 
-==== Software and ABIs
+=== Software and ABIs
 The platform specification mandates the following requirements for
 software components:
 
@@ -541,17 +497,54 @@ transactions that precisely traps if violated.
 *** Platform must provide a protection mechanism from I/O agents manipulating
 or accessing machine mode assets.
 
-// Server extension for OS-A Platform
-=== Server Extension
-The server extension specifies additional requirements for server  class
-platforms. The server extension includes all of the requirements for the
-base with the additional requirements as below. The server extension, besides
-placing additional requirements on top of the underlying base specification, 
-can also restrict the options allowed in the underlying base specification for
-satisfying a requirement.
+// OS-A Embedded Platform
+== OS-A Embedded Platform 
+The OS-A Embedded Platform targets embedded class applications. The OS-A
+Embedded Platform inherits all the requirements as defined in the OS-A Platform
+Common Requirements section. Additional requirements are detailed in the 
+following sections.
 
-==== ISA Requirements
-===== General
+=== PMU
+The RVA22 profile defines 32 PMU counters out-of-which first three counters are
+defined by the privilege specification while other 29 counters are programmable.
+The SBI PMU extension defines a set of hardware events that can be monitored
+using these programmable counters. This section defines the minimum number of
+programmable counters and hardware events required for an OS-A Embedded 
+compatible platform.
+
+* Counters
+** The platform does not require to implement any of the programmable counters.
+* Events
+** The platform does not require to implement any of the hardware events defined
+in SBI PMU extensions.
+
+=== Boot Process
+- The OS-A Embedded Platform must comply with the EBBR specification 
+<<spec_ebbr>>. Any deviation from the EBBR will be explicitly mentioned in 
+the requirements in this section.
+
+==== Firmware
+===== Storage and Partitioning
+- GPT partitioning required for shared storage.
+- MBR support is not required.
+
+==== Hardware Discovery Mechanisms
+- Platforms must support the Unified Discovery specification for all pre-boot
+information population <<spec_unified_discovery>>.
+
+===== Device Tree (DT) 
+- Device Tree (DT) is the required mechanism for the hardware discovery and 
+configuration.
+
+// OS-A Server Platform
+== OS-A Server Platform 
+The OS-A Server Platform targets server class applications. The OS-A
+Server Platform inherits all the requirements as defined in the OS-A Platform
+Common Requirements section. Additional requirements are detailed in the 
+following sections.
+
+=== ISA Requirements
+==== General
 * The hypervisor H-extension must be supported.
 * The Zam extension must be supported for misaligned addresses within at least aligned 16B regions.
 * The `time` CSR must be implemented in hardware.
@@ -561,12 +554,12 @@ satisfying a requirement.
 There should be hardware support for all misaligned accesses; misaligned
 accesses should not take address misaligned exceptions.
 
-===== Supervisor mode
+==== Supervisor mode
 * satp
 ** For RV64, Sv48 translation mode must be supported.
 ** At least 8 ASID bits must be supported and not hardwired to 0.
 
-===== Hypervisor extension
+==== Hypervisor extension
 * hgatp
 ** For RV64, Sv48x4 translation mode must be supported.
 ** At least 8 VMID bits must be supported and not hardwired to 0.
@@ -575,7 +568,13 @@ accesses should not take address misaligned exceptions.
 ** For RV64, Sv48 translation mode must be supported.
 ** At least 8 ASID bits must be supported and not hardwired to 0.
 
-==== PMU
+=== PMU
+The RVA22 profile defines 32 PMU counters out-of-which first three counters are
+defined by the privilege specification while other 29 counters are programmable.
+The SBI PMU extension defines a set of hardware events that can be monitored
+using these programmable counters. This section defines the minimum number of
+programmable counters and hardware events required for an OS-A Server 
+compatible platform.
 
 * Counters
 ** The platform must implement at least 8 programmable counters.
@@ -597,9 +596,9 @@ Any platform that does not implement the micro-architectural features related to
 a hardware event may hardwire the event value to zero.
 --
 
-==== Debug
-The server extension requirements are all of the base specification 
-requirements plus:
+=== Debug
+The OS-A Server platform includes all the requirements as specified in the
+OS-A Common Requirements section plus the following:
 
 - Implement at least six mcontrol6 triggers that can support matching on PC
 (select=0, execute=1, match=0) with timing=0 and full support for mode
@@ -611,13 +610,10 @@ above
 respect to all harts connected to the DM
   * Rationale: Debuggers must be able to view memory coherently.
 
-==== Interrupts and Timer
-
-===== Interrupts support
-
-The server extension must comply with interrupt support described in
-<<msis_virtual_msis_and_wired_irqs>> with the following additional 
-requirements:
+=== Interrupts 
+The OS-A Server platform must support the interrupt requirements as specified 
+in the OS-A Common Requirements Interrupts section 
+<<msis_virtual_msis_and_wired_irqs>> plus the following:
 
 * The H-extension implemented by each hart must support GEILEN = 5 or more.
 * Per-hart AIA IMSIC devices.
@@ -630,20 +626,20 @@ requirements:
 Platforms should implement at least 5 guest interrupt files. More guest
 interrupt files allow for better VM oversubscription on the same hart.
 
-==== Boot Process
-=====  Firmware
+=== Boot Process
+====  Firmware
 The boot and system firmware for the server platforms must support UEFI as
 defined in the section 2.6.1 of the UEFI Specification <<spec_uefi>> with some
 additional requirements described in following sub-sections.
 
-====== UEFI Configuration Tables
+===== UEFI Configuration Tables
 The platforms are required to provide following tables:
 
 * *EFI_ACPI_20_TABLE_GUID* ACPI configuration table which is at version 6.4+ or
 newer with HW-Reduced ACPI model.
 * *SMBIOS3_TABLE_GUID* SMBIOS table which conforms to version 3.4 or later.
 
-====== UEFI Protocol Support
+===== UEFI Protocol Support
 The UEFI protocols listed below are required to be implemented.
 
 .Additional UEFI Protocols
@@ -654,15 +650,17 @@ The UEFI protocols listed below are required to be implemented.
 |EFI_PCI_IO_PROTOCOL                   | 14.4         | For PCIe support
 |===
 
-===== Hardware Discovery Mechanisms
+==== Hardware Discovery Mechanisms
+- Platforms must support the Unified Discovery specification for all pre-boot
+information population <<spec_unified_discovery>>.
 
-====== ACPI
+===== ACPI
 ACPI is the required mechanism for the hardware discovery and configuration.
 Server platforms are required to adhere to the RISC-V ACPI Platform Requirements
 Specification <<spec_riscv_acpi>>. Platform firmware must support ACPI and 
 the runtime OS environment must use ACPI for device discovery and configuration.
 
-====== SMBIOS
+===== SMBIOS
 The System Management BIOS (SMBIOS) table is required for the platform
 conforming to server extension. The SMBIOS records provide basic hardware and
 firmware configuration information used widely by the platform management
@@ -687,9 +685,12 @@ characteristics and HART hardware features discovered during the firmware boot
 process.
 |===
 
-==== Runtime services
+=== Runtime services
+The OS-A Server platform includes all the runtime services requirements as 
+specified in the OS-A Common Requirements Runtime Services section plus the
+following.
 
-===== UEFI
+==== UEFI
 The UEFI run time services listed below are required to be implemented.
 
 .Required UEFI Runtime Services
@@ -723,9 +724,12 @@ implemented but it can return EFI_UNSUPPORTED.
 implemented but it can return EFI_UNSUPPORTED.
 |===
 
-==== System Peripherals
+=== System Peripherals
+The OS-A Server platform includes all the system peripheral requirements as 
+specified in the OS-A Common Requirements System Peripherals section plus
+the added requirements in this section.
 
-===== Watchdog Timers
+==== Watchdog Timers
 Implementation of a two-stage watchdog timer, as defined in the RISC-V Watchdog
 Timer Specification<<spec_riscv_watchdog>> is required. Software must
 periodically refresh the watchdog timer, otherwise a first-stage watchdog
@@ -747,7 +751,7 @@ targeting a specific hart.
 
 The resultant action taken is platform-specific.
 
-===== System Date/Time[[SystemDateTime]]
+==== System Date/Time[[SystemDateTime]]
 In order to facilitate server manageability, server extension platform is
 required to provide the mechanism to maintain system date/time for UEFI
 runtime Time service. +
@@ -761,11 +765,11 @@ runtime Time service. +
     EFI_UNSUPPORTED if the platform doesn't require the features or the system
     date/time mechanism doesn’t have the capabilities.
 
-===== PCIe
+==== PCIe
 Platforms are required to support at least PCIe Base Specification Revision 1.1
 <<spec_pcie_sig>>.
 
-====== PCIe Config Space
+===== PCIe Config Space
 * Platforms must support access to the PCIe config space via ECAM as described
 in the PCIe Base specification.
 * The entire config space for a single PCIe domain must be accessible via a
@@ -777,7 +781,7 @@ supported PCIe domains and map the ECAM I/O region for each domain.
 memory attributes are that of a PMA I/O region (i.e. strongly-ordered,
 non-cacheable, non-idempotent).
 
-====== PCIe Memory Space
+===== PCIe Memory Space
 Platforms are required to map PCIe address space directly in the system address
 space and not have any address translation for outbound accesses from harts or
 for inbound accesses to any component in the system address space.
@@ -811,7 +815,7 @@ Such an access control mechanism could be analogous to the per-hart PMP
 as described in the RISC-V Privileged Architectures specification.
 --
 
-====== PCIe Interrupts
+===== PCIe Interrupts
 * Platforms must support both INTx and MSI/MSI-x interrupts.
 * Following are the requirements for INTx:
 ** For each root port in the system, the platform must map all the INTx
@@ -833,13 +837,13 @@ requests 16 MSI vectors the minimum MSI data value assigned by the platform
 software can be 0x10 so that the function can use lower 4 bits to assert each
 of the 16 vectors.
 
-====== PCIe cache coherency
+===== PCIe cache coherency
 Memory that is cacheable by harts is not kept coherent by hardware when PCIe
 transactions to that memory are marked with a No_Snoop bit of zero. In this
 case, software must manage coherency on such memory; otherwise, software
 coherency management is not required.
 
-====== PCIe Topology
+===== PCIe Topology
 Platforms are required to implement at least one of the following topologies
 and the components required in that topology.
 
@@ -899,17 +903,16 @@ implemented. RCEC is required to terminate the AER and PME messages from RCiEP.
 must be implemented in a separate PCIe domain and must be addressable via a
 separate ECAM I/O region.
 
-===== PCIe Device Firmware Requirement
-PCI expansion ROM code type 3 (UEFI) image must be provided by PCIe device for
-OS/A server extension platform according to PCI Firmware 
-Specification <<spec_pci_firmware>> if that PCIe device is utilized during 
-UEFI firmware boot process. The image stored in PCI expansion ROM is a UEFI 
-driver that must be compliant with UEFI specification <<spec_uefi>> 14.4.2 
-PCI Option ROMs.
+===== PCIe Device Firmware
+PCI expansion ROM code type 3 (UEFI) image must be provided by PCIe device
+platform according to PCI Firmware Specification <<spec_pci_firmware>> if that 
+PCIe device is utilized during UEFI firmware boot process. The image stored in 
+PCI expansion ROM is a UEFI driver that must be compliant with UEFI 
+specification <<spec_uefi>> 14.4.2 PCI Option ROMs.
 
-
-==== Security
-Platforms must implement the following security features:
+=== Security
+The OS-A Server platform includes all the security requirements as 
+specified in the OS-A Common Requirements security section plus the following:
 
 * Support for some form of Secure Boot, as a means to ensure the integrity of
 platform firmware and software, is required. Flexibility is provided as
@@ -942,7 +945,7 @@ transactions that precisely traps if violated.
 *** Platform must provide a protection mechanism from I/O agents manipulating
 or accessing machine mode assets.
 
-==== RAS
+=== RAS
 All the below mentioned RAS features are required for the OS-A platform server
 extension:
 
