@@ -784,11 +784,13 @@ non-cacheable, non-idempotent).
 ===== PCIe Memory Space
 Platforms are required to map PCIe address space directly in the system address
 space. The physical addresses used by the hart for outbound accesses must not undergo
-any further translation/offsetting and must be sent to the PCIe device unmodified. 
-Inbound accesses from PCIe devices may optionally be presented unmodified to an 
-IOMMU for address tranlation. The unmodified physical address sent by a PCIe device when
-no IOMMU was employed or a translated physical address provided by the IOMMU must 
-be used unmodified for accessing system memory.
+any further translation/offsetting and must be sent to the PCIe device unmodified.
+ 
+The unmodified physical address in an inbound accesses may optionally be presented to an 
+IOMMU for address tranlation. If no IOMMU is employed for address translation then the 
+unmodified physical address sent by the device must be used for accessing system memory.
+If an IOMMU is employed then the unmodified translated address provided by the IOMMU must
+be used for accessing system memory.
 
 * PCIe Outbound Memory +
 PCIe devices and bridges/switches frequently implement BARs which only support
