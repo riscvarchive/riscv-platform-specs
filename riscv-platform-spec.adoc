@@ -783,8 +783,14 @@ non-cacheable, non-idempotent).
 
 ===== PCIe Memory Space
 Platforms are required to map PCIe address space directly in the system address
-space and not have any address translation for outbound accesses from harts or
-for inbound accesses to any component in the system address space.
+space. The physical addresses used by the hart for outbound accesses must not undergo
+any further translation/offsetting and must be sent to the PCIe device unmodified.
+ 
+The unmodified physical address in an inbound accesses may optionally be presented to an 
+IOMMU for address tranlation. If no IOMMU is employed for address translation then the 
+unmodified physical address sent by the device must be used for accessing system memory.
+If an IOMMU is employed then the unmodified translated address provided by the IOMMU must
+be used for accessing system memory.
 
 * PCIe Outbound Memory +
 PCIe devices and bridges/switches frequently implement BARs which only support
@@ -816,8 +822,9 @@ as described in the RISC-V Privileged Architectures specification.
 --
 
 ===== PCIe Interrupts
-* Platforms must support both INTx and MSI/MSI-x interrupts.
-* Following are the requirements for INTx:
+* Platforms must support Message Signaled (MSI or MSI-X) Interrupts.
+* Platforms may optionally support INTx interrupt signaling.
+* Following are the requirements for INTx interrupt signaling if supported:
 ** For each root port in the system, the platform must map all the INTx
 virtual wires to four distinct sources at the APLIC. Each of these sources
 must be configured as Level0 as described in Table 4.2 (Encoding of the SM
@@ -949,10 +956,9 @@ or accessing machine mode assets.
 All the below mentioned RAS features are required for the OS-A platform server
 extension:
 
-*  Main memory must be protected with SECDED-ECC. +
-*  All cache structures must be protected. +
-** single-bit errors must be detected and corrected. +
-** multi-bit errors can be detected and reported. +
+*  Main memory must be protected with SECDED-ECC or a stronger/advanced method of protection. +
+*  Cache structures must be protected. The protection mechanisms may include single-bit/multi-bit
+error detection/correction schemes.
 * There must be memory-mapped RAS registers associated with these protected
 structures to log detected errors with information about the type and location
 of the error. +
@@ -966,8 +972,8 @@ registers for system software to take the needed corrective action. +
 * Attempted use of corrupted uncorrectable data must result in an exception
  with a distinguishing custom exception code; preferably a precise exception
 on that instruction if possible. +
-* The platform should provide the capability to configure each RAS
-error to trigger firmware-first or OS-first error interrupt. +
+* The platform should provide the capability to configure RAS
+errors to trigger firmware-first or OS-first error interrupt. +
 * Errors logged in RAS registers must be able to generate an interrupt request
 to the system interrupt controller that may be directed to either M-mode or
 S/HS-mode for firmware-first or OS-first error reporting. +
