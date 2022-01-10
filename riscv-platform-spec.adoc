@@ -467,7 +467,7 @@ The platform specification mandates the following requirements for
 software components:
 
 * All RISC-V software components must comply with the
-  RISC-V procedure call standard <<spec_proc_call>>.
+  RISC-V Calling Convention specification <<spec_proc_call>>.
 * All RISC-V software components that use ELF files must comply with the
   RISC-V ELF specification <<spec_elf>>.
 * All RISC-V software components that use DWARF files must comply with the
@@ -1060,9 +1060,9 @@ implementations should aim for supporting at least 16 PMP regions.
 * [[[spec_aclint,9]]] link:https://github.com/riscv/riscv-aclint/releases/download/v1.0-draft2/riscv-aclint-1.0-draft2.pdf[RISC-V ACLINT Specification], Version: v1.0-draft2
 * [[[spec_aia,10]]] link:https://github.com/riscv/riscv-aia/releases/download/0.2-draft.24/riscv-interrupts-024.pdf[RISC-V AIA Specification], Version: v0.2-draft.24
 * [[[spec_profiles,11]]] link:https://github.com/riscv/riscv-profiles/blob/master/profiles.adoc[RISC-V Profiles Specification], Version: draft-8e8951987e2a
-* [[[spec_proc_call,12]]] link:https://github.com/riscv/riscv-elf-psabi-doc[RISC-V Procedure call standard], Version: draft-20210810
-* [[[spec_elf,13]]] link:https://github.com/riscv/riscv-elf-psabi-doc[RISC-V ELF specification], Version: draft-20210810
-* [[[spec_dwarf,14]]] link:https://github.com/riscv/riscv-elf-psabi-doc[RISC-V DWARF specification], Version: draft-20210810
+* [[[spec_proc_call,12]]] link:https://github.com/riscv/riscv-elf-psabi-doc[RISC-V Calling Convention specification], Version: 1.0-rc1
+* [[[spec_elf,13]]] link:https://github.com/riscv/riscv-elf-psabi-doc[RISC-V ELF specification], Version: 1.0-rc1
+* [[[spec_dwarf,14]]] link:https://github.com/riscv/riscv-elf-psabi-doc[RISC-V DWARF specification], Version: 1.0-rc1
 * [[[spec_ebbr,15]]] link:https://arm-software.github.io/ebbr/[EBBR Specification], Version: v2.0.1
 * [[[spec_acpi,16]]] link:https://uefi.org/sites/default/files/resources/ACPI_Spec_6_4_Jan22.pdf[ACPI Specification], Version: v6.4
 * [[[spec_apei,17]]] link:https://uefi.org/specs/ACPI/6.4/18_ACPI_Platform_Error_Interfaces/ACPI_PLatform_Error_Interfaces.html[APEI Specification], Version: v6.4
