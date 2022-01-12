@@ -845,10 +845,10 @@ software can be 0x10 so that the function can use lower 4 bits to assert each
 of the 16 vectors.
 
 ===== PCIe cache coherency
-Memory that is cacheable by harts is not kept coherent by hardware when PCIe
-transactions to that memory are marked with a No_Snoop bit of zero. In this
-case, software must manage coherency on such memory; otherwise, software
-coherency management is not required.
+Memory that is cacheable by harts may not be kept coherent by hardware when
+PCIe transactions to that memory are marked with a No_Snoop bit of one. On
+platforms that honour No_Snoop bit, software must manage coherency on such
+memory; otherwise, software coherency management is not required.
 
 ===== PCIe Topology
 Platforms are required to implement at least one of the following topologies
@@ -906,9 +906,6 @@ In addition the following requirements must be met:
 ** If RCiEP is implemented then RCEC must be implemented as well. All
 requirements for RCEC specified in the PCIe Base specification must be
 implemented. RCEC is required to terminate the AER and PME messages from RCiEP.
-** If both the topologies mentioned above are supported then RCiEP and RCEC
-must be implemented in a separate PCIe domain and must be addressable via a
-separate ECAM I/O region.
 
 ===== PCIe Device Firmware
 PCI expansion ROM code type 3 (UEFI) image must be provided by PCIe device
