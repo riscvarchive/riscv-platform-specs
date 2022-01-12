@@ -261,8 +261,7 @@ and one resume group (in addition to group 0)
 - dcsr.stepie must support the 0 setting. It is optional to support the 1
 setting
   * Rationale: It is not generally useful to step into interrupt handlers.
-- dcsr.stopcount and dcsr.stoptime must be supported and the reset value of
-each must be 1
+- dcsr.stopcount must be supported and the reset value must be 1
   * Rationale: The architecture has strict requirements on minstret which may
     be perturbed by an external debugger in a way that's visible to software.
     The default should allow code that's sensitive to these requirements to be
