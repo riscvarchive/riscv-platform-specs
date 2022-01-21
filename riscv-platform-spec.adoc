@@ -8,17 +8,50 @@
 = RISC-V Platform Specification
 :author: RISC-V Platform Horizontal Subcommittee (RISC-V Platform HSC) 
 :email: tech-unixplatformspec@lists.riscv.org
+:company: RISC-V
 :revnumber: 0.3-draft
 :revdate: December 2021
+:revremark: This document is in Development state.  Change should be expected.
+:url-riscv: http://riscv.org
 :doctype: book
+:preface-title: Preamble
+:colophon:
+:appendix-caption: Appendix
+:title-logo-image: image:docs-resources/images/risc-v_logo.svg[pdfwidth=3.25in,align=center]
+// Settings:
+:experimental:
+:reproducible:
+:WaveDromEditorApp: wavedrom-cli
+:icons: font
+:lang: en
+:listing-caption: Listing
 :sectnums:
 :sectnumlevels: 5
 :xrefstyle: short
-:toc: macro
+:toc: left
 :toclevels: 5
+:source-highlighter: pygments
+ifdef::backend-pdf[]
+:source-highlighter: coderay
+endif::[]
+:data-uri:
+:hide-uri-scheme:
+:stem: latexmath
+:footnote:
+:xrefstyle: short
 
 // table of contents
 toc::[]
+
+// Preamble
+[WARNING]
+.This document is in the link:http://riscv.org/spec-state[Development state]
+====
+Assume everything can change. This draft specification 
+will change before being accepted as standard, so 
+implementations made to this draft specification will 
+likely not conform to the future standard.
+====
 
 // document copyright and licensing information
 include::licensing.adoc[]
