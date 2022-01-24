@@ -3,9 +3,13 @@
 #
 
 ASCIIDOCTOR = asciidoctor
+ASCIIDOCTOR_PDF = $(ASCIIDOCTOR)-pdf
 DITAA = ditaa
 IMAGES = pcie-topology.png
 PLATFORM_SPEC = riscv-platform-spec
+RISCV_DIR = docs-resources
+RISCV_YML = $(RISCV_DIR)/themes/riscv-pdf.yml
+RISCV_FONTS = $(RISCV_DIR)/fonts/
 PANDOC = pandoc
 PARTS = changelog.adoc contributors.adoc introduction.adoc licensing.adoc
 
@@ -22,8 +26,13 @@ $(PLATFORM_SPEC).md: $(PLATFORM_SPEC).xml
 $(PLATFORM_SPEC).xml: $(PLATFORM_SPEC).adoc
 	$(ASCIIDOCTOR) -d book -b docbook $<
 
-$(PLATFORM_SPEC).pdf: $(PLATFORM_SPEC).adoc $(IMAGES) $(PLATFORM_SPEC).yml
-	$(ASCIIDOCTOR) -d book -r asciidoctor-pdf -a pdf-style=$(PLATFORM_SPEC).yml -b pdf $<
+$(PLATFORM_SPEC).pdf: $(PLATFORM_SPEC).adoc $(IMAGES) $(RISCV_YML)
+	$(ASCIIDOCTOR_PDF) \
+	-a toc \
+	-a compress \
+	-a pdf-style=$(RISCV_YML) \
+	-a pdf-fontsdir=$(RISCV_FONTS) \
+	-o $@ $<
 
 $(PLATFORM_SPEC).html: $(PLATFORM_SPEC).adoc $(IMAGES)
 	$(ASCIIDOCTOR) -d book -b html $<
