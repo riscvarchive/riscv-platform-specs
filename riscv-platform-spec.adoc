@@ -556,6 +556,17 @@ in SBI PMU extensions.
 the requirements in this section.
 
 ==== Firmware
+===== UEFI Protocol Support
+The UEFI protocols listed below are required to be implemented in addition to
+the requirements in EBBR.
+
+.Additional UEFI Protocols
+[cols="3,1,2", width=95%, align="center", options="header"]
+|===
+|Protocol                              | UEFI Section        | Note
+|RISCV_EFI_BOOT_PROTOCOL               | <<spec_riscv_uefi>> | To pass boot hart ID
+|===
+
 ===== Storage and Partitioning
 - GPT partitioning required for shared storage.
 - MBR support is not required.
@@ -675,11 +686,12 @@ newer with HW-Reduced ACPI model.
 The UEFI protocols listed below are required to be implemented.
 
 .Additional UEFI Protocols
-[cols="3,1,1", width=95%, align="center", options="header"]
+[cols="3,1,2", width=95%, align="center", options="header"]
 |===
 |Protocol                              | UEFI Section | Note
 |EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL       | 14           | For PCIe support
 |EFI_PCI_IO_PROTOCOL                   | 14.4         | For PCIe support
+|RISCV_EFI_BOOT_PROTOCOL               | <<spec_riscv_uefi>> | To pass boot hart ID
 |===
 
 ==== Hardware Discovery Mechanisms
@@ -1102,3 +1114,4 @@ implementations should aim for supporting at least 16 PMP regions.
 * [[[spec_riscv_watchdog,22]]] link:https://github.com/riscv-non-isa/riscv-watchdog/blob/main/riscv-watchdog.adoc[RISC-V Watchdog Timer Specification], Version: Version 1.0
 * [[[spec_riscv_platform_policy,23]]] link:https://docs.google.com/document/d/1U5qLoztZpCRSnw2s8tx4rB0SFPMQ27Svrr9jWRsOziY/edit[RISC-V Platform Platform Policy], Version: 1.0
 * [[[spec_pcie_sig,24]]] link:https://pcisig.com/specifications[PCIe Base Specification Revision], Revision: 1.1
+* [[[spec_riscv_uefi,25]]] link:https://github.com/riscv-non-isa/riscv-uefi/releases/download/1.0-rc2/RISCV_UEFI_PROTOCOL-spec.pdf[RISC-V UEFI Protocol Specification], Version: 1.0-rc2
