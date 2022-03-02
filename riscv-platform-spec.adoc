@@ -813,6 +813,8 @@ runtime Time service. +
 Platforms are required to support at least PCIe Base Specification Revision 1.1
 <<spec_pcie_sig>>.
 
+Unless otherwise specified by a given I/O device, I/O devices are on ordering channel 0 (i.e., they are point-to-point strongly ordered).
+
 ===== PCIe Config Space
 * Platforms must support access to the PCIe config space via ECAM as described
 in the PCIe Base specification.
