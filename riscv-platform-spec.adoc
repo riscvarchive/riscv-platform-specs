@@ -890,10 +890,11 @@ software can be 0x10 so that the function can use lower 4 bits to assert each
 of the 16 vectors.
 
 ===== PCIe cache coherency
-Memory that is cacheable by harts may not be kept coherent by hardware when
-PCIe transactions to that memory are marked with a No_Snoop bit of one. On
-platforms that honour No_Snoop bit, software must manage coherency on such
-memory; otherwise, software coherency management is not required.
+Memory that is cacheable by harts may not be kept coherent by hardware when 
+PCIe transactions to that memory are marked with a No_Snoop bit of one. 
+On platforms that honor the No_Snoop bit, software must manage coherency on 
+such memory, otherwise, software and DMA operations are hardware coherent and 
+software coherency management is not required.
 
 ===== PCIe Topology
 Platforms are required to implement at least one of the following topologies
