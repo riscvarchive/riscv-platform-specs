@@ -135,10 +135,10 @@ The OS-A platforms that are currently defined are the following: +
 ** *OS-A Embedded Platform*
 ** *OS-A Server Platform*
 
-* *M Platform*: The M platform specifies an RTOS platform for bare-metal 
-applications and
-small operating systems running on a microcontroller. The M platform has a base
-feature set and extensions as shown below: +
+* *RVM-CSI Platform*: The RVM-CSI platform specifies an RTOS platform for 
+bare-metal applications and small operating systems running on a 
+microcontroller. The RVM-CSI platform has a base feature set and extensions as 
+shown below: +
 ** *Base*
 ** *Physical Memory Protection (PMP) Extension*
 
@@ -1029,11 +1029,11 @@ in the physical RV processor. +
 * Logging and/or reporting of errors can be masked. +
 * PCIe AER capability is required. +
 
-// M Platform
-== M Platform
+// RVM-CSI Platform
+== RVM-CSI Platform
 
 === Scope
-The M Platform specification aims to apply to a range of embedded platforms.
+The RVM-CSI Platform specification aims to apply to a range of embedded platforms.
 In this case embedded platforms range from hand coded bare metal assembly
 all the way to to embedded operating systems such as
 https://www.zephyrproject.org[Zephyr] and embedded Linux.
@@ -1043,15 +1043,15 @@ will be easier to write and port if all the embedded hardware is similar. On
 the other hand vendors want to differentiate their product and reuse existing
 IP and SoC designs.
 
-Due to this, the M Platform specification has both required and recommended
-components. All required components must be met in order to meet this
-specification.
+Due to this, the RVM-CSI Platform specification has both required and 
+recommended components. All required components must be met in order to meet 
+this specification.
 It's strongly encouraged that all recommended components are met as well,
 although they do not have to in order to meet the specification.
 
 === Base
 ==== Architecture
-The M Platform must comply with the RVM22M profile defined by the RISC-V
+The RVM-CSI Platform must comply with the RVM22M profile defined by the RISC-V
 profiles specification <<spec_profiles>>.
 
 ==== Interrupt Controller
@@ -1068,9 +1068,10 @@ Embedded systems cannot use a non-compliant interrupt controller and still
 call it a PLIC or CLIC.
 
 ==== Timer Support
-The M Platform must implement one or more RISC-V ACLINT MTIMER <<spec_aclint>>
-devices. This will provide the `mtime` and `mtimecmp` memory mapped registers
-as required by the RISC-V privilege specification <<spec_priv>>.
+The RVM-CSI Platform must implement one or more RISC-V ACLINT MTIMER 
+<<spec_aclint>> devices. This will provide the `mtime` and `mtimecmp` memory 
+mapped registers as required by the RISC-V privilege specification 
+<<spec_priv>>.
 
 The `mcounteren`.TM and `scounteren`.TM bits _must not_ be hardwired,
 regardless as to whether accesses to the `time` CSR are implemented
@@ -1080,7 +1081,7 @@ directly or via traps.
 It is recommended that main memory and loadable code (not ROM) start at
 address `0x8000_0000`.
 
-// PMP extension for M Platform
+// PMP extension for RVM-CSI Platform
 === Physical Memory Protection (PMP) Extension
 It is recommended that any system that implement more than just machine mode
 also implement PMP support.
