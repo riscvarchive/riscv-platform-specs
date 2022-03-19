@@ -803,8 +803,8 @@ runtime Time service. +
 
 - UEFI Runtime Time Service
   * GetTime() +
-    Must be implemented by firmware to incorporate with the underlying system
-    date/time mechanism.
+    Must be implemented by firmware and is not allowed to return
+    EFI_UNSUPPORTED.
   * SetTime(), GetWakeupTime() and SetWakeupTime() +
     These Time services must be implemented but allowed to return
     EFI_UNSUPPORTED if the platform doesn't require the features or the system
