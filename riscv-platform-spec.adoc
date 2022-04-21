@@ -825,6 +825,8 @@ supported PCIe domains and map the ECAM I/O region for each domain.
 * Platform software must configure ECAM I/O regions such that the effective
 memory attributes are that of a PMA I/O region (i.e. strongly-ordered,
 non-cacheable, non-idempotent).
+* If the platform software (for e.g OS) re-enumerates the PCIe topology then it
+is required that the underlying fabric routing is always correctly preserved.
 
 ===== PCIe Memory Space
 Platforms are required to map PCIe address space directly in the system address
