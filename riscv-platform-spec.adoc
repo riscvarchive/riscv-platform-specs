@@ -101,6 +101,7 @@ include::changelog.adoc[]
 |PMA       | Physical Memory Attributes
 |PRT       | PCI Routing Table
 |EBBR      | Embedded Base Boot Requirements <<spec_ebbr>>
+|CSI       | Common Software Interface
 |===
 
 == Introduction
@@ -135,7 +136,8 @@ The OS-A platforms that are currently defined are the following: +
 ** *OS-A Embedded Platform*
 ** *OS-A Server Platform*
 
-* *RVM-CSI Platform*: The RVM-CSI platform specifies an RTOS platform for 
+* *RVM-CSI Platform*: The RVM-CSI platform defines the Common Software Interface
+(CSI) for RISC-V microcontrollers. It specifies an RTOS platform for 
 bare-metal applications and small operating systems running on a 
 microcontroller. The RVM-CSI platform has a base feature set and extensions as 
 shown below: +
