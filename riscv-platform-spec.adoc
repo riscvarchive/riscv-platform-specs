@@ -145,9 +145,8 @@ shown below: +
 ** *Physical Memory Protection (PMP) Extension*
 
 The current version of this platform spec targets the standardization of
-functionality available in S, U, VS and VU modes, and the standardization of
-the SBI (Supervisory Binary Interface as defined in <<spec_sbi>>) between
-Supervisor level (S-mode/VS-mode) and M-mode/HS-mode respectively.
+functionality available in S and VS modes, and the standardization of
+the SBI (Supervisory Binary Interface as defined in <<spec_sbi>>).
 
 // OS-A Platform Common requirements
 == OS-A Common Requirements 
