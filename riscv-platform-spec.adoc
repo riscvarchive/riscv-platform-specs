@@ -105,18 +105,42 @@ include::changelog.adoc[]
 |===
 
 == Introduction
-The platform specification defines a set of platforms that specify requirements
-for interoperability between software and hardware. The Platform Policy <<spec_riscv_platform_policy>>
+
+A RISC-V Platform specifies a common, reusable execution environment that operating
+systems and applications can target to improve portability and reuse. A RISC-V
+Platform provides an interoperability assurance for compatible software (i.e,
+software that fulfills all requirements of a RISC-V Platform) when run on systems
+that are also compatible with the same RISC-V Platform.
+
+The focus of the platform standards is software-centric. However, both software and
+hardware will be affected by the requirements put forth in these specifications:
+both soft- and hardware will need to claim compatibility against these specifications
+to ensure interoperability between soft- and hardware products.
+
+A Platform standard governs how the software can use the Platform, not the
+implementation details of the underlying hardware platform. Consequently, a Platform
+shall avoid performance requirements or whether mechanisms have to be implemented in
+hardware (i.e. if they can be emulated through trap-and-emulate).
+
+=== Platform Policy
+
+The Platform Policy <<spec_riscv_platform_policy>>
 defines the various terms used in this platform specification. The platform
 policy also provides the needed detail regarding the scope, coverage, naming,
 versioning, structure, life cycle and compatibility claims for the platform
 specification. It is recommended that readers get familiar with the platform
-policy while reading this specification. All the requirements in this 
-specification are MANDATORY unless specifically called out in the relevant 
+policy while reading this specification.
+
+=== Compliance of Platform Requirements
+
+All the requirements in this specification are MANDATORY unless specifically
+called out in the relevant 
 sections. Any hardware platform seeking compatibility with the platform 
 specification has to be self certified by the platform compatibility test 
 suite (PCT). More details about the PCT are available in the platform policy 
-specification.
+specification <<spec_riscv_platform_policy>>.
+
+=== Previous Verbiage - Reword?
 
 The platform specification currently defines two platforms as shown below. 
 Additional platforms are expected to be defined in the future for industry 
@@ -151,6 +175,17 @@ Supervisor level (S-mode/VS-mode) and M-mode/HS-mode respectively.
 
 // OS-A Platform Common requirements
 == OS-A Common Requirements 
+
+=== Motivation
+
+A solid foundation for software development and interoperability is required to
+support the growth of the software ecosystem for RISC-V. From a user perspective,
+binary operating systems distributions (such as the various Linux distributions)
+should be easily movable between different hardware. Therefore, the OS-A platform
+establishes a base set of criteria to load and run a rich Operating System. The OS-A
+platform defines the environment the OS can expect from the system to manage booting
+and the underlying interfaces it needs to communicate with its outer execution
+environment.
 
 === ISA Requirements
 ==== General
