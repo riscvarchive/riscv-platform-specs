@@ -674,18 +674,21 @@ interrupt files allow for better VM oversubscription on the same hart.
 
 === Boot Process
 ====  Firmware
-The boot and system firmware for the server platforms must support UEFI as
-defined in the section 2.6.1 of the UEFI Specification <<spec_uefi>> with some
-additional requirements described in following sub-sections.
+The boot and system firmware for the server platforms are recommended to use
+UEFI, while other firmware solutions such as coreboot are also supported.
 
-===== UEFI Configuration Tables
+===== UEFI
+UEFI is defined in the section 2.6.1 of the the UEFI Specification <<spec_uefi>> with
+some additional requirements described in following subsections.
+
+====== UEFI Configuration Tables
 The platforms are required to provide following tables:
 
 * *EFI_ACPI_20_TABLE_GUID* ACPI configuration table which is at version 6.4+ or
 newer with HW-Reduced ACPI model.
 * *SMBIOS3_TABLE_GUID* SMBIOS table which conforms to version 3.4 or later.
 
-===== UEFI Protocol Support
+====== UEFI Protocol Support
 The UEFI protocols listed below are required to be implemented.
 
 .Additional UEFI Protocols
@@ -696,6 +699,12 @@ The UEFI protocols listed below are required to be implemented.
 |EFI_PCI_IO_PROTOCOL                   | 14.4         | For PCIe support
 |RISCV_EFI_BOOT_PROTOCOL               | <<spec_riscv_uefi>> | To pass boot hart ID
 |===
+
+===== coreboot
+The introduction of coreboot can refer to https://www.coreboot.org/[coreboot]. This scheme
+is the startup mode for coreboot plus payload. coreboot does the basic and necessary
+hardware initialization, then loads and executes payload, which completes the boot
+and additional functions. linuxboot is a common payload.
 
 ==== Hardware Discovery Mechanisms
 - Platforms must support the Unified Discovery specification for all pre-boot
@@ -715,7 +724,8 @@ applications.
 
 The SMBIOS table is identified using *SMBIOS3_TABLE_GUID* in UEFI configuration
 table. The memory type used for the SMBIOS table is required to be of type
-*EfiRuntimeServicesData*.
+*EfiRuntimeServicesData*. In addition, the SMBIOS table can be obtained in other
+ways, such as *DT*.
 
 In addition to the conformance guidelines as mentioned in *ANNEX A / 6.2* of
 the SMBIOS specification 3.4.0, below additional structures are required.
@@ -733,9 +743,9 @@ process.
 |===
 
 === Runtime services
-The OS-A Server platform includes all the runtime services requirements as 
-specified in the OS-A Common Requirements Runtime Services section plus the
-following.
+If UEFI firmware is applicable, the OS-A Server platform includes all the runtime
+services requirements as specified in the OS-A Common Requirements Runtime Services
+section plus the following. If non-UEFI firmware is applicable, only SBI is required.
 
 ==== UEFI
 The UEFI run time services listed below are required to be implemented.
